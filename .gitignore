@@ -1,0 +1,18 @@
+
+# Author    KMS - Martin Dubois, P. Eng.
+# Copyright (C) 2022
+# Product   KMS-PLC
+# File      .gitignore
+
+/Import/
+
+# ===== Visual Studio =======================================================
+
+/.vs/
+
+x64/
+
+Release/
+Release_Static/
+
+*.vcxproj.user

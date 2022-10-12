@@ -1,0 +1,16 @@
+
+Author    KMS - Martin Dubois, P. Eng.
+Copyright (C) 2022 KMS
+Product   KMS-PLC
+File      KMS-PLC/_DocUser/KMS.ReadMe.txt
+
+0.0.4-dev Windows 2022-10-09
+- EBPro - Addresses
+
+0.0.2-dev Windows 2022-10-06
+* Always Read, Parse and verify
+- EBPro - Labels
+    - Remove Exported_LBL_IN0 configurable attribute
+    - Support string longer than 255 characters
+
+0.0.0-dev Windows 2022-10-05

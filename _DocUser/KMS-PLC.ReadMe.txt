@@ -1,0 +1,11 @@
+
+Author    KMS - Martin Dubois, P. Eng.
+Copyright (C) 2022 KMS
+Product   KMS-PLC
+File      _DocUser/KMS.ReadMe.txt
+
+0.0.4-dev Windows 2022-10-09
+
+0.0.2-dev Windows 2022-10-06
+
+0.0.0-dev Windows 2022-10-05
