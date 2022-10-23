@@ -98,20 +98,6 @@ void System::Read()
     mTRiLOGY.Read();
 }
 
-int System::Run()
-{
-    mEBPro  .ValidateConfig();
-    mTRiLOGY.ValidateConfig();
-
-    Read();
-    Parse();
-    Verify();
-
-    ExecuteOperations();
-
-    return 0;
-}
-
 void System::Verify()
 {
     mEBPro  .Verify();
@@ -147,34 +133,49 @@ void System::Verify()
     }
 }
 
-void System::Write() const
+void System::Write()
 {
     mEBPro  .Write();
     mTRiLOGY.Write();
 }
 
-// Private
-// //////////////////////////////////////////////////////////////////////////
+// ===== KMS::CLI::Tool =====================================================
 
-void System::ExecuteOperations()
+void System::DisplayHelp(FILE* aOut) const
 {
-    const KMS::DI::Array::Internal& lInternal = mOperations.GetInternal();
-    for (const KMS::DI::Container::Entry lEntry : lInternal)
-    {
-        const KMS::DI::String* lOp = dynamic_cast<const KMS::DI::String*>(lEntry.Get());
-        assert(NULL != lOp);
+    assert(NULL != aOut);
 
-        try
-        {
-            if      (*lOp == "Clean" ) { Clean (); }
-            else if (*lOp == "Export") { Export(); }
-            else if (*lOp == "Import") { Import(); }
-            else if (*lOp == "Write" ) { Write (); }
-            else
-            {
-                KMS_EXCEPTION(CONFIG_FORMAT, "Invalid operation", lOp->Get());
-            }
-        }
-        KMS_CATCH
+    fprintf(aOut,
+        "Clean\n"
+        "Export\n"
+        "Import\n"
+        "Write\n");
+
+    KMS::CLI::Tool::DisplayHelp(aOut);
+}
+
+void System::ExecuteCommand(const char* aC)
+{
+    assert(NULL != aC);
+
+    if      (0 == strcmp("Clean" , aC)) { Clean (); }
+    else if (0 == strcmp("Export", aC)) { Export(); }
+    else if (0 == strcmp("Import", aC)) { Import(); }
+    else if (0 == strcmp("Write" , aC)) { Write (); }
+    else
+    {
+        KMS::CLI::Tool::ExecuteCommand(aC);
     }
+}
+
+int System::Run()
+{
+    mEBPro  .ValidateConfig();
+    mTRiLOGY.ValidateConfig();
+
+    Read  ();
+    Parse ();
+    Verify();
+
+    return KMS::CLI::Tool::Run();
 }

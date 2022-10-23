@@ -8,13 +8,13 @@
 #pragma once
 
 // ===== Import =============================================================
-#include <KMS/DI/Dictionary.h>
+#include <KMS/CLI/Tool.h>
 
 // ===== Local ==============================================================
 #include "EBPro/Project.h"
 #include "TRiLOGY/Project.h"
 
-class System : public KMS::DI::Dictionary
+class System : public KMS::CLI::Tool
 {
 
 public:
@@ -33,11 +33,14 @@ public:
 
     void Parse();
 
-    int Run();
-
     void Verify();
 
-    void Write() const;
+    void Write();
+
+    // ===== KMS::CLI::Tool =================================================
+    virtual void DisplayHelp(FILE* aOut) const;
+    virtual void ExecuteCommand(const char* aC);
+    virtual int  Run();
 
 private:
 
