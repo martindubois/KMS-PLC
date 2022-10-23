@@ -127,7 +127,7 @@ namespace EBPro
         {
             const char* lStr = mExported_CSV.Get();
 
-            KMS_EXCEPTION_ASSERT(lCurrent.DoesFileExist(lStr), CONFIG_VALUE, "The exported CSV file does not exist", lStr);
+            KMS_EXCEPTION_ASSERT(lCurrent.DoesFileExist(lStr), APPLICATION_USER_ERROR, "The exported CSV file does not exist", lStr);
         }
     }
 

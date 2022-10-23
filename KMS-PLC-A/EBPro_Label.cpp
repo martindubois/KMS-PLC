@@ -78,7 +78,7 @@ namespace EBPro
         assert(NULL != aFile);
 
         ReadResult lRR = Read_String(aFile, &mName);
-        KMS_EXCEPTION_ASSERT(ReadResult::OK == lRR, APPLICATION, "Corrupted exported LBL file", "");
+        KMS_EXCEPTION_ASSERT(ReadResult::OK == lRR, APPLICATION_ERROR, "Corrupted exported LBL file", "");
 
         uint16_t lStateCount;
 
@@ -98,7 +98,7 @@ namespace EBPro
                 std::wstring lStr;
 
                 lRR = Read_String(aFile, &lStr);
-                KMS_EXCEPTION_ASSERT(ReadResult::OK != ReadResult::END_OF_LABEL, APPLICATION, "Corrupted exported LBL file", "");
+                KMS_EXCEPTION_ASSERT(ReadResult::OK != ReadResult::END_OF_LABEL, APPLICATION_ERROR, "Corrupted exported LBL file", "");
 
                 lState->mStrings.push_back(lStr);
             }
@@ -112,12 +112,12 @@ namespace EBPro
 
             switch (Read_String(aFile, &lDump))
             {
-            case ReadResult::OK: KMS_EXCEPTION(APPLICATION, "Corrupted exported LBL file", "");
+            case ReadResult::OK: KMS_EXCEPTION(APPLICATION_ERROR, "Corrupted exported LBL file", "");
 
             case ReadResult::EMPTY_STRING: lEmptyString++; break;
 
             case ReadResult::END_OF_LABEL:
-                KMS_EXCEPTION_ASSERT(mStates.size() * 16 == lEmptyString, APPLICATION, "Corrupted exported LBL file", lEmptyString);
+                KMS_EXCEPTION_ASSERT(mStates.size() * 16 == lEmptyString, APPLICATION_ERROR, "Corrupted exported LBL file", lEmptyString);
                 return;
 
             default: assert(false);
@@ -202,7 +202,7 @@ void Read_Data(FILE* aFile, void* aOut, unsigned int aOutSize_byte)
     assert(0 < aOutSize_byte);
 
     size_t lSize_byte = fread_s(aOut SizeInfoV(aOutSize_byte + 1), 1, aOutSize_byte, aFile);
-    KMS_EXCEPTION_ASSERT(aOutSize_byte == lSize_byte, APPLICATION, "Corrupted exported LBL file", lSize_byte);
+    KMS_EXCEPTION_ASSERT(aOutSize_byte == lSize_byte, APPLICATION_ERROR, "Corrupted exported LBL file", lSize_byte);
 }
 
 ReadResult Read_String(FILE* aFile, std::wstring* aOut)
@@ -217,19 +217,19 @@ ReadResult Read_String(FILE* aFile, std::wstring* aOut)
         return ReadResult::END_OF_LABEL;
     }
 
-    KMS_EXCEPTION_ASSERT(2 == lSize_byte, FILE_READ, "Cannot read the exported LBL file", lSize_byte);
+    KMS_EXCEPTION_ASSERT(2 == lSize_byte, APPLICATION_ERROR, "Cannot read the exported LBL file", lSize_byte);
 
     if ((0x01 == lHeader[0]) && (0x80 == lHeader[1]))
     {
         return ReadResult::END_OF_LABEL;
     }
 
-    KMS_EXCEPTION_ASSERT(0xff == lHeader[0], APPLICATION, "Corrupted exported LBL file", lHeader[0]);
-    KMS_EXCEPTION_ASSERT(0xfe == lHeader[1], APPLICATION, "Corrupted exported LBL file", lHeader[1]);
+    KMS_EXCEPTION_ASSERT(0xff == lHeader[0], APPLICATION_ERROR, "Corrupted exported LBL file", lHeader[0]);
+    KMS_EXCEPTION_ASSERT(0xfe == lHeader[1], APPLICATION_ERROR, "Corrupted exported LBL file", lHeader[1]);
 
     Read_Data(aFile, lHeader + 2, 2);
 
-    KMS_EXCEPTION_ASSERT(0xff == lHeader[2], APPLICATION, "Corrupted exported LBL file", lHeader[2]);
+    KMS_EXCEPTION_ASSERT(0xff == lHeader[2], APPLICATION_ERROR, "Corrupted exported LBL file", lHeader[2]);
 
     if (0 == lHeader[3])
     {
@@ -269,8 +269,7 @@ void Write_Data(FILE* aFile, const void* aIn, unsigned int aInSize_byte)
     assert(0 < aInSize_byte);
 
     size_t lSize_byte = fwrite(aIn, 1, aInSize_byte, aFile);
-    KMS_EXCEPTION_ASSERT(aInSize_byte == lSize_byte, FILE_WRITE, "Cannot write the output LBL file", lSize_byte);
-
+    KMS_EXCEPTION_ASSERT(aInSize_byte == lSize_byte, APPLICATION_ERROR, "Cannot write the output LBL file", lSize_byte);
 }
 
 void Write_String(FILE* aFile, const std::wstring& aIn)

@@ -65,10 +65,10 @@ namespace EBPro
             lRet = sscanf_s(aLine, "%[^,],%[^,],%[^,],%[^,],,%s",
                 lName SizeInfo(lName), lType SizeInfo(lType), lSubType SizeInfo(lSubType),
                 lAddress SizeInfo(lAddress), lDataType SizeInfo(lDataType));
-            KMS_EXCEPTION_ASSERT(5 == lRet, APPLICATION, "Corrupted CSV file", aLine);
+            KMS_EXCEPTION_ASSERT(5 == lRet, APPLICATION_ERROR, "Corrupted CSV file", aLine);
             break;
 
-        default: KMS_EXCEPTION(APPLICATION, "Corrupted CSV file", aLine);
+        default: KMS_EXCEPTION(APPLICATION_ERROR, "Corrupted CSV file", aLine);
         }
 
         if (0 == strcmp("Local HMI", lType))
@@ -126,7 +126,7 @@ namespace EBPro
 
     bool Address::Set(AddressType aType, unsigned int aAddr)
     {
-        KMS_EXCEPTION_ASSERT(mType == aType, APPLICATION, "Imported address type does not match the current type", mName.c_str());
+        KMS_EXCEPTION_ASSERT(mType == aType, APPLICATION_ERROR, "Imported address type does not match the current type", mName.c_str());
 
         bool lResult = GetAddress_UInt16() != aAddr;
         if (lResult)

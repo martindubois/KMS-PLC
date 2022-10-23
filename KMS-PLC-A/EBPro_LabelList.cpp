@@ -63,14 +63,14 @@ namespace EBPro
     {
         if (0 < mExported_LBL.GetLength())
         {
-            std::string lPath = mExported_LBL.GetInternal() + ".in0";
+            std::string lPath = mExported_LBL.mInternal + ".in0";
 
             std::cout << "Exporting " << lPath << " ..." << std::endl;
 
             FILE* lFile;
 
             errno_t lErr = fopen_s(&lFile, lPath.c_str(), "w,ccs=UTF-8");
-            KMS_EXCEPTION_ASSERT(0 == lErr, FILE_OPEN, "Cannot open the output LBL.IN0 file", lPath.c_str());
+            KMS_EXCEPTION_ASSERT(0 == lErr, APPLICATION_ERROR, "Cannot open the output LBL.IN0 file", lPath.c_str());
 
             assert(NULL != lFile);
 
@@ -92,8 +92,7 @@ namespace EBPro
 
         bool lChanged = false;
 
-        const KMS::DI::Array::Internal& lInternal = mSources.GetInternal();
-        for (const KMS::DI::Container::Entry& lEntry : lInternal)
+        for (const KMS::DI::Container::Entry& lEntry : mSources.mInternal)
         {
             const KMS::DI::String* lSource = dynamic_cast<const KMS::DI::String*>(lEntry.Get());
             assert(NULL != lSource);
@@ -121,7 +120,7 @@ namespace EBPro
                 // TODO Support something else than 4 spaces.
                 if (0 == strcmp("    STATE", lLine.c_str()))
                 {
-                    KMS_EXCEPTION_ASSERT(NULL != lLabel, APPLICATION, "Corruted source file", lLine.c_str());
+                    KMS_EXCEPTION_ASSERT(NULL != lLabel, APPLICATION_ERROR, "Corruted source file", lLine.c_str());
 
                     lState = lLabel->FindOrCreate(lStateCount, &lChanged);
                     lStateCount++;
@@ -135,7 +134,7 @@ namespace EBPro
                 }
                 else if (2 == sscanf_s(lLine.c_str(), " %[a-z] %[^\n\r\t]", lLanguage SizeInfo(lLanguage), lText SizeInfo(lText)))
                 {
-                    KMS_EXCEPTION_ASSERT(NULL != lState, APPLICATION, "Corruted source file", lLine.c_str());
+                    KMS_EXCEPTION_ASSERT(NULL != lState, APPLICATION_ERROR, "Corruted source file", lLine.c_str());
 
                     std::wstring lString(lConverter.from_bytes(lText));
 
@@ -172,17 +171,17 @@ namespace EBPro
             FILE* lFile;
 
             errno_t lErr = fopen_s(&lFile, mExported_LBL.Get(), "rb");
-            KMS_EXCEPTION_ASSERT(0 == lErr, FILE_OPEN, "Cannot open the exported LBL file", mExported_LBL.Get());
+            KMS_EXCEPTION_ASSERT(0 == lErr, APPLICATION_ERROR, "Cannot open the exported LBL file", mExported_LBL.Get());
 
             assert(NULL != lFile);
 
             uint16_t lLabelCount;
 
             size_t lSize_byte = fread_s(&lLabelCount SizeInfo(lLabelCount) + 1, 1, sizeof(lLabelCount), lFile);
-            KMS_EXCEPTION_ASSERT(sizeof(lLabelCount) == lSize_byte, FILE_READ, "Cannot read the exported LBL file", lSize_byte);
+            KMS_EXCEPTION_ASSERT(sizeof(lLabelCount) == lSize_byte, APPLICATION_ERROR, "Cannot read the exported LBL file", lSize_byte);
 
             lSize_byte = fread_s(mHeader SizeInfo(mHeader) + 1, 1, sizeof(mHeader), lFile);
-            KMS_EXCEPTION_ASSERT(sizeof(mHeader) == lSize_byte, FILE_READ, "Cannot read the exported LBL file", lSize_byte);
+            KMS_EXCEPTION_ASSERT(sizeof(mHeader) == lSize_byte, APPLICATION_ERROR, "Cannot read the exported LBL file", lSize_byte);
 
             while (!feof(lFile))
             {
@@ -195,7 +194,7 @@ namespace EBPro
 
             std::cout << "    " << mLabels.size() << " labels" << std::endl;
 
-            KMS_EXCEPTION_ASSERT(lLabelCount == mLabels.size(), APPLICATION, "Corrupted exported LBL file", lLabelCount);
+            KMS_EXCEPTION_ASSERT(lLabelCount == mLabels.size(), APPLICATION_ERROR, "Corrupted exported LBL file", lLabelCount);
 
             int lRet = fclose(lFile);
             assert(0 == lRet);
@@ -216,31 +215,29 @@ namespace EBPro
         {
             lStr = mExported_LBL.Get();
 
-            KMS_EXCEPTION_ASSERT(lCurrent.DoesFileExist(lStr), CONFIG_VALUE, "The exported LBL file does not exist", lStr);
+            KMS_EXCEPTION_ASSERT(lCurrent.DoesFileExist(lStr), APPLICATION_ERROR, "The exported LBL file does not exist", lStr);
         }
 
-        KMS_EXCEPTION_ASSERT(0 < mLanguages.GetCount(), CONFIG_VALUE, "The configuration file must define language", "");
+        KMS_EXCEPTION_ASSERT(0 < mLanguages.GetCount(), APPLICATION_USER_ERROR, "The configuration file must define language", "");
 
-        const KMS::DI::Array::Internal& lInternal0 = mLanguages.GetInternal();
-        for (const KMS::DI::Container::Entry& lEntry : lInternal0)
+        for (const KMS::DI::Container::Entry& lEntry : mLanguages.mInternal)
         {
             const KMS::DI::String* lLanguage = dynamic_cast<const KMS::DI::String*>(lEntry.Get());
             assert(NULL != lLanguage);
 
-            KMS_EXCEPTION_ASSERT(2 == lLanguage->GetLength(), CONFIG_VALUE, "The language id must be 2 characteres", lLanguage->Get());
+            KMS_EXCEPTION_ASSERT(2 == lLanguage->GetLength(), APPLICATION_USER_ERROR, "The language id must be 2 characteres", lLanguage->Get());
         }
 
         if (0 < mSources.GetCount())
         {
-            const KMS::DI::Array::Internal& lInternal = mSources.GetInternal();
-            for (const KMS::DI::Container::Entry& lEntry : lInternal)
+            for (const KMS::DI::Container::Entry& lEntry : mSources.mInternal)
             {
                 const KMS::DI::String* lSource = dynamic_cast<const KMS::DI::String*>(lEntry.Get());
                 assert(NULL != lSource);
 
                 lStr = lSource->Get();
 
-                KMS_EXCEPTION_ASSERT(lCurrent.DoesFileExist(lStr), CONFIG_VALUE, "The source file does not exist", lStr);
+                KMS_EXCEPTION_ASSERT(lCurrent.DoesFileExist(lStr), APPLICATION_USER_ERROR, "The source file does not exist", lStr);
             }
         }
     }
@@ -322,8 +319,7 @@ namespace EBPro
     {
         unsigned int lResult = 0;
 
-        const KMS::DI::Array::Internal& lInternal = mLanguages.GetInternal();
-        for (const KMS::DI::Container::Entry& lEntry : lInternal)
+        for (const KMS::DI::Container::Entry& lEntry : mLanguages.mInternal)
         {
             const KMS::DI::String* lId = dynamic_cast<const KMS::DI::String*>(lEntry.Get());
             assert(NULL != lId);
@@ -336,7 +332,7 @@ namespace EBPro
             lResult++;
         }
 
-        KMS_EXCEPTION(APPLICATION, "Corrupted source file", aId);
+        KMS_EXCEPTION(APPLICATION_ERROR, "Corrupted source file", aId);
     }
 
     void LabelList::Save_ToImport_LBL() const
@@ -350,17 +346,17 @@ namespace EBPro
             FILE* lFile;
 
             errno_t lErr = fopen_s(&lFile, mToImport_LBL.Get(), "wb");
-            KMS_EXCEPTION_ASSERT(0 == lErr, FILE_OPEN, "Cannot open the output LBL file", mToImport_LBL.Get());
+            KMS_EXCEPTION_ASSERT(0 == lErr, APPLICATION_ERROR, "Cannot open the output LBL file", mToImport_LBL.Get());
 
             assert(NULL != lFile);
 
             uint16_t lLabelCount = static_cast<uint16_t>(mLabels.size());
 
             size_t lSize_byte = fwrite(&lLabelCount, 1, sizeof(lLabelCount), lFile);
-            KMS_EXCEPTION_ASSERT(sizeof(lLabelCount) == lSize_byte, FILE_WRITE, "Cannot write the output LBL file", lSize_byte);
+            KMS_EXCEPTION_ASSERT(sizeof(lLabelCount) == lSize_byte, APPLICATION_ERROR, "Cannot write the output LBL file", lSize_byte);
 
             lSize_byte = fwrite(mHeader, 1, sizeof(mHeader), lFile);
-            KMS_EXCEPTION_ASSERT(sizeof(mHeader) == lSize_byte, FILE_WRITE, "Cannot write the output LBL file", lSize_byte);
+            KMS_EXCEPTION_ASSERT(sizeof(mHeader) == lSize_byte, APPLICATION_ERROR, "Cannot write the output LBL file", lSize_byte);
 
             bool lFirst = true;
 
@@ -375,7 +371,7 @@ namespace EBPro
                 else
                 {
                     lSize_byte = fwrite(lMark, 1, sizeof(lMark), lFile);
-                    KMS_EXCEPTION_ASSERT(sizeof(lMark) == lSize_byte, FILE_WRITE, "Cannot write the output LBL file", lSize_byte);
+                    KMS_EXCEPTION_ASSERT(sizeof(lMark) == lSize_byte, APPLICATION_ERROR, "Cannot write the output LBL file", lSize_byte);
                 }
 
                 lLabel->Write(lFile);
