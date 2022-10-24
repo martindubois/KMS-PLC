@@ -19,6 +19,12 @@ namespace TRiLOGY
     Function::Function(unsigned int aIndex, unsigned int aLength) : Object(aIndex), mLength(aLength) {}
 
     // ===== Object =========================================================
+
     Function::~Function() {}
+
+    void Function::GetLine(wchar_t* aOut, unsigned int aOutSize_byte) const
+    {
+        // TODO
+    }
 
 }

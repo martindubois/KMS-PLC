@@ -22,12 +22,15 @@ namespace TRiLOGY
 
     public:
 
-        BitList(const char* aElementName, unsigned int aStartAddress);
+        BitList(const char* aElementName, unsigned int aStartAddress, unsigned int aMaxQty);
 
         void GetAddresses(const std::regex& aRegEx, AddressList* aOut) const;
 
         void Display_ByName (FILE* aOut, unsigned int aModbusBaseAddress) const;
         void Display_ByIndex(FILE* aOut, unsigned int aModbusBaseAddress) const;
+
+        bool Import(const char* aName);
+        bool Import(const char* aName, unsigned int aIndex);
 
     private:
 

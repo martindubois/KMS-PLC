@@ -7,6 +7,9 @@
 
 #include "Component.h"
 
+// ===== Import/Includes ====================================================
+#include <KMS/Console/Color.h>
+
 // ===== Local ==============================================================
 #include "../Common/TRiLOGY/Object.h"
 
@@ -18,8 +21,8 @@ namespace TRiLOGY
     // Public
     // //////////////////////////////////////////////////////////////////////
 
-    BitList::BitList(const char* aElementName, unsigned int aStartAddress)
-        : ObjectList(aElementName, L"~\r"), mStartAddress(aStartAddress)
+    BitList::BitList(const char* aElementName, unsigned int aStartAddress, unsigned int aMaxQty)
+        : ObjectList(aElementName, L"~\r", aMaxQty), mStartAddress(aStartAddress)
     {}
 
     void BitList::GetAddresses(const std::regex& aRegEx, AddressList* aOut) const
@@ -36,6 +39,57 @@ namespace TRiLOGY
                 aOut->push_back(Address(lBit->GetName(), AddressType::MODBUS_RTU_1X, mStartAddress + lBit->GetIndex()));
             }
         }
+    }
+
+    bool BitList::Import(const char* aName)
+    {
+        Object* lObject = FindObject_ByName(aName);
+        if (NULL == lObject)
+        {
+            unsigned int lIndex;
+            unsigned int lLineNo;
+
+            FindIndexAndLineNo(&lIndex, &lLineNo);
+
+            lObject = new Object(aName, lIndex, lLineNo, Object::FLAG_TO_INSERT);
+
+            AddObject(lObject);
+            return true;
+        }
+
+        return false;
+    }
+
+    bool BitList::Import(const char* aName, unsigned int aIndex)
+    {
+        Object* lObject = FindObject_ByName(aName);
+        if (NULL == lObject)
+        {
+            lObject = FindObject_ByIndex(aIndex);
+            if (NULL == lObject)
+            {
+                unsigned int lLineNo = FindLineNo(aIndex);
+
+                lObject = new Object(aName, aIndex, lLineNo, Object::FLAG_TO_INSERT);
+
+                AddObject(lObject);
+                return true;
+            }
+
+            std::cout << KMS::Console::Color::RED;
+            std::cout << "ERROR  The index " << aIndex << " is alreadt used";
+            std::cout << KMS::Console::Color::WHITE << std::endl;
+            return false;
+        }
+
+        if (aIndex != lObject->GetIndex())
+        {
+            std::cout << KMS::Console::Color::RED;
+            std::cout << "ERROR  The name " << aName << " is alreadt used for another index";
+            std::cout << KMS::Console::Color::WHITE << std::endl;
+        }
+
+        return false;
     }
 
 }

@@ -10,6 +10,9 @@
 // ====== C++ ===============================================================
 #include <string>
 
+// ====== Import/Includes ===================================================
+#include <KMS/Text/File_UTF16.h>
+
 namespace TRiLOGY
 {
 
@@ -19,9 +22,9 @@ namespace TRiLOGY
     public:
 
         static const unsigned int FLAG_NOT_USED;
-        static const unsigned int FLAG_TO_APPLY;
+        static const unsigned int FLAG_TO_INSERT;
 
-        Object(const char* aName, unsigned int mIndex, unsigned int aLineNo);
+        Object(const char* aName, unsigned int mIndex, unsigned int aLineNo, unsigned int aFlags);
 
         virtual ~Object();
 
@@ -35,9 +38,13 @@ namespace TRiLOGY
 
         bool TestFlag(unsigned int aFlag) const;
 
+        virtual void GetLine(wchar_t* aOut, unsigned int aOutSize_byte) const;
+
     protected:
 
         Object(unsigned int mIndex);
+
+        void Update(KMS::Text::File_UTF16* aFile_PC6);
 
     private:
 

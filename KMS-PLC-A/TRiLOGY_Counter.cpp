@@ -3,12 +3,12 @@
 // Copyright (C) 2022 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
-// File      KMS-PLC-A/TRiLOGY_Timer.cpp
+// File      KMS-PLC-A/TRiLOGY_Counter.cpp
 
 #include "Component.h"
 
 // ===== Local ==============================================================
-#include "../Common/TRiLOGY/Timer.h"
+#include "../Common/TRiLOGY/Counter.h"
 
 namespace TRiLOGY
 {
@@ -16,13 +16,13 @@ namespace TRiLOGY
     // Public
     // //////////////////////////////////////////////////////////////////////
 
-    Timer::Timer(const char* aName, unsigned int aIndex, unsigned int aLineNo, unsigned int aInit, unsigned int aFlags)
+    Counter::Counter(const char* aName, unsigned int aIndex, unsigned int aLineNo, unsigned int aInit, unsigned int aFlags)
         : Object(aName, aIndex, aLineNo, aFlags), mInit(aInit)
     {
         assert(NULL != aName);
     }
 
-    bool Timer::SetInit(unsigned int aInit, KMS::Text::File_UTF16* aFile_PC6)
+    bool Counter::SetInit(unsigned int aInit, KMS::Text::File_UTF16* aFile_PC6)
     {
         bool lResult = mInit != aInit;
         if (lResult)
@@ -37,13 +37,13 @@ namespace TRiLOGY
 
     // ===== Object =========================================================
 
-    Timer::~Timer() {}
+    Counter::~Counter() {}
 
-    void Timer::GetLine(wchar_t* aOut, unsigned int aOutSize_byte) const
+    void Counter::GetLine(wchar_t* aOut, unsigned int aOutSize_byte) const
     {
-        assert(NULL != aOut);
+        wchar_t lLine[LINE_LENGTH];
 
-        swprintf_s(aOut SizeInfoV(aOutSize_byte / sizeof(wchar_t)), L"%u:%S:%u", GetIndex(), GetName(), mInit);
+        swprintf_s(lLine SizeInfoV(aOutSize_byte / sizeof(wchar_t)), L"%u,%S %u", GetIndex(), GetName(), mInit);
     }
 
 }

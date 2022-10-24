@@ -26,6 +26,8 @@ namespace TRiLOGY
 
         void AddFunction(Function* aFunction);
 
+        void Clear();
+
         unsigned int SetEndLine_Code (unsigned int aEndLine);
 
         void Display_ByIndex(FILE* aOut) const;

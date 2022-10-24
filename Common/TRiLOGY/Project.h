@@ -16,9 +16,9 @@
 // ===== Local ==============================================================
 #include "../Address.h"
 #include "BitList.h"
+#include "CounterList.h"
 #include "DefineList.h"
 #include "FunctionList.h"
-#include "SequencerList.h"
 #include "TimerList.h"
 
 namespace TRiLOGY
@@ -48,7 +48,7 @@ namespace TRiLOGY
         bool VerifyAddress_1X(uint16_t aAddr) const;
         bool VerifyAddress_4X(uint16_t aAddr) const;
 
-        void Write() const;
+        void Write();
 
         AddressList* GetSharedAddresses() const;
 
@@ -58,22 +58,26 @@ namespace TRiLOGY
 
         const Project& operator = (const Project&);
 
+        bool Apply();
+
+        void Reparse();
+
+        void Verify_Counters  () const;
         void Verify_Defines   () const;
         void Verify_Functions () const;
         void Verify_Inputs    () const;
         void Verify_Outputs   () const;
-        void Verify_Sequencers() const;
 
         void Verify_BitList(const BitList& aBits) const;
 
         KMS::Text::File_UTF16 mFile_PC6;
 
+        CounterList   mCounters;
         DefineList    mDefines;
         FunctionList  mFunctions;
         BitList       mInputs;
         BitList       mOutputs;
         BitList       mRelays;
-        SequencerList mSequencers;
         TimerList     mTimers;
 
         // ===== Configurable attributes ====================================

@@ -16,8 +16,8 @@ namespace TRiLOGY
     // Public
     // //////////////////////////////////////////////////////////////////////
 
-    Word::Word(const char* aName, unsigned int aIndex, unsigned int aLineNo, unsigned int aOffset)
-        : Object(aName, aIndex, aLineNo), mOffset(aOffset)
+    Word::Word(const char* aName, unsigned int aIndex, unsigned int aLineNo, unsigned int aOffset, const char* aComment, unsigned int aFlags)
+        : Object(aName, aIndex, aLineNo, aFlags), mComment(aComment), mOffset(aOffset)
     {
         assert(NULL != aName);
     }
@@ -25,6 +25,23 @@ namespace TRiLOGY
     unsigned int Word::GetOffset() const { return mOffset; }
 
     // ===== Object =========================================================
+
     Word::~Word() {}
+
+    void Word::GetLine(wchar_t* aOut, unsigned int aOutSize_byte) const
+    {
+        assert(NULL != aOut);
+
+        unsigned int lOutLen = aOutSize_byte / sizeof(wchar_t);
+
+        if (mComment.empty())
+        {
+            swprintf_s(aOut SizeInfoV(lOutLen), L"%u,%S,DM[%u]", GetIndex(), GetName(), mOffset);
+        }
+        else
+        {
+            swprintf_s(aOut SizeInfoV(lOutLen), L"%u,%S,DM[%u],%S", GetIndex(), GetName(), mOffset, mComment.c_str());
+        }
+    }
 
 }

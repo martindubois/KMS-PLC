@@ -7,6 +7,9 @@
 
 #pragma once
 
+// ====== Import/Includes ===================================================
+#include <KMS/Text/File_UTF16.h>
+
 // ====== Local =============================================================
 #include "Object.h"
 
@@ -18,17 +21,21 @@ namespace TRiLOGY
 
     public:
 
-        Constant(const char* aName, unsigned int aIndex, unsigned int aLineNo, const char* aValue);
+        Constant(const char* aName, unsigned int aIndex, unsigned int aLineNo, const char* aValue, const char* aComment, unsigned int aFlags);
 
         const char* GetValue() const;
+
+        bool SetValue(const char* aValue, KMS::Text::File_UTF16* aFile_PC6);
 
         void Verify();
 
         // ===== Object =====================================================
-        ~Constant();
+        virtual ~Constant();
+        virtual void GetLine(wchar_t* aOut, unsigned int aOutSize_byte) const;
 
     private:
 
+        std::string mComment;
         std::string mValue;
 
     };

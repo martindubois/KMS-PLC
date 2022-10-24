@@ -3,14 +3,20 @@
 // Copyright (C) 2022 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
-// File      KMS-PLC-A/TRiLOGY_TimerList.cpp
+// File      KMS-PLC-A/TRiLOGY_CounterList.cpp
 
 #include "Component.h"
 
-// ===== Local ==============================================================
-#include "../Common/TRiLOGY/Timer.h"
+// ===== C++ ================================================================
+#include <codecvt>
 
-#include "../Common/TRiLOGY/TimerList.h"
+// ===== Import/Includes ====================================================
+#include <KMS/Console/Color.h>
+
+// ===== Local ==============================================================
+#include "../Common/TRiLOGY/Counter.h"
+
+#include "../Common/TRiLOGY/CounterList.h"
 
 namespace TRiLOGY
 {
@@ -18,12 +24,12 @@ namespace TRiLOGY
     // Public
     // //////////////////////////////////////////////////////////////////////
 
-    TimerList::TimerList() : ObjectList("timer", L"~\r", 128) {}
+    CounterList::CounterList() : ObjectList("counter", L"~\r", 256) {}
 
     // Protected
     // //////////////////////////////////////////////////////////////////////
 
-    void TimerList::AddObject(const wchar_t* aLine, unsigned int aLineNo)
+    void CounterList::AddObject(const wchar_t* aLine, unsigned int aLineNo)
     {
         assert(NULL != aLine);
 
@@ -34,13 +40,15 @@ namespace TRiLOGY
         int lRet = swscanf_s(aLine, L"%u,%S %u", &lIndex, lName SizeInfo(lName), &lInit);
         KMS_EXCEPTION_ASSERT(3 == lRet, APPLICATION_ERROR, "Invalid timer line", lRet);
 
-        Timer* lTimer = new Timer(lName, lIndex, aLineNo, lInit, 0);
+        Counter* lCounter = new Counter(lName, lIndex, aLineNo, lInit, 0);
 
-        ObjectList::AddObject(lTimer);
+        ObjectList::AddObject(lCounter);
     }
 
-    bool TimerList::Import(const char* aName, unsigned int aInit)
+    bool CounterList::Import(const char* aName, unsigned int aInit)
     {
+        Counter* lCounter;
+
         Object* lObject = FindObject_ByName(aName);
         if (NULL == lObject)
         {
@@ -49,17 +57,16 @@ namespace TRiLOGY
 
             FindIndexAndLineNo(&lIndex, &lLineNo);
 
-            Timer* lTimer = new Timer(aName, lIndex, lLineNo, aInit, Object::FLAG_TO_INSERT);
+            lCounter = new Counter(aName, lIndex, lLineNo, aInit, Object::FLAG_TO_INSERT);
 
-            ObjectList::AddObject(lTimer);
-
+            ObjectList::AddObject(lCounter);
             return true;
         }
 
-        Timer* lTimer = dynamic_cast<Timer*>(lObject);
-        assert(NULL != lTimer);
+        lCounter = dynamic_cast<Counter*>(lObject);
+        assert(NULL != lCounter);
 
-        return lTimer->SetInit(aInit, GetFile_PC6());
+        return lCounter->SetInit(aInit, GetFile_PC6());
     }
 
 }

@@ -18,15 +18,17 @@ namespace TRiLOGY
 
     public:
 
-        Word(const char* aName, unsigned int aIndex, unsigned int aLineNo, unsigned int aOffset);
+        Word(const char* aName, unsigned int aIndex, unsigned int aLineNo, unsigned int aOffset, const char* aComment, unsigned int aFlags);
 
         unsigned int GetOffset() const;
 
         // ===== Object =====================================================
-        ~Word();
+        virtual ~Word();
+        virtual void GetLine(wchar_t* aOut, unsigned int aOutSize_byte) const;
 
     private:
 
+        std::string  mComment;
         unsigned int mOffset;
 
     };

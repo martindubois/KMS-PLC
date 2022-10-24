@@ -21,7 +21,8 @@ namespace TRiLOGY
         Function(unsigned int aIndex, unsigned int aLineNo);
 
         // ===== Object =====================================================
-        ~Function();
+        virtual ~Function();
+        virtual void GetLine(wchar_t* aOut, unsigned int aOutSize_byte) const;
 
     private:
 

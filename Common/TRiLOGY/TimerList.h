@@ -25,6 +25,8 @@ namespace TRiLOGY
         void Display_ByName (FILE* aOut) const;
         void Display_ByIndex(FILE* aOut) const;
 
+        bool Import(const char* aName, unsigned int aInit);
+
     protected:
 
         virtual void AddObject(const wchar_t* aLine, unsigned int aLineNo);

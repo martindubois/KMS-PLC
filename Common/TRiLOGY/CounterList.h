@@ -3,7 +3,7 @@
 // Copyright (C) 2022 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
-// File      Common/TRiLOGY/SequencerList.h
+// File      Common/TRiLOGY/CounterList.h
 
 #pragma once
 
@@ -13,17 +13,19 @@
 namespace TRiLOGY
 {
 
-    class Sequencer;
+    class Counter;
 
-    class SequencerList : public ObjectList
+    class CounterList : public ObjectList
     {
 
     public:
 
-        SequencerList();
+        CounterList();
 
         void Display_ByIndex(FILE* aOut) const;
         void Display_ByName (FILE* aOut) const;
+
+        bool Import(const char* aName, unsigned int aInit);
 
     protected:
 
@@ -31,9 +33,9 @@ namespace TRiLOGY
 
     private:
 
-        SequencerList(const SequencerList&);
+        CounterList(const CounterList&);
 
-        const SequencerList& operator = (const SequencerList&);
+        const CounterList& operator = (const CounterList&);
 
     };
 

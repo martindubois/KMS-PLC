@@ -22,7 +22,9 @@ namespace TRiLOGY
 
     public:
 
-        Object* AddConstant(const char* aName, unsigned int aIndex, unsigned int aLineNo, const char* aValue);
+        void AddConstant(Constant* aConstant);
+
+        void Clear();
 
         unsigned int GetCount() const;
 

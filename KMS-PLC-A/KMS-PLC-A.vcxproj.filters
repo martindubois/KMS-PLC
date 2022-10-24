@@ -30,7 +30,7 @@
     <ClCompile Include="TRiLOGY_TimerList.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TRiLOGY_SequencerList.cpp">
+    <ClCompile Include="TRiLOGY_CounterList.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TRiLOGY_FunctionList.cpp">
@@ -54,7 +54,7 @@
     <ClCompile Include="Convert.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TRiLOGY_Sequencer.cpp">
+    <ClCompile Include="TRiLOGY_Counter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TRiLOGY_Timer.cpp">

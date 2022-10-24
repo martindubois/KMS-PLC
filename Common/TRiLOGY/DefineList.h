@@ -22,12 +22,19 @@ namespace TRiLOGY
 
         DefineList();
 
+        void Clear();
+
         void Display_ByIndex(FILE* aOut) const;
         void Display_ByName (FILE* aOut) const;
 
-        unsigned int Parse(const KMS::Text::File_UTF16& aFile_PC6, unsigned int aLineNo);
+        bool ImportConstant(const char* aName, const char* aValue);
 
-        void Verify(const KMS::Text::File_UTF16& aFile_CP6);
+        bool ImportWord(const char* aName);
+        bool ImportWord(const char* aName, unsigned int aOffset);
+
+        unsigned int Parse(KMS::Text::File_UTF16* aFile_PC6, unsigned int aLineNo);
+
+        void Verify();
 
         WordList mWords;
 

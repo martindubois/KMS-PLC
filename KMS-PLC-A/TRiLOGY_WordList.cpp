@@ -12,6 +12,11 @@
 
 #include "../Common/TRiLOGY/WordList.h"
 
+// Constants
+// /////////////////////////////////////////////////////////////////////////
+
+#define OFFSET_MAX (3999)
+
 namespace TRiLOGY
 {
 
@@ -20,20 +25,39 @@ namespace TRiLOGY
 
     WordList::WordList() {}
 
-    Object* WordList::AddWord(const char* aName, unsigned int aIndex, unsigned int aLineNo, unsigned int aOffset)
+    Object* WordList::AddWord(const char* aName, unsigned int aIndex, unsigned int aLineNo, const char* aComment, unsigned int aFlags)
     {
-        assert(NULL != aName);
+        unsigned int lOffset = OFFSET_MAX;
 
-        Word* lResult = new Word(aName, aIndex, aLineNo, aOffset);
+        for (ByOffset::reverse_iterator lIt = mWords_ByOffset.rbegin(); lIt != mWords_ByOffset.rend(); lIt++)
+        {
+            if (lOffset > lIt->first)
+            {
+                Word* lWord = new Word(aName, aIndex, aLineNo, lOffset, aComment, aFlags);
 
-        std::pair<ByName::iterator, bool> lBN = mWords_ByName.insert(ByName::value_type(aName, lResult));
-        KMS_EXCEPTION_ASSERT(lBN.second, APPLICATION, "A word with the same name already exist", aName);
+                AddWord(lWord);
 
-        std::pair<ByOffset::iterator, bool> lBO = mWords_ByOffset.insert(ByOffset::value_type(aOffset, lResult));
-        KMS_EXCEPTION_ASSERT(lBO.second, APPLICATION, "A word with the same offset already exist", aOffset);
+                return lWord;
+            }
 
-        return lResult;
+            lOffset = lIt->first - 1;
+        }
+
+        KMS_EXCEPTION(APPLICATION_ERROR, "Too many word", aName);
     }
+
+    void WordList::AddWord(Word* aWord)
+    {
+        assert(NULL != aWord);
+
+        std::pair<ByName::iterator, bool> lBN = mWords_ByName.insert(ByName::value_type(aWord->GetName(), aWord));
+        KMS_EXCEPTION_ASSERT(lBN.second, APPLICATION_ERROR, "A word with the same name already exist", aWord->GetName());
+
+        std::pair<ByOffset::iterator, bool> lBO = mWords_ByOffset.insert(ByOffset::value_type(aWord->GetOffset(), aWord));
+        KMS_EXCEPTION_ASSERT(lBO.second, APPLICATION_ERROR, "A word with the same offset already exist", aWord->GetOffset());
+    }
+
+    void WordList::Clear() { mWords_ByName.clear(); mWords_ByOffset.clear(); }
 
     void WordList::GetAddresses(const std::regex& aRegEx, AddressList* aOut) const
     {

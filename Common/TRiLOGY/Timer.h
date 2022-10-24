@@ -3,7 +3,7 @@
 // Copyright (C) 2022 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
-// File      Common/TRiLOGY/Sequencer.h
+// File      Common/TRiLOGY/Timer.h
 
 #pragma once
 
@@ -18,12 +18,15 @@ namespace TRiLOGY
 
     public:
 
-        Timer(const char* aName, unsigned int aIndex, unsigned int aLineNo, unsigned int aInit);
+        Timer(const char* aName, unsigned int aIndex, unsigned int aLineNo, unsigned int aInit, unsigned int aFlags);
 
         unsigned int GetInit () const;
 
+        bool SetInit(unsigned int aInit, KMS::Text::File_UTF16* aFile_PC6);
+
         // ===== Object =====================================================
-        ~Timer();
+        virtual ~Timer();
+        virtual void GetLine(wchar_t* aOut, unsigned int aOutSize_byte) const;
 
     private:
 

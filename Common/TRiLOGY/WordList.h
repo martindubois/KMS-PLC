@@ -28,7 +28,11 @@ namespace TRiLOGY
 
         WordList();
 
-        Object* AddWord(const char* aName, unsigned int aIndex, unsigned int aLineNo, unsigned int aOffset);
+        Object* AddWord(const char* aName, unsigned int aIndex, unsigned int aLineNo, const char* aComment, unsigned int aFlags);
+
+        void AddWord(Word* aWord);
+
+        void Clear();
 
         void GetAddresses(const std::regex& aRegEx, AddressList* aOut) const;
 

@@ -9,6 +9,7 @@
 
 // ===== Import/Includes ====================================================
 #include <KMS/Cfg/MetaData.h>
+#include <KMS/Text/File_ASCII.h>
 
 // ===== Local ==============================================================
 #include "../Common/TRiLOGY/Word.h"
@@ -28,7 +29,7 @@ namespace TRiLOGY
     // Public
     // //////////////////////////////////////////////////////////////////////
 
-    Project::Project() : mInputs("input", 1), mOutputs("output", 1), mRelays("relay", 1025)
+    Project::Project() : mInputs("input", 1, 256), mOutputs("output", 1, 256), mRelays("relay", 1025, 512)
     {
         mSources.SetCreator(KMS::DI::String_Expand::Create);
 
@@ -46,7 +47,89 @@ namespace TRiLOGY
 
     void Project::Import()
     {
-        // TODO
+        std::cout << "Importing sources ..." << std::endl;
+
+        bool lChanged = false;
+
+        for (const KMS::DI::Container::Entry& lEntry : mSources.mInternal)
+        {
+            const KMS::DI::String* lSource = dynamic_cast<const KMS::DI::String*>(lEntry.Get());
+            assert(NULL != lSource);
+
+            KMS::Text::File_ASCII lFile;
+
+            lFile.Read(KMS::File::Folder::CURRENT, lSource->Get());
+
+            lFile.RemoveEmptyLines();
+            lFile.RemoveComments_Script();
+
+            for (const std::string& lLine : lFile.mLines)
+            {
+                unsigned int lIndex;
+                unsigned int lInit;
+                unsigned int lOffset;
+                char lName[NAME_LENGTH];
+                char lValue[LINE_LENGTH];
+
+                // TODO Import Constant and Word comment or at least put the source file name in the
+                //      comment of newly created ones.
+
+                if (2 == sscanf_s(lLine.c_str(), "COUNTER %[0-9A-Za-z_] %u", lName SizeInfo(lName), &lInit))
+                {
+                    lChanged |= mCounters.Import(lName, lInit);
+                }
+                else if (2 == sscanf_s(lLine.c_str(), "CONSTANT %[0-9A-Za-z_] %s", lName SizeInfo(lName), lValue SizeInfo(lValue)))
+                {
+                    lChanged |= mDefines.ImportConstant(lName, lValue);
+                }
+                else if (1 == sscanf_s(lLine.c_str(), "FUNCTION %[0-9A-Za-z_]", lName SizeInfo(lName)))
+                {
+                    // TODO
+                }
+                else if (2 == sscanf_s(lLine.c_str(), "INPUT %[0-9A-Za-z_] %u", lName SizeInfo(lName), &lIndex))
+                {
+                    lChanged |= mInputs.Import(lName, lIndex);
+                }
+                else if (2 == sscanf_s(lLine.c_str(), "OUTPUT %[0-9A-Za-z_] %u", lName SizeInfo(lName), &lIndex))
+                {
+                    lChanged |= mOutputs.Import(lName, lIndex);
+                }
+                else if (2 == sscanf_s(lLine.c_str(), "RELAY %[0-9A-Za-z_] %u", lName SizeInfo(lName), &lIndex))
+                {
+                    lChanged |= mRelays.Import(lName, lIndex);
+                }
+                else if (1 == sscanf_s(lLine.c_str(), "RELAY %[0-9A-Za-z_]", lName SizeInfo(lName)))
+                {
+                    lChanged |= mRelays.Import(lName);
+                }
+                else if (2 == sscanf_s(lLine.c_str(), "TIMER %[0-9A-Za-z_] %u", lName SizeInfo(lName), &lInit))
+                {
+                    lChanged |= mTimers.Import(lName, lInit);
+                }
+                else if (2 == sscanf_s(lLine.c_str(), "WORD %[0-9A-Za-z_] %u", lName SizeInfo(lName), &lOffset))
+                {
+                    lChanged |= mDefines.ImportWord(lName, lOffset);
+                }
+                else if (1 == sscanf_s(lLine.c_str(), "WORD %[0-9A-Za-z_]", lName SizeInfo(lName)))
+                {
+                    lChanged |= mDefines.ImportWord(lName);
+                }
+            }
+        }
+
+        if (lChanged)
+        {
+            if (Apply())
+            {
+                Reparse();
+            }
+
+            std::cout << "Imported - Use the Write command to save the change" << std::endl;
+        }
+        else
+        {
+            std::cout << "Imported - No change" << std::endl;
+        }
     }
 
     void Project::Parse()
@@ -59,11 +142,11 @@ namespace TRiLOGY
             unsigned int   lLineNo = 1;
             unsigned int   lLineCount = mFile_PC6.GetLineCount();
 
-            lLineNo = mInputs    .Parse(mFile_PC6, lLineNo);
-            lLineNo = mOutputs   .Parse(mFile_PC6, lLineNo);
-            lLineNo = mRelays    .Parse(mFile_PC6, lLineNo);
-            lLineNo = mTimers    .Parse(mFile_PC6, lLineNo);
-            lLineNo = mSequencers.Parse(mFile_PC6, lLineNo);
+            lLineNo = mInputs    .Parse(&mFile_PC6, lLineNo);
+            lLineNo = mOutputs   .Parse(&mFile_PC6, lLineNo);
+            lLineNo = mRelays    .Parse(&mFile_PC6, lLineNo);
+            lLineNo = mTimers    .Parse(&mFile_PC6, lLineNo);
+            lLineNo = mCounters  .Parse(&mFile_PC6, lLineNo);
 
             // ===== Circuits ===============================================
             for (; lLineNo < lLineCount; lLineNo++)
@@ -82,7 +165,7 @@ namespace TRiLOGY
                 if (0 == wcscmp(L"~END_QUICKTAGS~\r", lLine)) { lLineNo++; break; }
             }
 
-            lLineNo = mDefines.Parse(mFile_PC6, lLineNo);
+            lLineNo = mDefines.Parse(&mFile_PC6, lLineNo);
         }
     }
 
@@ -106,16 +189,15 @@ namespace TRiLOGY
 
         if (0 < mFileName_PC6.GetLength())
         {
-            KMS_EXCEPTION_ASSERT(lCurrent.DoesFileExist(mFileName_PC6.Get()), CONFIG_VALUE, "The .PC6 file does not exist", mFileName_PC6.Get());
+            KMS_EXCEPTION_ASSERT(lCurrent.DoesFileExist(mFileName_PC6.Get()), APPLICATION_USER_ERROR, "The .PC6 file does not exist", mFileName_PC6.Get());
         }
 
-        const KMS::DI::Array::Internal& lInternal = mSources.GetInternal();
-        for (const KMS::DI::Container::Entry& lEntry : lInternal)
+        for (const KMS::DI::Container::Entry& lEntry : mSources.mInternal)
         {
             const KMS::DI::String* lSource = dynamic_cast<const KMS::DI::String*>(lEntry.Get());
             assert(NULL != lSource);
 
-            KMS_EXCEPTION_ASSERT(lCurrent.DoesFileExist(lSource->Get()), CONFIG_VALUE, "The source file does not exist", lSource->Get());
+            KMS_EXCEPTION_ASSERT(lCurrent.DoesFileExist(lSource->Get()), APPLICATION_USER_ERROR, "The source file does not exist", lSource->Get());
         }
     }
 
@@ -128,12 +210,12 @@ namespace TRiLOGY
             // TODO For the verification, use a version of mFile_PC6 without
             //      comment
 
-            mDefines   .Verify(mFile_PC6);
+            mCounters  .Verify(mFile_PC6);
+            mDefines   .Verify();
             mFunctions .Verify(mFile_PC6);
             mInputs    .Verify(mFile_PC6);
             mOutputs   .Verify(mFile_PC6);
             mRelays    .Verify(mFile_PC6);
-            mSequencers.Verify(mFile_PC6);
             mTimers    .Verify(mFile_PC6);
 
             // TODO
@@ -195,9 +277,15 @@ namespace TRiLOGY
         return true;
     }
 
-    void Project::Write() const
+    void Project::Write()
     {
-        // TODO
+        std::cout << "Writing ..." << std::endl;
+
+        KMS::File::Folder::CURRENT.Backup(mFileName_PC6.Get(), KMS::File::Folder::FLAG_BACKUP_RENAME);
+
+        mFile_PC6.Write(KMS::File::Folder::CURRENT, mFileName_PC6.Get());
+
+        std::cout << "Written" << std::endl;
     }
 
     AddressList* Project::GetSharedAddresses() const
@@ -218,6 +306,37 @@ namespace TRiLOGY
         }
 
         return lResult;
+    }
+
+    // Private
+    // //////////////////////////////////////////////////////////////////////
+
+    bool Project::Apply()
+    {
+        bool lResult = false;
+
+        lResult |= mDefines .Apply();
+        // TODO Functions
+        lResult |= mCounters.Apply();
+        lResult |= mTimers  .Apply();
+        lResult |= mRelays  .Apply();
+        lResult |= mOutputs .Apply();
+        lResult |= mInputs  .Apply();
+
+        return lResult;
+    }
+
+    void Project::Reparse()
+    {
+        mCounters  .Clear();
+        mDefines   .Clear();
+        mFunctions .Clear();
+        mInputs    .Clear();
+        mOutputs   .Clear();
+        mRelays    .Clear();
+        mTimers    .Clear();
+
+        Parse();
     }
 
 }

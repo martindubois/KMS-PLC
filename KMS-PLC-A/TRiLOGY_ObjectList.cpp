@@ -24,21 +24,51 @@ namespace TRiLOGY
     // Public
     // //////////////////////////////////////////////////////////////////////
 
-    ObjectList::ObjectList(const char* aElementName, const wchar_t* aEndMark)
-        : mElementName(aElementName), mEndMark(aEndMark), mLineNo_End(0)
+    ObjectList::ObjectList(const char* aElementName, const wchar_t* aEndMark, unsigned int aMaxQty)
+        : mElementName(aElementName), mEndMark(aEndMark), mFile_PC6(NULL), mLineNo_End(0), mMaxQty(aMaxQty)
     {
         assert(NULL != aElementName);
         assert(NULL != aEndMark);
     }
 
-    ObjectList::~ObjectList()
+    ObjectList::~ObjectList() { Clear(); }
+
+    bool ObjectList::Apply()
     {
+        assert(NULL != mFile_PC6);
+
+        bool lResult = false;
+
+        for (ByIndex::reverse_iterator lIt = mObjects_ByIndex.rbegin(); lIt != mObjects_ByIndex.rend(); lIt++)
+        {
+            if (lIt->second->TestFlag(Object::FLAG_TO_INSERT))
+            {
+                lResult = true;
+
+                wchar_t lLine[LINE_LENGTH];
+
+                lIt->second->GetLine(lLine, sizeof(lLine));
+
+                mFile_PC6->InsertLine(lIt->second->GetLineNo(), lLine);
+            }
+        }
+
+        return lResult;
+    }
+
+    void ObjectList::Clear()
+    {
+        mFile_PC6 = NULL;
+
         for (const ByIndex::value_type& lVT : mObjects_ByIndex)
         {
             assert(NULL != lVT.second);
 
             delete lVT.second;
         }
+
+        mObjects_ByIndex.clear();
+        mObjects_ByName .clear();
     }
 
     unsigned int ObjectList::GetCount() const { return static_cast<unsigned int>(mObjects_ByIndex.size()); }
@@ -69,16 +99,31 @@ namespace TRiLOGY
         return lIt->second;
     }
 
-    unsigned int ObjectList::Parse(const KMS::Text::File_UTF16& aFile_PC6, unsigned int aLineNo)
+    Object* ObjectList::FindObject_ByName(const char* aName)
+    {
+        ByName::iterator lIt = mObjects_ByName.find(aName);
+        if (mObjects_ByName.end() == lIt)
+        {
+            return NULL;
+        }
+
+        assert(NULL != lIt->second);
+
+        return lIt->second;
+    }
+
+    unsigned int ObjectList::Parse(KMS::Text::File_UTF16* aFile_PC6, unsigned int aLineNo)
     {
         assert(NULL != mEndMark);
 
-        unsigned int lLineCount = aFile_PC6.GetLineCount();
+        mFile_PC6 = aFile_PC6;
+
+        unsigned int lLineCount = aFile_PC6->GetLineCount();
         unsigned int lLineNo    = aLineNo;
 
         for (; lLineNo < lLineCount; lLineNo++)
         {
-            const wchar_t* lLine = aFile_PC6.GetLine(lLineNo);
+            const wchar_t* lLine = aFile_PC6->GetLine(lLineNo);
             assert(NULL != lLine);
 
             if (0 == wcscmp(mEndMark, lLine)) { SetLineNo_End(lLineNo); lLineNo++; break; }
@@ -133,6 +178,8 @@ namespace TRiLOGY
 
     const char* ObjectList::GetElementName() const { return mElementName; }
 
+    KMS::Text::File_UTF16* ObjectList::GetFile_PC6() { return mFile_PC6; }
+
     void ObjectList::SetLineNo_End(unsigned int aLineNo) { mLineNo_End = aLineNo; }
 
     void ObjectList::AddObject(Object* aObject)
@@ -140,10 +187,10 @@ namespace TRiLOGY
         assert(NULL != aObject);
 
         std::pair<ByIndex::iterator, bool> lBI = mObjects_ByIndex.insert(ObjectList::ByIndex::value_type(aObject->GetIndex(), aObject));
-        KMS_EXCEPTION_ASSERT(lBI.second, APPLICATION, "An object with the same index already exist", aObject->GetIndex());
+        KMS_EXCEPTION_ASSERT(lBI.second, APPLICATION_ERROR, "An object with the same index already exist", aObject->GetIndex());
 
         std::pair<ByName::iterator, bool> lBN = mObjects_ByName.insert(ObjectList::ByName::value_type(aObject->GetName(), aObject));
-        KMS_EXCEPTION_ASSERT(lBN.second, APPLICATION, "An object with the same name already exist", aObject->GetName());
+        KMS_EXCEPTION_ASSERT(lBN.second, APPLICATION_ERROR, "An object with the same name already exist", aObject->GetName());
     }
 
     void ObjectList::AddObject(const wchar_t* aLine, unsigned int aLineNo)
@@ -154,11 +201,49 @@ namespace TRiLOGY
         char         lName[NAME_LENGTH];
 
         int lRet = swscanf_s(aLine, L"%u,%S", &lIndex, lName SizeInfo(lName));
-        KMS_EXCEPTION_ASSERT(2 == lRet, APPLICATION, "Invalid bit line", lRet);
+        KMS_EXCEPTION_ASSERT(2 == lRet, APPLICATION_ERROR, "Invalid bit line", lRet);
 
-        Object* lObject = new Object(lName, lIndex, aLineNo);
+        Object* lObject = new Object(lName, lIndex, aLineNo, 0);
 
         AddObject(lObject);
+    }
+
+    void ObjectList::FindIndexAndLineNo(unsigned int* aIndex, unsigned int* aLineNo)
+    {
+        unsigned int lIndex  = mMaxQty - 1;
+        unsigned int lLineNo = mLineNo_End;
+
+        for (ByIndex::reverse_iterator lIt = mObjects_ByIndex.rbegin(); lIt != mObjects_ByIndex.rend(); lIt++)
+        {
+            if (lIndex > lIt->first)
+            {
+                *aIndex  = lIndex;
+                *aLineNo = lLineNo;
+                return;
+            }
+
+            lIndex  = lIt->first - 1;
+            lLineNo = lIt->second->GetLineNo();
+        }
+
+        KMS_EXCEPTION(APPLICATION_ERROR, "Too many", mElementName);
+    }
+
+    unsigned int ObjectList::FindLineNo(unsigned int aIndex)
+    {
+        unsigned int lLineNo = mLineNo_End;
+
+        for (ByIndex::reverse_iterator lIt = mObjects_ByIndex.rbegin(); lIt != mObjects_ByIndex.rend(); lIt++)
+        {
+            if (aIndex > lIt->first)
+            {
+                return lLineNo;
+            }
+
+            lLineNo = lIt->second->GetLineNo();
+        }
+
+        KMS_EXCEPTION(APPLICATION_ERROR, "Too many", mElementName);
     }
 
 }
