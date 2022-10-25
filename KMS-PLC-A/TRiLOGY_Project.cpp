@@ -34,13 +34,39 @@ namespace TRiLOGY
     {
         mSources.SetCreator(KMS::DI::String_Expand::Create);
 
-        AddEntry("Exported_PC5_TXT"  , &mExported_PC6_TXT  , false, &MD_EXPORTED_PC6_TXT);
+        AddEntry("Exported_PC6_TXT"  , &mExported_PC6_TXT  , false, &MD_EXPORTED_PC6_TXT);
         AddEntry("FileName_PC6"      , &mFileName_PC6      , false, &MD_FILE_NAME_PC6);
         AddEntry("SharedAddressRegEx", &mSharedAddressRegEx, false, &MD_SHARED_ADDRESS_REG_EX);
         AddEntry("Sources"           , &mSources           , false, &MD_SOURCES);
     }
 
     bool Project::IsValid() const { return 0 < mFile_PC6.GetLineCount(); }
+
+    void Project::Clean()
+    {
+        std::cout << "Cleaning ..." << std::endl;
+
+        unsigned int lCount = 0;
+
+        lCount += mDefines .Clean();
+        // TODO Functions
+        lCount += mCounters.Clean();
+        lCount += mTimers  .Clean();
+        lCount += mRelays  .Clean();
+        lCount += mOutputs .Clean();
+        lCount += mInputs  .Clean();
+
+        if (0 < lCount)
+        {
+            Reparse();
+
+            std::cout << "Cleaned - " << lCount << " elements - Use the Write command to save the change" << std::endl;
+        }
+        else
+        {
+            std::cout << "Cleaned - No change" << std::endl;
+        }
+    }
 
     void Project::Export()
     {
@@ -220,7 +246,7 @@ namespace TRiLOGY
             //      comment
 
             mCounters  .Verify(mFile_PC6);
-            mDefines   .Verify();
+            mDefines   .Verify(mFile_PC6);
             mFunctions .Verify(mFile_PC6);
             mInputs    .Verify(mFile_PC6);
             mOutputs   .Verify(mFile_PC6);

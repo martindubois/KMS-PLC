@@ -65,7 +65,7 @@ System::System()
 
 void System::Clean()
 {
-    // TODO
+    mTRiLOGY.Clean();
 }
 
 void System::Export()
@@ -161,6 +161,7 @@ void System::ExecuteCommand(const char* aC)
     if      (0 == strcmp("Clean" , aC)) { Clean (); }
     else if (0 == strcmp("Export", aC)) { Export(); }
     else if (0 == strcmp("Import", aC)) { Import(); }
+    else if (0 == strcmp("Verify", aC)) { Verify(); }
     else if (0 == strcmp("Write" , aC)) { Write (); }
     else
     {

@@ -153,9 +153,9 @@ namespace TRiLOGY
         return lResult;
     }
 
-    void DefineList::Verify()
+    void DefineList::Verify(const KMS::Text::File_UTF16& aFile_PC6)
     {
-        ObjectList::Verify(*GetFile_PC6());
+        ObjectList::Verify(aFile_PC6);
 
         mConstants.Verify();
     }

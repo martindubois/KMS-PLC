@@ -7,6 +7,8 @@
 
 /Import/
 
+EXPORTED_*.PC6.TXT
+
 # ===== Visual Studio =======================================================
 
 /.vs/
@@ -17,3 +19,7 @@ Release/
 Release_Static/
 
 *.vcxproj.user
+
+# ===== Visual Studio Code ==================================================
+
+/.vscode/

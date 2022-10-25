@@ -34,7 +34,7 @@ namespace TRiLOGY
 
         unsigned int Parse(KMS::Text::File_UTF16* aFile_PC6, unsigned int aLineNo);
 
-        void Verify();
+        void Verify(const KMS::Text::File_UTF16& aFile_PC6);
 
         WordList mWords;
 

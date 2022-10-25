@@ -33,6 +33,8 @@ namespace TRiLOGY
 
         bool IsValid() const;
 
+        void Clean();
+
         void Export();
 
         void Import();

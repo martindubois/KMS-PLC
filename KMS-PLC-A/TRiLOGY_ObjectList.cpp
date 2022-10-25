@@ -112,6 +112,28 @@ namespace TRiLOGY
         return lIt->second;
     }
 
+    unsigned int ObjectList::Clean()
+    {
+        assert(NULL != mFile_PC6);
+
+        unsigned int lResult = 0;
+
+        for (ByIndex::reverse_iterator lIt = mObjects_ByIndex.rbegin(); lIt != mObjects_ByIndex.rend(); lIt++)
+        {
+            Object* lObject = lIt->second;
+            assert(NULL != lObject);
+
+            if (lObject->TestFlag(Object::FLAG_NOT_USED))
+            {
+                lResult++;
+
+                mFile_PC6->RemoveLines(lObject->GetLineNo(), 1);
+            }
+        }
+
+        return lResult;
+    }
+
     unsigned int ObjectList::Parse(KMS::Text::File_UTF16* aFile_PC6, unsigned int aLineNo)
     {
         assert(NULL != mEndMark);
