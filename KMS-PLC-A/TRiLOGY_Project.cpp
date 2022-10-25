@@ -19,6 +19,7 @@
 // Constants
 // //////////////////////////////////////////////////////////////////////////
 
+static const KMS::Cfg::MetaData MD_EXPORTED_PC6_TXT     ("Exported_PC6_TXT = {Path}");
 static const KMS::Cfg::MetaData MD_FILE_NAME_PC6        ("FileName_PC6 = {Path}");
 static const KMS::Cfg::MetaData MD_SHARED_ADDRESS_REG_EX("SharedAddressRegEx = {RegEx}");
 static const KMS::Cfg::MetaData MD_SOURCES              ("Sources += {Path}");
@@ -33,6 +34,7 @@ namespace TRiLOGY
     {
         mSources.SetCreator(KMS::DI::String_Expand::Create);
 
+        AddEntry("Exported_PC5_TXT"  , &mExported_PC6_TXT  , false, &MD_EXPORTED_PC6_TXT);
         AddEntry("FileName_PC6"      , &mFileName_PC6      , false, &MD_FILE_NAME_PC6);
         AddEntry("SharedAddressRegEx", &mSharedAddressRegEx, false, &MD_SHARED_ADDRESS_REG_EX);
         AddEntry("Sources"           , &mSources           , false, &MD_SOURCES);
@@ -40,9 +42,16 @@ namespace TRiLOGY
 
     bool Project::IsValid() const { return 0 < mFile_PC6.GetLineCount(); }
 
-    void Project::Export() const
+    void Project::Export()
     {
-        // TODO
+        if (0 < mExported_PC6_TXT.GetLength())
+        {
+            std::cout << "Exporting " << mExported_PC6_TXT.Get() << " ..." << std::endl;
+
+            mFile_PC6.Write_ASCII(KMS::File::Folder::CURRENT, mExported_PC6_TXT.Get());
+
+            std::cout << "Exported" << std::endl;
+        }
     }
 
     void Project::Import()

@@ -25,7 +25,7 @@ public:
 
     void Clean();
 
-    void Export() const;
+    void Export();
 
     void Import();
 

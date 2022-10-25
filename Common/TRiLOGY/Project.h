@@ -33,7 +33,7 @@ namespace TRiLOGY
 
         bool IsValid() const;
 
-        void Export() const;
+        void Export();
 
         void Import();
 
@@ -81,6 +81,7 @@ namespace TRiLOGY
         TimerList     mTimers;
 
         // ===== Configurable attributes ====================================
+        KMS::DI::String_Expand mExported_PC6_TXT;
         KMS::DI::String_Expand mFileName_PC6;
         KMS::DI::String        mSharedAddressRegEx;
         KMS::DI::Array         mSources;
