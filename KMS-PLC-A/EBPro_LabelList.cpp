@@ -209,35 +209,33 @@ namespace EBPro
     {
         KMS::File::Folder lCurrent(KMS::File::Folder::Id::CURRENT);
 
-        const char* lStr;
-
         if (0 < mExported_LBL.GetLength())
         {
-            lStr = mExported_LBL.Get();
+            const char* lStr = mExported_LBL.Get();
 
             KMS_EXCEPTION_ASSERT(lCurrent.DoesFileExist(lStr), APPLICATION_ERROR, "The exported LBL file does not exist", lStr);
-        }
 
-        KMS_EXCEPTION_ASSERT(0 < mLanguages.GetCount(), APPLICATION_USER_ERROR, "The configuration file must define language", "");
+            KMS_EXCEPTION_ASSERT(0 < mLanguages.GetCount(), APPLICATION_USER_ERROR, "The configuration file must define language", "");
 
-        for (const KMS::DI::Container::Entry& lEntry : mLanguages.mInternal)
-        {
-            const KMS::DI::String* lLanguage = dynamic_cast<const KMS::DI::String*>(lEntry.Get());
-            assert(NULL != lLanguage);
-
-            KMS_EXCEPTION_ASSERT(2 == lLanguage->GetLength(), APPLICATION_USER_ERROR, "The language id must be 2 characteres", lLanguage->Get());
-        }
-
-        if (0 < mSources.GetCount())
-        {
-            for (const KMS::DI::Container::Entry& lEntry : mSources.mInternal)
+            for (const KMS::DI::Container::Entry& lEntry : mLanguages.mInternal)
             {
-                const KMS::DI::String* lSource = dynamic_cast<const KMS::DI::String*>(lEntry.Get());
-                assert(NULL != lSource);
+                const KMS::DI::String* lLanguage = dynamic_cast<const KMS::DI::String*>(lEntry.Get());
+                assert(NULL != lLanguage);
 
-                lStr = lSource->Get();
+                KMS_EXCEPTION_ASSERT(2 == lLanguage->GetLength(), APPLICATION_USER_ERROR, "The language id must be 2 characteres", lLanguage->Get());
+            }
 
-                KMS_EXCEPTION_ASSERT(lCurrent.DoesFileExist(lStr), APPLICATION_USER_ERROR, "The source file does not exist", lStr);
+            if (0 < mSources.GetCount())
+            {
+                for (const KMS::DI::Container::Entry& lEntry : mSources.mInternal)
+                {
+                    const KMS::DI::String* lSource = dynamic_cast<const KMS::DI::String*>(lEntry.Get());
+                    assert(NULL != lSource);
+
+                    lStr = lSource->Get();
+
+                    KMS_EXCEPTION_ASSERT(lCurrent.DoesFileExist(lStr), APPLICATION_USER_ERROR, "The source file does not exist", lStr);
+                }
             }
         }
     }
