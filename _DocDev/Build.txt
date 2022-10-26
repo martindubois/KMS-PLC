@@ -15,15 +15,17 @@ Computer            _________________________________________________________
 
 Version             ______ . ______ . ______ . ______ - _____________________
 
+[ ] File "_DocUser/Documentation.html"
 [ ] File "_DocUser/KMS.ReadMe.txt"
 [ ] File "KMS-PLC/_DocUser/KMS.KMS-A.ReadMe.txt"
 [ ] Tools "PowerShell" - In the product folder
         .\Import\Binaries\Release_Static_x64\KMS-Build.exe
-
+[ ] Tools "Visual Studio" - Build KMS-PLC-Setup (Release_Static - x64)
 [ ] Tools "GIT GUI"
     - Commit all modified File with {Ma}.{Mi}.{Bu}[-{Type}] Windows as
       message
     - Push the servers
+[ ] If needed, publish the installer on GitHub.com
 
 Time and duration   ______ : ______           ______ hours and ______ minutes
 

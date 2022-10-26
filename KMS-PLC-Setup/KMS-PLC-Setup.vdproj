@@ -15,7 +15,31 @@
     {
         "Entry"
         {
+        "MsmKey" = "8:_1051F013A528415D9F2A090BB48F0566"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_B35F6EDB20F54D40A570FD07AB3A5E2A"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_B62AAEB8FD8942C69BDAE85221A06FD7"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_BC128C25841649849617274A7AB151D4"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_BD32869803B34E4D8BF4510635F45514"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -27,7 +51,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_DBB31ECAC9754B5C9790DE6EA419BDA0"
+        "MsmKey" = "8:_ECD2023E082F43D397B3EA1BEC0C855A"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -118,6 +142,46 @@
         }
         "File"
         {
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1051F013A528415D9F2A090BB48F0566"
+            {
+            "SourcePath" = "8:..\\Import\\Binaries\\Release_Static_x64\\KMS-ModbusTool.exe"
+            "TargetName" = "8:KMS-ModbusTool.exe"
+            "Tag" = "8:"
+            "Folder" = "8:_2E761AA5050D45089E65B3C87879FFE8"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B35F6EDB20F54D40A570FD07AB3A5E2A"
+            {
+            "SourcePath" = "8:..\\Import\\Binaries\\Release_Static_x64\\KMS-ComTool.exe"
+            "TargetName" = "8:KMS-ComTool.exe"
+            "Tag" = "8:"
+            "Folder" = "8:_2E761AA5050D45089E65B3C87879FFE8"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B62AAEB8FD8942C69BDAE85221A06FD7"
             {
             "SourcePath" = "8:..\\_DocUser\\KMS-PLC.ReadMe.txt"
@@ -138,10 +202,50 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BD32869803B34E4D8BF4510635F45514"
+            {
+            "SourcePath" = "8:..\\_DocUser\\Documentation.html"
+            "TargetName" = "8:Documentation.html"
+            "Tag" = "8:"
+            "Folder" = "8:_2E761AA5050D45089E65B3C87879FFE8"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C9F7DC2EB7114EC48B5331A756A11C98"
             {
             "SourcePath" = "8:..\\KMS-PLC\\_DocUser\\KMS-PLC.KMS-PLC.ReadMe.txt"
             "TargetName" = "8:KMS-PLC.KMS-PLC.ReadMe.txt"
+            "Tag" = "8:"
+            "Folder" = "8:_2E761AA5050D45089E65B3C87879FFE8"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_ECD2023E082F43D397B3EA1BEC0C855A"
+            {
+            "SourcePath" = "8:..\\Import\\Binaries\\Release_Static_x64\\KMS-ModbusSim.exe"
+            "TargetName" = "8:KMS-ModbusSim.exe"
             "Tag" = "8:"
             "Folder" = "8:_2E761AA5050D45089E65B3C87879FFE8"
             "Condition" = "8:"
@@ -343,7 +447,21 @@
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
-            "Target" = "8:_DBB31ECAC9754B5C9790DE6EA419BDA0"
+            "Target" = "8:_BC128C25841649849617274A7AB151D4"
+            "Folder" = "8:_8481E0FE395D4C59B6CDF9073D077CAE"
+            "WorkingFolder" = "8:_2E761AA5050D45089E65B3C87879FFE8"
+            "Icon" = "8:"
+            "Feature" = "8:"
+            }
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_EB09ABE585F5451BB82D850AB4EF8578"
+            {
+            "Name" = "8:Documentation.html"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_BD32869803B34E4D8BF4510635F45514"
             "Folder" = "8:_8481E0FE395D4C59B6CDF9073D077CAE"
             "WorkingFolder" = "8:_2E761AA5050D45089E65B3C87879FFE8"
             "Icon" = "8:"
@@ -748,7 +866,7 @@
         }
         "ProjectOutput"
         {
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_DBB31ECAC9754B5C9790DE6EA419BDA0"
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_BC128C25841649849617274A7AB151D4"
             {
             "SourcePath" = "8:..\\x64\\Release_Static\\KMS-PLC.exe"
             "TargetName" = "8:"
@@ -768,7 +886,7 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             "ProjectOutputGroupRegister" = "3:1"
-            "OutputConfiguration" = "8:"
+            "OutputConfiguration" = "8:Release_Static|x64"
             "OutputGroupCanonicalName" = "8:Built"
             "OutputProjectGuid" = "8:{6C3FEFB4-D8DD-4B43-ABC0-7D26AC933A3A}"
             "ShowKeyOutput" = "11:TRUE"
