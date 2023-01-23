@@ -43,7 +43,7 @@ namespace TRiLOGY
     {
         assert(NULL != aOut);
 
-        swprintf_s(aOut SizeInfoV(aOutSize_byte / sizeof(wchar_t)), L"%u:%S", GetIndex(), GetName());
+        swprintf_s(aOut SizeInfoV(aOutSize_byte / sizeof(wchar_t)), L"%u,%S", GetIndex(), GetName());
     }
 
     // Protected
