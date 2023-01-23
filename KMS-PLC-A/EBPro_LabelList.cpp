@@ -146,7 +146,7 @@ namespace EBPro
                 }
             }
 
-            std::cout << "Imported";
+            std::cout << "Imported" << std::endl;
         }
 
         if (lChanged)
@@ -155,7 +155,7 @@ namespace EBPro
         }
         else
         {
-            if (0 < mToImport_LBL.GetLength())
+            if ((0 < mToImport_LBL.GetLength()) && (lCurrent.DoesFileExist(mToImport_LBL.Get())))
             {
                 lCurrent.Delete(mToImport_LBL.Get());
             }
