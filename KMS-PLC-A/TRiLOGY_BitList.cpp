@@ -77,7 +77,7 @@ namespace TRiLOGY
             }
 
             std::cout << KMS::Console::Color::RED;
-            std::cout << "ERROR  The index " << aIndex << " is alreadt used";
+            std::cout << "ERROR  The index " << aIndex << " is already used";
             std::cout << KMS::Console::Color::WHITE << std::endl;
             return false;
         }
@@ -85,7 +85,7 @@ namespace TRiLOGY
         if (aIndex != lObject->GetIndex())
         {
             std::cout << KMS::Console::Color::RED;
-            std::cout << "ERROR  The name " << aName << " is alreadt used for another index";
+            std::cout << "ERROR  The name " << aName << " is already used for another index";
             std::cout << KMS::Console::Color::WHITE << std::endl;
         }
 
