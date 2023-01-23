@@ -91,7 +91,7 @@ namespace EBPro
         mName     = lName;
     }
 
-    Address::Address(const char* aName, AddressType aType, unsigned int aAddr, unsigned int aLineNo)
+    Address::Address(const char* aName, AddressType aType, uint16_t aAddr, unsigned int aLineNo)
         : mDataType("Undesignated")
         , mLineNo(aLineNo)
         , mName(aName)

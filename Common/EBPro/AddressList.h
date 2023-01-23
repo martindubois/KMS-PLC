@@ -11,6 +11,7 @@
 #include <vector>
 
 // ===== Import =============================================================
+#include <KMS/DI/Array.h>
 #include <KMS/DI/Dictionary.h>
 #include <KMS/DI/String_Expand.h>
 #include <KMS/Text/File_ASCII.h>
@@ -36,6 +37,8 @@ namespace EBPro
 
         ~AddressList();
 
+        void Import();
+
         void Import(const ::AddressList& aAL);
 
         void Parse();
@@ -60,10 +63,13 @@ namespace EBPro
 
         Address* Find_ByName(const char* aName);
 
+        bool Import(const char* aName, AddressType aType, uint16_t aAddr);
+
         KMS::Text::File_ASCII mFile_CSV;
 
         // ===== Configurable attributes ====================================
         KMS::DI::String_Expand mExported_CSV;
+        KMS::DI::Array         mSources;
         KMS::DI::String_Expand mToImport_CSV;
 
     };

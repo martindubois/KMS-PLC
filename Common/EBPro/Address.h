@@ -23,7 +23,7 @@ namespace EBPro
 
         Address(const char* aLine, unsigned int aLineNo);
 
-        Address(const char* aName, AddressType aType, unsigned int aAddr, unsigned int aLineNo);
+        Address(const char* aName, AddressType aType, uint16_t aAddr, unsigned int aLineNo);
 
         const char * GetAddress       () const;
         uint16_t     GetAddress_UInt16() const;
