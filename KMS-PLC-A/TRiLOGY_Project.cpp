@@ -24,6 +24,11 @@ static const KMS::Cfg::MetaData MD_FILE_NAME_PC6        ("FileName_PC6 = {Path}"
 static const KMS::Cfg::MetaData MD_SHARED_ADDRESS_REG_EX("SharedAddressRegEx = {RegEx}");
 static const KMS::Cfg::MetaData MD_SOURCES              ("Sources += {Path}");
 
+// Static function declarations
+// //////////////////////////////////////////////////////////////////////////
+
+static void Instruction_Write();
+
 namespace TRiLOGY
 {
 
@@ -60,7 +65,9 @@ namespace TRiLOGY
         {
             Reparse();
 
-            std::cout << "Cleaned - " << lCount << " elements - Use the Write command to save the change" << std::endl;
+            std::cout << "Cleaned - " << lCount << " elements\n";
+
+            Instruction_Write();
         }
         else
         {
@@ -159,7 +166,9 @@ namespace TRiLOGY
                 Reparse();
             }
 
-            std::cout << "Imported - Use the Write command to save the change" << std::endl;
+            std::cout << "Imported\n";
+
+            Instruction_Write();
         }
         else
         {
@@ -378,4 +387,15 @@ namespace TRiLOGY
         Parse();
     }
 
+}
+
+// Static function declarations
+// //////////////////////////////////////////////////////////////////////////
+
+void Instruction_Write()
+{
+    std::cout << "INSTRUCTION\n";
+    //                     1           2         3         4         5         6         7
+    //            123456789012 345678 90123456789012345678901234567890123456789012345678901234567 89
+    std::cout << "    Use the \"Write\" command to save the changes                           [ ]" << std::endl;
 }

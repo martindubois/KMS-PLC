@@ -27,6 +27,8 @@ static const KMS::Cfg::MetaData MD_TO_IMPORT_CSV("ToImport_CSV = {Path}");
 // Static function declarations
 // //////////////////////////////////////////////////////////////////////////
 
+static void Instruction_ToImport(const char* aImp, const char* aExp);
+
 static AddressType ToAddressType(const char* aIn);
 
 namespace EBPro
@@ -84,12 +86,14 @@ namespace EBPro
                 }
             }
 
+            std::cout << "Imported" << std::endl;
+
             if (lChanged && (0 < mToImport_CSV.GetLength()))
             {
                 mFile_CSV.Write(KMS::File::Folder::CURRENT, mToImport_CSV.Get());
-            }
 
-            std::cout << "Imported" << std::endl;
+                Instruction_ToImport(mToImport_CSV.Get(), mExported_CSV.Get());
+            }
         }
     }
 
@@ -128,6 +132,8 @@ namespace EBPro
         if (lChanged && (0 < mToImport_CSV.GetLength()))
         {
             mFile_CSV.Write(KMS::File::Folder::CURRENT, mToImport_CSV.Get());
+
+            Instruction_ToImport(mToImport_CSV.Get(), mExported_CSV.Get());
         }
     }
 
@@ -264,6 +270,36 @@ namespace EBPro
 
 // Static function declarations
 // //////////////////////////////////////////////////////////////////////////
+
+void Instruction_ToImport(const char* aImp, const char* aExp)
+{
+    assert(NULL != aImp);
+    assert(NULL != aExp);
+
+    std::cout << "INSTRUCTION\n";
+    std::cout << "    Tool \"EBPro\"\n";
+    //                     1           2          3          4          5          6          7
+    //            1234567890 12345678 9012345678 90123456 7890123456 78901234 567890 123456789012   3456789
+    std::cout << "    - Tab \"Project\" - Group \"Library\" - Click \"Address\" ==> \"Address Tag\n";
+    //            1234567890123 45678901234567890 12345678901234567890123456789012345678901234567   89
+    std::cout << "      Library\" dialog                                                      [ ]\n";
+    //            1234567890123456 78901234567890 123456 78901 234567890123456789012345678901234567   89
+    std::cout << "        - Click \"Import CSV...\" ==> \"Open\" dialog                         [ ]\n";
+    std::cout << "            - Select \"" << aImp << "\"\n";
+    //            123456789012345678901234 56789 012345678901234567890123456789012345678901234567   89
+    std::cout << "              and click \"Open\"                                            [ ]\n";
+    //            1234567890123456 78901234567890 123456 78901 234567890123456789012345678901234567   89
+    std::cout << "        - Click \"Export CSV...\" ==> \"Open\" dialog                         [ ]\n";
+    std::cout << "            - Select \"" << aExp << "\"\n";
+    //            123456789012345678901234 56789 012345678901234567890123456789012345678901234567   89
+    std::cout << "              and click \"Open\"                                            [ ]\n";
+    //            1234567890123456 78901 234 56789 012345678901234567890123456789012345678901234567   89
+    std::cout << "        - Click \"Exit\"                                                      [ ]\n";
+    std::cout << "Presse ENTER to continue" << std::endl;
+
+    char lLine[LINE_LENGTH];
+    fgets(lLine, sizeof(lLine), stdin);
+}
 
 AddressType ToAddressType(const char* aIn)
 {
