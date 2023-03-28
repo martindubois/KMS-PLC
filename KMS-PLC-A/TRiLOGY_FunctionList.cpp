@@ -1,6 +1,6 @@
 
 // Author    KMS - Martin Dubois, P. Eng.
-// Copyright (C) 2022 KMS
+// Copyright (C) 2022-2023 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGY_FunctionList.cpp
@@ -42,6 +42,7 @@ namespace TRiLOGY
         unsigned int lLineCount = aFile_PC6.GetLineCount();
         unsigned int lIndex;
         unsigned int lLineNo    = aLineNo;
+        char         lMsg[64];
 
         for (; lLineNo < lLineCount; lLineNo++)
         {
@@ -55,7 +56,9 @@ namespace TRiLOGY
                 if (NULL != lFunction)
                 {
                     std::pair<ByIndex::iterator, bool> lBI = mObjects_ByIndex.insert(ByIndex::value_type(lIndex, lFunction));
-                    KMS_EXCEPTION_ASSERT(lBI.second, APPLICATION_ERROR, "A function with the same index already exist", lIndex);
+
+                    sprintf_s(lMsg, "Line %u  A function already exist at index %u", lLineNo, lIndex);
+                    KMS_EXCEPTION_ASSERT(lBI.second, APPLICATION_ERROR, lMsg, "");
                 }
 
                 lLineNo++;
@@ -66,7 +69,9 @@ namespace TRiLOGY
                 unsigned int lLength;
 
                 int lRet = swscanf_s(lLine, L"Fn#%u,%u", &lIndex, &lLength);
-                KMS_EXCEPTION_ASSERT(2 == lRet, APPLICATION_ERROR, "Corrupted PC6 file", lRet);
+
+                sprintf_s(lMsg, "Line %u  Corrupted PC6 file", lLineNo);
+                KMS_EXCEPTION_ASSERT(2 == lRet, APPLICATION_ERROR, lMsg, lRet);
 
                 lFunction = new Function(lIndex, lLength);
             }
@@ -75,7 +80,9 @@ namespace TRiLOGY
         if (NULL != lFunction)
         {
             std::pair<ByIndex::iterator, bool> lBI = mObjects_ByIndex.insert(ByIndex::value_type(lIndex, lFunction));
-            KMS_EXCEPTION_ASSERT(lBI.second, APPLICATION_ERROR, "A function with the same index already exist", lIndex);
+
+            sprintf_s(lMsg, "Line %u  A function already exist at index %u", aLineNo, lIndex);
+            KMS_EXCEPTION_ASSERT(lBI.second, APPLICATION_ERROR, lMsg, "");
         }
 
         std::cout << "    " << GetCount() << " " << "functions" << std::endl;
@@ -94,10 +101,13 @@ namespace TRiLOGY
             if (0 == wcscmp(L"~END_CUSTFNLABEL~\r", lLine)) { SetLineNo_End(lLineNo); lLineNo++; break; }
 
             unsigned int lIndex;
+            char         lMsg[64 + NAME_LENGTH];
             char         lName[NAME_LENGTH];
 
             int lRet = swscanf_s(lLine, L"%u,%S", &lIndex, lName SizeInfo(lName));
-            KMS_EXCEPTION_ASSERT(2 == lRet, APPLICATION_ERROR, "Corrupted PC6 file", lRet);
+
+            sprintf_s(lMsg, "Line %u  Corrupted PC6 file", aLineNo);
+            KMS_EXCEPTION_ASSERT(2 == lRet, APPLICATION_ERROR, lMsg, lRet);
 
             Function* lFunction = Find_ByIndex(lIndex);
             if (NULL == lFunction)
@@ -105,13 +115,17 @@ namespace TRiLOGY
                 lFunction = new Function(lIndex, 0);
 
                 std::pair<ByIndex::iterator, bool> lBI = mObjects_ByIndex.insert(ByIndex::value_type(lIndex, lFunction));
-                KMS_EXCEPTION_ASSERT(lBI.second, APPLICATION_ERROR, "A function with the same index already exist", lIndex);
+
+                sprintf_s(lMsg, "Line %u  A function already exist at index %u", aLineNo, lIndex);
+                KMS_EXCEPTION_ASSERT(lBI.second, APPLICATION_ERROR, lMsg, "");
             }
 
             lFunction->SetName(lName, lLineNo);
 
             std::pair<ByName::iterator, bool> lBI = mObjects_ByName.insert(ByName::value_type(lName, lFunction));
-            KMS_EXCEPTION_ASSERT(lBI.second, APPLICATION_ERROR, "A function with the same name already exist", lName);
+
+            sprintf_s(lMsg, "Line %u  A function named \"%s\" already exist", lLineNo, lName);
+            KMS_EXCEPTION_ASSERT(lBI.second, APPLICATION_ERROR, lMsg, "");
         }
 
         std::cout << "    " << GetCount() << " " << "function names" << std::endl;

@@ -1,6 +1,6 @@
 
 // Author    KMS - Martin Dubois, P. Eng.
-// Copyright (C) 2022 KMS
+// Copyright (C) 2022-2023 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
 // File      KMS-PLC-A/EBPro_Address.cpp
@@ -51,9 +51,12 @@ namespace EBPro
         char lAddress [NAME_LENGTH];
         char lComment [LINE_LENGTH];
         char lDataType[NAME_LENGTH];
+        char lMsg     [LINE_LENGTH];
         char lName    [NAME_LENGTH];
         char lType    [NAME_LENGTH];
         char lSubType [NAME_LENGTH];
+
+        sprintf_s(lMsg, "Line %u  The CSV file is corrupted", aLineNo);
 
         int lRet = sscanf_s(aLine, "%[^,],%[^,],%[^,],%[^,],%[^,],%s",
             lName SizeInfo(lName), lType SizeInfo(lType), lSubType SizeInfo(lSubType),
@@ -65,10 +68,11 @@ namespace EBPro
             lRet = sscanf_s(aLine, "%[^,],%[^,],%[^,],%[^,],,%s",
                 lName SizeInfo(lName), lType SizeInfo(lType), lSubType SizeInfo(lSubType),
                 lAddress SizeInfo(lAddress), lDataType SizeInfo(lDataType));
-            KMS_EXCEPTION_ASSERT(5 == lRet, APPLICATION_ERROR, "Corrupted CSV file", aLine);
+
+            KMS_EXCEPTION_ASSERT(5 == lRet, APPLICATION_ERROR, lMsg, aLine);
             break;
 
-        default: KMS_EXCEPTION(APPLICATION_ERROR, "Corrupted CSV file", aLine);
+        default: KMS_EXCEPTION(APPLICATION_ERROR, lMsg, aLine);
         }
 
         if (0 == strcmp("Local HMI", lType))
@@ -126,7 +130,9 @@ namespace EBPro
 
     bool Address::Set(AddressType aType, unsigned int aAddr)
     {
-        KMS_EXCEPTION_ASSERT(mType == aType, APPLICATION_ERROR, "Imported address type does not match the current type", mName.c_str());
+        char lMsg[128 + NAME_LENGTH];
+        sprintf_s(lMsg, "The improted address type of \"%s\" does not match the current type", mName.c_str());
+        KMS_EXCEPTION_ASSERT(mType == aType, APPLICATION_ERROR, lMsg, "");
 
         bool lResult = GetAddress_UInt16() != aAddr;
         if (lResult)

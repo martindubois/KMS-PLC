@@ -1,6 +1,6 @@
 
 // Author    KMS - Martin Dubois, P. Eng.
-// Copyright (C) 2022 KMS
+// Copyright (C) 2022-2023 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
 // File      KMS-PLC-A/EBPro_AddressList.cpp
@@ -176,7 +176,9 @@ namespace EBPro
         {
             const char* lStr = mExported_CSV.Get();
 
-            KMS_EXCEPTION_ASSERT(lCurrent.DoesFileExist(lStr), APPLICATION_USER_ERROR, "The exported CSV file does not exist", lStr);
+            char lMsg[64 + PATH_LENGTH];
+            sprintf_s(lMsg, "\"%s\" does not exist", lStr);
+            KMS_EXCEPTION_ASSERT(lCurrent.DoesFileExist(lStr), APPLICATION_USER_ERROR, lMsg, "");
         }
     }
 
@@ -275,5 +277,8 @@ AddressType ToAddressType(const char* aIn)
     if (0 == strcmp("MODBUS_RTU_1X", aIn)) { return AddressType::MODBUS_RTU_1X     ; }
     if (0 == strcmp("MODBUS_RTU_4X", aIn)) { return AddressType::MODBUS_RTU_4X     ; }
 
-    KMS_EXCEPTION(APPLICATION_USER_ERROR, "Invalid address type", aIn);
+    char lMsg[64 + NAME_LENGTH];
+    sprintf_s(lMsg, "\"%s\" is not a valid address type", aIn);
+
+    KMS_EXCEPTION(APPLICATION_USER_ERROR, lMsg, "");
 }

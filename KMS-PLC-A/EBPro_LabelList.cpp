@@ -1,6 +1,6 @@
 
 // Author    KMS - Martin Dubois, P. Eng.
-// Copyright (C) 2022 KMS
+// Copyright (C) 2022-2023 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
 // File      KMS-PLC-A/EBPro_LabelList.cpp
@@ -70,7 +70,10 @@ namespace EBPro
             FILE* lFile;
 
             errno_t lErr = fopen_s(&lFile, lPath.c_str(), "w,ccs=UTF-8");
-            KMS_EXCEPTION_ASSERT(0 == lErr, APPLICATION_ERROR, "Cannot open the output LBL.IN0 file", lPath.c_str());
+
+            char lMsg[64 + PATH_LENGTH];
+            sprintf_s(lMsg, "Cannot open \"%s\" for writing", lPath.c_str());
+            KMS_EXCEPTION_ASSERT(0 == lErr, APPLICATION_ERROR, lMsg, lErr);
 
             assert(NULL != lFile);
 
@@ -171,7 +174,10 @@ namespace EBPro
             FILE* lFile;
 
             errno_t lErr = fopen_s(&lFile, mExported_LBL.Get(), "rb");
-            KMS_EXCEPTION_ASSERT(0 == lErr, APPLICATION_ERROR, "Cannot open the exported LBL file", mExported_LBL.Get());
+
+            char lMsg[64 + PATH_LENGTH];
+            sprintf_s(lMsg, "Cannot open \"%s\" for reading", mExported_LBL.Get());
+            KMS_EXCEPTION_ASSERT(0 == lErr, APPLICATION_ERROR, lMsg, lErr);
 
             assert(NULL != lFile);
 
@@ -213,7 +219,10 @@ namespace EBPro
         {
             const char* lStr = mExported_LBL.Get();
 
-            KMS_EXCEPTION_ASSERT(lCurrent.DoesFileExist(lStr), APPLICATION_ERROR, "The exported LBL file does not exist", lStr);
+            char lMsg[64 + PATH_LENGTH];
+
+            sprintf_s(lMsg, "\"%s\" does not exist", lStr);
+            KMS_EXCEPTION_ASSERT(lCurrent.DoesFileExist(lStr), APPLICATION_ERROR, lMsg, "");
 
             KMS_EXCEPTION_ASSERT(0 < mLanguages.GetCount(), APPLICATION_USER_ERROR, "The configuration file must define language", "");
 
@@ -222,7 +231,8 @@ namespace EBPro
                 const KMS::DI::String* lLanguage = dynamic_cast<const KMS::DI::String*>(lEntry.Get());
                 assert(NULL != lLanguage);
 
-                KMS_EXCEPTION_ASSERT(2 == lLanguage->GetLength(), APPLICATION_USER_ERROR, "The language id must be 2 characteres", lLanguage->Get());
+                sprintf_s(lMsg, "\"%s\" is not a valid language id", lLanguage->Get());
+                KMS_EXCEPTION_ASSERT(2 == lLanguage->GetLength(), APPLICATION_USER_ERROR, lMsg, "");
             }
 
             if (0 < mSources.GetCount())
@@ -234,7 +244,8 @@ namespace EBPro
 
                     lStr = lSource->Get();
 
-                    KMS_EXCEPTION_ASSERT(lCurrent.DoesFileExist(lStr), APPLICATION_USER_ERROR, "The source file does not exist", lStr);
+                    sprintf_s(lMsg, "\"%s\" does not exist", lStr);
+                    KMS_EXCEPTION_ASSERT(lCurrent.DoesFileExist(lStr), APPLICATION_USER_ERROR, lMsg, "");
                 }
             }
         }
@@ -344,7 +355,10 @@ namespace EBPro
             FILE* lFile;
 
             errno_t lErr = fopen_s(&lFile, mToImport_LBL.Get(), "wb");
-            KMS_EXCEPTION_ASSERT(0 == lErr, APPLICATION_ERROR, "Cannot open the output LBL file", mToImport_LBL.Get());
+
+            char lMsg[64 + PATH_LENGTH];
+            sprintf_s(lMsg, "Cannot open \"%s\" for writing", mToImport_LBL.Get());
+            KMS_EXCEPTION_ASSERT(0 == lErr, APPLICATION_ERROR, lMsg, lErr);
 
             assert(NULL != lFile);
 

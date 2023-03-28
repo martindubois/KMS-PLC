@@ -1,6 +1,6 @@
 
 // Author    KMS - Martin Dubois, P. Eng.
-// Copyright (C) 2022 KMS
+// Copyright (C) 2022-2023 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGY_ConstantList.cpp
@@ -23,7 +23,10 @@ namespace TRiLOGY
         assert(NULL != aConstant);
 
         std::pair<ByName::iterator, bool> lBN = mConstants_ByName.insert(ByName::value_type(aConstant->GetName(), aConstant));
-        KMS_EXCEPTION_ASSERT(lBN.second, APPLICATION_ERROR, "A constant with same name already exist", aConstant->GetName());
+
+        char lMsg[64 + NAME_LENGTH];
+        sprintf_s(lMsg, "A constant named \"%s\" already exist", aConstant->GetName());
+        KMS_EXCEPTION_ASSERT(lBN.second, APPLICATION_ERROR, lMsg, "");
     }
 
     void ConstantList::Clear() { mConstants_ByName.clear(); }

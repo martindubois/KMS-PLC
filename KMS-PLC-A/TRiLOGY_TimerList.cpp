@@ -1,6 +1,6 @@
 
 // Author    KMS - Martin Dubois, P. Eng.
-// Copyright (C) 2022 KMS
+// Copyright (C) 2022-2023 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGY_TimerList.cpp
@@ -32,7 +32,10 @@ namespace TRiLOGY
         char         lName[NAME_LENGTH];
 
         int lRet = swscanf_s(aLine, L"%u,%S %u", &lIndex, lName SizeInfo(lName), &lInit);
-        KMS_EXCEPTION_ASSERT(3 == lRet, APPLICATION_ERROR, "Invalid timer line", lRet);
+
+        char lMsg[64];
+        sprintf_s(lMsg, "Line %u  Invalid timer line", aLineNo);
+        KMS_EXCEPTION_ASSERT(3 == lRet, APPLICATION_ERROR, lMsg, lRet);
 
         Timer* lTimer = new Timer(lName, lIndex, aLineNo, lInit, 0);
 
