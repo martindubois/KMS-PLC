@@ -1,6 +1,6 @@
 
 // Author    KMS - Martin Dubois, P. Eng.
-// Copyright (C) 2022 KMS
+// Copyright (C) 2022-2023 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGY_Object.cpp
@@ -16,8 +16,10 @@ namespace TRiLOGY
     // Public
     // //////////////////////////////////////////////////////////////////////
 
-    const unsigned int Object::FLAG_NOT_USED  = 0x00000001;
-    const unsigned int Object::FLAG_TO_INSERT = 0x00000002;
+    const unsigned int Object::FLAG_NOT_USED           = 0x00000001;
+    const unsigned int Object::FLAG_SINGLE_USE_INFO    = 0x00000002;
+    const unsigned int Object::FLAG_SINGLE_USE_WARNING = 0x00000004;
+    const unsigned int Object::FLAG_TO_INSERT          = 0x00000008;
 
     Object::Object(const char* aName, unsigned int aIndex, unsigned int aLineNo, unsigned int aFlags)
         : mFlags(aFlags), mIndex(aIndex), mLineNo(aLineNo), mName(aName)

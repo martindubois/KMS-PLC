@@ -1,6 +1,6 @@
 
 // Author    KMS - Martin Dubois, P. Eng.
-// Copyright (C) 2022 KMS
+// Copyright (C) 2022-2023 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGY_ObjectList.cpp
@@ -134,7 +134,7 @@ namespace TRiLOGY
         return lResult;
     }
 
-    unsigned int ObjectList::Parse(KMS::Text::File_UTF16* aFile_PC6, unsigned int aLineNo)
+    unsigned int ObjectList::Parse(KMS::Text::File_UTF16* aFile_PC6, unsigned int aLineNo, unsigned int aFlags)
     {
         assert(NULL != mEndMark);
 
@@ -150,7 +150,7 @@ namespace TRiLOGY
 
             if (0 == wcscmp(mEndMark, lLine)) { SetLineNo_End(lLineNo); lLineNo++; break; }
 
-            AddObject(lLine, lLineNo);
+            AddObject(lLine, lLineNo, aFlags);
         }
 
         std::cout << "    " << GetCount() << " " << GetElementName() << "s" << std::endl;
@@ -183,8 +183,16 @@ namespace TRiLOGY
                 break;
 
             case 2:
-                std::cout << "    INFO  The " << mElementName << " named " << lObject->GetName();
-                std::cout << " (" << lObject->GetIndex() << ") is used only once" << std::endl;
+                if (lObject->TestFlag(Object::FLAG_SINGLE_USE_WARNING))
+                {
+                    std::cout << KMS::Console::Color::YELLOW << "    WARNING  The " << mElementName << " named " << lObject->GetName();
+                    std::cout << " (" << lObject->GetIndex() << ") is used only once" << KMS::Console::Color::WHITE << std::endl;
+                }
+                else if (lObject->TestFlag(Object::FLAG_SINGLE_USE_INFO))
+                {
+                    std::cout << "    INFO  The " << mElementName << " named " << lObject->GetName();
+                    std::cout << " (" << lObject->GetIndex() << ") is used only once" << std::endl;
+                }
                 break;
             }
         }
@@ -208,14 +216,20 @@ namespace TRiLOGY
     {
         assert(NULL != aObject);
 
+        char lMsg[64 + NAME_LENGTH];
+
         std::pair<ByIndex::iterator, bool> lBI = mObjects_ByIndex.insert(ObjectList::ByIndex::value_type(aObject->GetIndex(), aObject));
-        KMS_EXCEPTION_ASSERT(lBI.second, APPLICATION_ERROR, "An object with the same index already exist", aObject->GetIndex());
+
+        sprintf_s(lMsg, "An object with index %u already exist", aObject->GetIndex());
+        KMS_EXCEPTION_ASSERT(lBI.second, APPLICATION_ERROR, lMsg, "");
 
         std::pair<ByName::iterator, bool> lBN = mObjects_ByName.insert(ObjectList::ByName::value_type(aObject->GetName(), aObject));
-        KMS_EXCEPTION_ASSERT(lBN.second, APPLICATION_ERROR, "An object with the same name already exist", aObject->GetName());
+
+        sprintf_s(lMsg, "An object named \"%s\" already exist", aObject->GetName());
+        KMS_EXCEPTION_ASSERT(lBN.second, APPLICATION_ERROR, lMsg, "");
     }
 
-    void ObjectList::AddObject(const wchar_t* aLine, unsigned int aLineNo)
+    void ObjectList::AddObject(const wchar_t* aLine, unsigned int aLineNo, unsigned int aFlags)
     {
         assert(NULL != aLine);
 
@@ -223,9 +237,12 @@ namespace TRiLOGY
         char         lName[NAME_LENGTH];
 
         int lRet = swscanf_s(aLine, L"%u,%S", &lIndex, lName SizeInfo(lName));
-        KMS_EXCEPTION_ASSERT(2 == lRet, APPLICATION_ERROR, "Invalid bit line", lRet);
 
-        Object* lObject = new Object(lName, lIndex, aLineNo, 0);
+        char lMsg[64];
+        sprintf_s(lMsg, "Line %u  Invalid bit line", aLineNo);
+        KMS_EXCEPTION_ASSERT(2 == lRet, APPLICATION_ERROR, lMsg, lRet);
+
+        Object* lObject = new Object(lName, lIndex, aLineNo, aFlags);
 
         AddObject(lObject);
     }
@@ -248,7 +265,9 @@ namespace TRiLOGY
             lLineNo = lIt->second->GetLineNo();
         }
 
-        KMS_EXCEPTION(APPLICATION_ERROR, "Too many", mElementName);
+        char lMsg[64 + NAME_LENGTH];
+        sprintf_s(lMsg, "Line %u  Too many %s", aLineNo, mElementName);
+        KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
     }
 
     unsigned int ObjectList::FindLineNo(unsigned int aIndex)
@@ -265,7 +284,9 @@ namespace TRiLOGY
             lLineNo = lIt->second->GetLineNo();
         }
 
-        KMS_EXCEPTION(APPLICATION_ERROR, "Too many", mElementName);
+        char lMsg[64 + NAME_LENGTH];
+        sprintf_s(lMsg, "Too many %s", mElementName);
+        KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
     }
 
 }

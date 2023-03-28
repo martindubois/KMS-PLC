@@ -1,6 +1,6 @@
 
 // Author    KMS - Martin Dubois, P. Eng.
-// Copyright (C) 2022 KMS
+// Copyright (C) 2022-2023 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGY_DefineList.cpp
@@ -145,7 +145,7 @@ namespace TRiLOGY
     {
         assert(NULL != aFile_PC6);
 
-        unsigned int lResult = ObjectList::Parse(aFile_PC6, aLineNo);
+        unsigned int lResult = ObjectList::Parse(aFile_PC6, aLineNo, 0);
 
         std::cout << "    " << mConstants.GetCount() << " constants\n";
         std::cout << "    " << mWords    .GetCount() << " words" << std::endl;
@@ -168,10 +168,13 @@ namespace TRiLOGY
         assert(NULL != aLine);
 
         unsigned int lIndex;
+        char         lMsg[64];
         char         lText[LINE_LENGTH];
 
         int lRet = swscanf_s(aLine, L"%u,%S", &lIndex, lText SizeInfo(lText));
-        KMS_EXCEPTION_ASSERT(2 == lRet, APPLICATION_ERROR, "Invalid define line", lRet);
+
+        sprintf_s(lMsg, "Line %u  Invalid define line", aLineNo);
+        KMS_EXCEPTION_ASSERT(2 == lRet, APPLICATION_ERROR, lMsg, lRet);
 
         char         lComment[NAME_LENGTH];
         Object     * lDefine;
@@ -200,7 +203,7 @@ namespace TRiLOGY
         }
         else
         {
-            KMS_EXCEPTION(APPLICATION_ERROR, "Invalid define line", "");
+            KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
         }
 
         ObjectList::AddObject(lDefine);

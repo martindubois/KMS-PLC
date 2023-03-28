@@ -4,6 +4,8 @@ Copyright (C) 2022-2023 KMS
 Product   KMS-PLC
 File      KMS-PLC/_DocUser/KMS.ReadMe.txt
 
+* TRiLOGY - No warning for a define used only once (KP-11)
+
 0.0.7-dev Windows 2023-01-23
 * EBPro::AddressList - Import addresses (KP-12)
 - KP-13 and 15 fixed

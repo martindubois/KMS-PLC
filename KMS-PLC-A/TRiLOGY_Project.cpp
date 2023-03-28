@@ -1,6 +1,6 @@
 
 // Author    KMS - Martin Dubois, P. Eng.
-// Copyright (C) 2022 KMS
+// Copyright (C) 2022-2023 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGY_Project.cpp
@@ -177,11 +177,11 @@ namespace TRiLOGY
             unsigned int   lLineNo = 1;
             unsigned int   lLineCount = mFile_PC6.GetLineCount();
 
-            lLineNo = mInputs    .Parse(&mFile_PC6, lLineNo);
-            lLineNo = mOutputs   .Parse(&mFile_PC6, lLineNo);
-            lLineNo = mRelays    .Parse(&mFile_PC6, lLineNo);
-            lLineNo = mTimers    .Parse(&mFile_PC6, lLineNo);
-            lLineNo = mCounters  .Parse(&mFile_PC6, lLineNo);
+            lLineNo = mInputs  .Parse(&mFile_PC6, lLineNo, TRiLOGY::Object::FLAG_SINGLE_USE_INFO);
+            lLineNo = mOutputs .Parse(&mFile_PC6, lLineNo, TRiLOGY::Object::FLAG_SINGLE_USE_INFO);
+            lLineNo = mRelays  .Parse(&mFile_PC6, lLineNo, TRiLOGY::Object::FLAG_SINGLE_USE_INFO);
+            lLineNo = mTimers  .Parse(&mFile_PC6, lLineNo, TRiLOGY::Object::FLAG_SINGLE_USE_WARNING);
+            lLineNo = mCounters.Parse(&mFile_PC6, lLineNo, TRiLOGY::Object::FLAG_SINGLE_USE_WARNING);
 
             // ===== Circuits ===============================================
             for (; lLineNo < lLineCount; lLineNo++)
@@ -222,9 +222,12 @@ namespace TRiLOGY
     {
         KMS::File::Folder lCurrent(KMS::File::Folder::Id::CURRENT);
 
+        char lMsg[64 + PATH_LENGTH];
+
         if (0 < mFileName_PC6.GetLength())
         {
-            KMS_EXCEPTION_ASSERT(lCurrent.DoesFileExist(mFileName_PC6.Get()), APPLICATION_USER_ERROR, "The .PC6 file does not exist", mFileName_PC6.Get());
+            sprintf_s(lMsg, "\"%s\" does not exist", mFileName_PC6.Get());
+            KMS_EXCEPTION_ASSERT(lCurrent.DoesFileExist(mFileName_PC6.Get()), APPLICATION_USER_ERROR, lMsg, "");
         }
 
         for (const KMS::DI::Container::Entry& lEntry : mSources.mInternal)
@@ -232,7 +235,8 @@ namespace TRiLOGY
             const KMS::DI::String* lSource = dynamic_cast<const KMS::DI::String*>(lEntry.Get());
             assert(NULL != lSource);
 
-            KMS_EXCEPTION_ASSERT(lCurrent.DoesFileExist(lSource->Get()), APPLICATION_USER_ERROR, "The source file does not exist", lSource->Get());
+            sprintf_s(lMsg, "\"%s\" does not exist", lSource->Get());
+            KMS_EXCEPTION_ASSERT(lCurrent.DoesFileExist(lSource->Get()), APPLICATION_USER_ERROR, lMsg, "");
         }
     }
 

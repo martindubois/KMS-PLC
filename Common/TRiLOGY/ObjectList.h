@@ -1,6 +1,6 @@
 
 // Author    KMS - Martin Dubois, P. Eng.
-// Copyright (C) 2022 KMS
+// Copyright (C) 2022-2023 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
 // File      Common/TRiLOGY/ObjectList.h
@@ -43,7 +43,7 @@ namespace TRiLOGY
 
         unsigned int Clean();
 
-        unsigned int Parse(KMS::Text::File_UTF16* aFile_PC6, unsigned int aLineNo);
+        unsigned int Parse(KMS::Text::File_UTF16* aFile_PC6, unsigned int aLineNo, unsigned int aFlags);
 
         void Verify(const KMS::Text::File_UTF16& aFile_CP6);
 
@@ -60,7 +60,7 @@ namespace TRiLOGY
 
         void AddObject(Object* aObject);
 
-        virtual void AddObject(const wchar_t* aLine, unsigned int aLineNo);
+        virtual void AddObject(const wchar_t* aLine, unsigned int aLineNo, unsigned int aFlags);
 
         void FindIndexAndLineNo(unsigned int* aIndex, unsigned int* aLineNo);
 

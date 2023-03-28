@@ -1,6 +1,6 @@
 
 // Author    KMS - Martin Dubois, P. Eng.
-// Copyright (C) 2022 KMS
+// Copyright (C) 2022-2023 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGY_Word.cpp
@@ -17,7 +17,7 @@ namespace TRiLOGY
     // //////////////////////////////////////////////////////////////////////
 
     Word::Word(const char* aName, unsigned int aIndex, unsigned int aLineNo, unsigned int aOffset, const char* aComment, unsigned int aFlags)
-        : Object(aName, aIndex, aLineNo, aFlags), mComment(aComment), mOffset(aOffset)
+        : Object(aName, aIndex, aLineNo, aFlags | FLAG_SINGLE_USE_INFO), mComment(aComment), mOffset(aOffset)
     {
         assert(NULL != aName);
     }
