@@ -40,7 +40,8 @@ namespace TRiLOGY
 
     protected:
 
-        virtual void AddObject(const wchar_t* aLine, unsigned int aLineNo);
+        // ===== ObjectList =================================================
+        virtual void AddObject(const wchar_t* aLine, unsigned int aLineNo, unsigned int aFlags);
 
     private:
 

@@ -17,6 +17,8 @@
 
 #include "../Common/TRiLOGY/DefineList.h"
 
+using namespace KMS;
+
 namespace TRiLOGY
 {
 
@@ -55,9 +57,9 @@ namespace TRiLOGY
         Constant* lConstant = dynamic_cast<Constant*>(lObject);
         if (NULL == lConstant)
         {
-            std::cout << KMS::Console::Color::RED;
+            std::cout << Console::Color::RED;
             std::cout << "ERROR  The name " << aName << " is already used for a word";
-            std::cout << KMS::Console::Color::WHITE << std::endl;
+            std::cout << Console::Color::WHITE << std::endl;
             return false;
         }
 
@@ -84,9 +86,9 @@ namespace TRiLOGY
         Word* lWord = dynamic_cast<Word*>(lObject);
         if (NULL == lWord)
         {
-            std::cout << KMS::Console::Color::RED;
+            std::cout << Console::Color::RED;
             std::cout << "ERROR  The name " << aName << " is already used for a constant";
-            std::cout << KMS::Console::Color::WHITE << std::endl;
+            std::cout << Console::Color::WHITE << std::endl;
             return false;
         }
 
@@ -101,9 +103,9 @@ namespace TRiLOGY
             const Word* lWord = mWords.Find_ByOffset(aOffset);
             if (NULL != lWord)
             {
-                std::cout << KMS::Console::Color::RED;
+                std::cout << Console::Color::RED;
                 std::cout << "ERROR  The offset " << aOffset << " is already used";
-                std::cout << KMS::Console::Color::WHITE << std::endl;
+                std::cout << Console::Color::WHITE << std::endl;
                 return false;
             }
 
@@ -124,24 +126,24 @@ namespace TRiLOGY
         Word* lWord = dynamic_cast<Word*>(lObject);
         if (NULL == lWord)
         {
-            std::cout << KMS::Console::Color::RED;
+            std::cout << Console::Color::RED;
             std::cout << "ERROR  The name " << aName << " is already used for a constant";
-            std::cout << KMS::Console::Color::WHITE << std::endl;
+            std::cout << Console::Color::WHITE << std::endl;
             return false;
         }
 
         if (lWord->GetOffset() != aOffset)
         {
-            std::cout << KMS::Console::Color::RED;
+            std::cout << Console::Color::RED;
             std::cout << "ERROR  The name " << aName << " is already uses witch another offset";
-            std::cout << KMS::Console::Color::WHITE << std::endl;
+            std::cout << Console::Color::WHITE << std::endl;
             return false;
         }
 
         return true;
     }
 
-    unsigned int DefineList::Parse(KMS::Text::File_UTF16* aFile_PC6, unsigned int aLineNo)
+    unsigned int DefineList::Parse(Text::File_UTF16* aFile_PC6, unsigned int aLineNo)
     {
         assert(NULL != aFile_PC6);
 
@@ -153,7 +155,7 @@ namespace TRiLOGY
         return lResult;
     }
 
-    void DefineList::Verify(const KMS::Text::File_UTF16& aFile_PC6)
+    void DefineList::Verify(const Text::File_UTF16& aFile_PC6)
     {
         ObjectList::Verify(aFile_PC6);
 
@@ -163,7 +165,9 @@ namespace TRiLOGY
     // Protected
     // //////////////////////////////////////////////////////////////////////
 
-    void DefineList::AddObject(const wchar_t* aLine, unsigned int aLineNo)
+    // ===== ObjectList =====================================================
+
+    void DefineList::AddObject(const wchar_t* aLine, unsigned int aLineNo, unsigned int aFlags)
     {
         assert(NULL != aLine);
 
@@ -187,7 +191,7 @@ namespace TRiLOGY
 
         if (2 <= sscanf_s(lText, "%[^,],DM[%u],%[^\n\r\t]", &lName SizeInfo(lName), &lOffset, lComment SizeInfo(lComment)))
         {
-            Word* lWord = new Word(lName, lIndex, aLineNo, lOffset, lComment, 0);
+            Word* lWord = new Word(lName, lIndex, aLineNo, lOffset, lComment, aFlags);
 
             mWords.AddWord(lWord);
 
@@ -195,7 +199,7 @@ namespace TRiLOGY
         }
         else if (1 <= sscanf_s(lText, "%[^,],%[^,],%[^\n\r\t]", &lName SizeInfo(lName), lValue SizeInfo(lValue), lComment SizeInfo(lComment)))
         {
-            Constant* lConstant = new Constant(lName, lIndex, aLineNo, lValue, lComment, 0);
+            Constant* lConstant = new Constant(lName, lIndex, aLineNo, lValue, lComment, aFlags);
 
             mConstants.AddConstant(lConstant);
 

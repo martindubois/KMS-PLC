@@ -29,7 +29,9 @@ namespace TRiLOGY
     // Protected
     // //////////////////////////////////////////////////////////////////////
 
-    void CounterList::AddObject(const wchar_t* aLine, unsigned int aLineNo)
+    // ===== ObjectList =====================================================
+
+    void CounterList::AddObject(const wchar_t* aLine, unsigned int aLineNo, unsigned int aFlags)
     {
         assert(NULL != aLine);
 
@@ -43,7 +45,7 @@ namespace TRiLOGY
         sprintf_s(lMsg, "Line %u  Invalid timer line", aLineNo);
         KMS_EXCEPTION_ASSERT(3 == lRet, APPLICATION_ERROR, lMsg, lRet);
 
-        Counter* lCounter = new Counter(lName, lIndex, aLineNo, lInit, 0);
+        Counter* lCounter = new Counter(lName, lIndex, aLineNo, lInit, aFlags);
 
         ObjectList::AddObject(lCounter);
     }
