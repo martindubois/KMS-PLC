@@ -9,6 +9,7 @@
 
 // ===== Import/Includes ====================================================
 #include <KMS/Cfg/MetaData.h>
+#include <KMS/Proc/Process.h>
 #include <KMS/Text/File_ASCII.h>
 
 // ===== Local ==============================================================
@@ -16,13 +17,15 @@
 
 #include "../Common/TRiLOGY/Project.h"
 
+using namespace KMS;
+
 // Constants
 // //////////////////////////////////////////////////////////////////////////
 
-static const KMS::Cfg::MetaData MD_EXPORTED_PC6_TXT     ("Exported_PC6_TXT = {Path}");
-static const KMS::Cfg::MetaData MD_FILE_NAME_PC6        ("FileName_PC6 = {Path}");
-static const KMS::Cfg::MetaData MD_SHARED_ADDRESS_REG_EX("SharedAddressRegEx = {RegEx}");
-static const KMS::Cfg::MetaData MD_SOURCES              ("Sources += {Path}");
+static const Cfg::MetaData MD_EXPORTED_PC6_TXT     ("Exported_PC6_TXT = {Path}");
+static const Cfg::MetaData MD_FILE_NAME_PC6        ("FileName_PC6 = {Path}");
+static const Cfg::MetaData MD_SHARED_ADDRESS_REG_EX("SharedAddressRegEx = {RegEx}");
+static const Cfg::MetaData MD_SOURCES              ("Sources += {Path}");
 
 // Static function declarations
 // //////////////////////////////////////////////////////////////////////////
@@ -37,7 +40,7 @@ namespace TRiLOGY
 
     Project::Project() : mInputs("input", 1, 256), mOutputs("output", 1, 256), mRelays("relay", 1025, 512)
     {
-        mSources.SetCreator(KMS::DI::String_Expand::Create);
+        mSources.SetCreator(DI::String_Expand::Create);
 
         AddEntry("Exported_PC6_TXT"  , &mExported_PC6_TXT  , false, &MD_EXPORTED_PC6_TXT);
         AddEntry("FileName_PC6"      , &mFileName_PC6      , false, &MD_FILE_NAME_PC6);
@@ -75,13 +78,27 @@ namespace TRiLOGY
         }
     }
 
+    void Project::Edit()
+    {
+        KMS_EXCEPTION_ASSERT(0 < mFileName_PC6.GetLength(), APPLICATION_USER_ERROR, "No file name configured", "");
+
+        Proc::Process lP(File::Folder::CURRENT, mFileName_PC6.Get());
+
+        lP.SetVerb("open");
+
+        lP.Run(0xffffffff);
+
+        Read();
+        Reparse();
+    }
+
     void Project::Export()
     {
         if (0 < mExported_PC6_TXT.GetLength())
         {
             std::cout << "Exporting " << mExported_PC6_TXT.Get() << " ..." << std::endl;
 
-            mFile_PC6.Write_ASCII(KMS::File::Folder::CURRENT, mExported_PC6_TXT.Get());
+            mFile_PC6.Write_ASCII(File::Folder::CURRENT, mExported_PC6_TXT.Get());
 
             std::cout << "Exported" << std::endl;
         }
@@ -93,14 +110,14 @@ namespace TRiLOGY
 
         bool lChanged = false;
 
-        for (const KMS::DI::Container::Entry& lEntry : mSources.mInternal)
+        for (const DI::Container::Entry& lEntry : mSources.mInternal)
         {
-            const KMS::DI::String* lSource = dynamic_cast<const KMS::DI::String*>(lEntry.Get());
+            const DI::String* lSource = dynamic_cast<const DI::String*>(lEntry.Get());
             assert(NULL != lSource);
 
-            KMS::Text::File_ASCII lFile;
+            Text::File_ASCII lFile;
 
-            lFile.Read(KMS::File::Folder::CURRENT, lSource->Get());
+            lFile.Read(File::Folder::CURRENT, lSource->Get());
 
             lFile.RemoveEmptyLines();
             lFile.RemoveComments_Script();
@@ -217,7 +234,7 @@ namespace TRiLOGY
     {
         if (0 < mFileName_PC6.GetLength())
         {
-            KMS::File::Folder lCurrent(KMS::File::Folder::Id::CURRENT);
+            File::Folder lCurrent(File::Folder::Id::CURRENT);
 
             std::cout << "Reading " << mFileName_PC6.Get() << " ..." << std::endl;
 
@@ -229,7 +246,7 @@ namespace TRiLOGY
 
     void Project::ValidateConfig() const
     {
-        KMS::File::Folder lCurrent(KMS::File::Folder::Id::CURRENT);
+        File::Folder lCurrent(File::Folder::Id::CURRENT);
 
         char lMsg[64 + PATH_LENGTH];
 
@@ -239,9 +256,9 @@ namespace TRiLOGY
             KMS_EXCEPTION_ASSERT(lCurrent.DoesFileExist(mFileName_PC6.Get()), APPLICATION_USER_ERROR, lMsg, "");
         }
 
-        for (const KMS::DI::Container::Entry& lEntry : mSources.mInternal)
+        for (const DI::Container::Entry& lEntry : mSources.mInternal)
         {
-            const KMS::DI::String* lSource = dynamic_cast<const KMS::DI::String*>(lEntry.Get());
+            const DI::String* lSource = dynamic_cast<const DI::String*>(lEntry.Get());
             assert(NULL != lSource);
 
             sprintf_s(lMsg, "\"%s\" does not exist", lSource->Get());
@@ -329,9 +346,9 @@ namespace TRiLOGY
     {
         std::cout << "Writing ..." << std::endl;
 
-        KMS::File::Folder::CURRENT.Backup(mFileName_PC6.Get(), KMS::File::Folder::FLAG_BACKUP_RENAME);
+        File::Folder::CURRENT.Backup(mFileName_PC6.Get(), File::Folder::FLAG_BACKUP_RENAME);
 
-        mFile_PC6.Write(KMS::File::Folder::CURRENT, mFileName_PC6.Get());
+        mFile_PC6.Write(File::Folder::CURRENT, mFileName_PC6.Get());
 
         std::cout << "Written" << std::endl;
     }

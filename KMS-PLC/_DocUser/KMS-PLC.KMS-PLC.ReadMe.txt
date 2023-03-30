@@ -5,6 +5,7 @@ Product   KMS-PLC
 File      KMS-PLC/_DocUser/KMS.ReadMe.txt
 
 * Clear instructions for import and write (KP-14)
+* Edit command (KP-7)
 * TRiLOGY - No warning for a define used only once (KP-11)
 
 0.0.7-dev Windows 2023-01-23

@@ -1,6 +1,6 @@
 
 // Author    KMS - Martin Dubois, P. Eng.
-// Copyright (C) 2022 KMS
+// Copyright (C) 2022-2023 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
 // File      Common/System.h
@@ -24,6 +24,10 @@ public:
     System();
 
     void Clean();
+
+    void Edit_PC6();
+
+    void Edit_emtp();
 
     void Export();
 
@@ -52,8 +56,5 @@ private:
 
     EBPro::Project   mEBPro;
     TRiLOGY::Project mTRiLOGY;
-
-    // ===== Configurable attributes ========================================
-    KMS::DI::Array mOperations;
 
 };

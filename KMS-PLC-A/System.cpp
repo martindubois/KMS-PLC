@@ -1,6 +1,6 @@
 
 // Author    KMS - Martin Dubois, P. Eng.
-// Copyright (C) 2022 KMS
+// Copyright (C) 2022-2023 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
 // File      KMS-PLC-A/System.cpp
@@ -16,6 +16,8 @@
 #include "../Common/EBPro/Address.h"
 
 #include "../Common/System.h"
+
+using namespace KMS;
 
 //
 // //////////////////////////////////////////////////////////////////////////
@@ -34,18 +36,16 @@ int System::Main(int aCount, const char** aVector)
 
     try
     {
-        KMS::Cfg::Configurator lC;
-        System                 lS;
+        Cfg::Configurator lC;
+        System            lS;
 
         lC.AddConfigurable(&lS);
 
-        lC.AddConfigurable(&KMS::Dbg::gLog);
+        lC.AddConfigurable(&Dbg::gLog);
 
-        lC.ParseFile(KMS::File::Folder(KMS::File::Folder::Id::CURRENT), CONFIG_FILE);
+        lC.ParseFile(File::Folder(File::Folder::Id::CURRENT), CONFIG_FILE);
 
         lC.ParseArguments(aCount - 1, aVector + 1);
-
-        KMS::Dbg::gLog.CloseLogFiles();
 
         lResult = lS.Run();
     }
@@ -56,10 +56,7 @@ int System::Main(int aCount, const char** aVector)
 
 System::System()
 {
-    mOperations.SetCreator(KMS::DI::String::Create);
-
     AddEntry("EBPro"     , &mEBPro     , false);
-    AddEntry("Operations", &mOperations, false);
     AddEntry("TRiLOGY"   , &mTRiLOGY   , false);
 }
 
@@ -67,6 +64,9 @@ void System::Clean()
 {
     mTRiLOGY.Clean();
 }
+
+void System::Edit_emtp() { mEBPro  .Edit(); }
+void System::Edit_PC6 () { mTRiLOGY.Edit(); }
 
 void System::Export()
 {
@@ -114,16 +114,16 @@ void System::Verify()
             case AddressType::MODBUS_RTU_1X:
                 if (!mTRiLOGY.VerifyAddress_1X(lA->GetAddress_UInt16()))
                 {
-                    std::cout << KMS::Console::Color::RED << "    ERROR  The HMI access an invalid PLC address named ";
-                    std::cout << lA->GetName() << " (1x-" << lA->GetAddress() << ")" << KMS::Console::Color::WHITE << std::endl;
+                    std::cout << Console::Color::RED << "    ERROR  The HMI access an invalid PLC address named \"";
+                    std::cout << lA->GetName() << "\" (1x-" << lA->GetAddress() << ")" << Console::Color::WHITE << std::endl;
                 }
                 break;
 
             case AddressType::MODBUS_RTU_4X:
                 if (!mTRiLOGY.VerifyAddress_4X(lA->GetAddress_UInt16()))
                 {
-                    std::cout << KMS::Console::Color::RED << "    ERROR  The HMI access an invalid PLC address named ";
-                    std::cout << lA->GetName() << " (4x-" << lA->GetAddress() << ")" << KMS::Console::Color::WHITE << std::endl;
+                    std::cout << Console::Color::RED << "    ERROR  The HMI access an invalid PLC address named \"";
+                    std::cout << lA->GetName() << "\" (4x-" << lA->GetAddress() << ")" << Console::Color::WHITE << std::endl;
                 }
                 break;
             }
@@ -139,7 +139,7 @@ void System::Write()
     mTRiLOGY.Write();
 }
 
-// ===== KMS::CLI::Tool =====================================================
+// ===== CLI::Tool ==========================================================
 
 void System::DisplayHelp(FILE* aOut) const
 {
@@ -147,25 +147,28 @@ void System::DisplayHelp(FILE* aOut) const
 
     fprintf(aOut,
         "Clean\n"
+        "Edit emtp | PC6\n"
         "Export\n"
         "Import\n"
         "Write\n");
 
-    KMS::CLI::Tool::DisplayHelp(aOut);
+    CLI::Tool::DisplayHelp(aOut);
 }
 
 void System::ExecuteCommand(const char* aC)
 {
     assert(NULL != aC);
 
-    if      (0 == strcmp("Clean" , aC)) { Clean (); }
-    else if (0 == strcmp("Export", aC)) { Export(); }
-    else if (0 == strcmp("Import", aC)) { Import(); }
-    else if (0 == strcmp("Verify", aC)) { Verify(); }
-    else if (0 == strcmp("Write" , aC)) { Write (); }
+    if      (0 == strcmp("Clean"    , aC)) { Clean    (); }
+    else if (0 == strcmp("Edit emtp", aC)) { Edit_emtp(); }
+    else if (0 == strcmp("Edit PC6" , aC)) { Edit_PC6 (); }
+    else if (0 == strcmp("Export"   , aC)) { Export   (); }
+    else if (0 == strcmp("Import"   , aC)) { Import   (); }
+    else if (0 == strcmp("Verify"   , aC)) { Verify   (); }
+    else if (0 == strcmp("Write"    , aC)) { Write    (); }
     else
     {
-        KMS::CLI::Tool::ExecuteCommand(aC);
+        CLI::Tool::ExecuteCommand(aC);
     }
 }
 
@@ -178,5 +181,5 @@ int System::Run()
     Parse ();
     Verify();
 
-    return KMS::CLI::Tool::Run();
+    return CLI::Tool::Run();
 }

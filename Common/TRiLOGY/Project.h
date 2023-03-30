@@ -35,6 +35,8 @@ namespace TRiLOGY
 
         void Clean();
 
+        void Edit();
+
         void Export();
 
         void Import();

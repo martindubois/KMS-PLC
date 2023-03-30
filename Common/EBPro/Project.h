@@ -22,6 +22,8 @@ namespace EBPro
 
         Project();
 
+        void Edit();
+
         void Export() const;
         
         void Import();
@@ -39,6 +41,9 @@ namespace EBPro
         void Write() const;
 
         AddressList mAddresses;
+
+        // ===== Configurable attributes ====================================
+        KMS::DI::String_Expand mFileName_emtp;
 
     private:
 

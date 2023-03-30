@@ -7,8 +7,20 @@
 
 #include "Component.h"
 
+// ===== Import/Includes ====================================================
+#include <KMS/Cfg/MetaData.h>
+#include <KMS/Exception.h>
+#include <KMS/Proc/Process.h>
+
 // ===== Local ==============================================================
 #include "../Common/EBPro/Project.h"
+
+using namespace KMS;
+
+// Constants
+// //////////////////////////////////////////////////////////////////////////
+
+static const Cfg::MetaData MD_FILE_NAME_EMTP("FileName_emtp = {Path}");
 
 namespace EBPro
 {
@@ -18,8 +30,23 @@ namespace EBPro
 
     Project::Project()
     {
+        AddEntry("FileName_emtp", &mFileName_emtp, false, &MD_FILE_NAME_EMTP);
+
         AddEntry("Addresses", &mAddresses, false);
         AddEntry("Labels"   , &mLabels   , false);
+    }
+
+    void Project::Edit()
+    {
+        KMS_EXCEPTION_ASSERT(0 < mFileName_emtp.GetLength(), APPLICATION_USER_ERROR, "No file name configured", "");
+
+        Proc::Process lP(File::Folder::CURRENT, mFileName_emtp.Get());
+
+        lP.SetVerb("open");
+
+        lP.Start();
+
+        lP.Detach();
     }
 
     void Project::Export() const
