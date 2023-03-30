@@ -24,13 +24,15 @@
 
 #include "Convert.h"
 
+using namespace KMS;
+
 // Constants
 // //////////////////////////////////////////////////////////////////////////
 
-static const KMS::Cfg::MetaData MD_EXPORTED_LBL    ("Exported_LBL = {Path}");
-static const KMS::Cfg::MetaData MD_LANGUAGES       ("LANGUAGES += {id}");
-static const KMS::Cfg::MetaData MD_SOURCES         ("Sources += {Path}");
-static const KMS::Cfg::MetaData MD_TO_IMPORT_LBL   ("ToImport_LBL = {Path}");
+static const Cfg::MetaData MD_EXPORTED_LBL    ("Exported_LBL = {Path}");
+static const Cfg::MetaData MD_LANGUAGES       ("LANGUAGES += {id}");
+static const Cfg::MetaData MD_SOURCES         ("Sources += {Path}");
+static const Cfg::MetaData MD_TO_IMPORT_LBL   ("ToImport_LBL = {Path}");
 
 // Static function declarations
 // //////////////////////////////////////////////////////////////////////////
@@ -45,8 +47,8 @@ namespace EBPro
 
     LabelList::LabelList()
     {
-        mLanguages.SetCreator(KMS::DI::String::Create);
-        mSources  .SetCreator(KMS::DI::String_Expand::Create);
+        mLanguages.SetCreator(DI::String::Create);
+        mSources  .SetCreator(DI::String_Expand::Create);
 
         AddEntry("Exported_LBL"    , &mExported_LBL, false , &MD_EXPORTED_LBL);
         AddEntry("Languages"       , &mLanguages   , false , &MD_LANGUAGES);
@@ -96,18 +98,18 @@ namespace EBPro
 
     void LabelList::Import()
     {
-        KMS::File::Folder lCurrent(KMS::File::Folder::Id::CURRENT);
+        File::Folder lCurrent(File::Folder::Id::CURRENT);
 
         bool lChanged = false;
 
-        for (const KMS::DI::Container::Entry& lEntry : mSources.mInternal)
+        for (const DI::Container::Entry& lEntry : mSources.mInternal)
         {
-            const KMS::DI::String* lSource = dynamic_cast<const KMS::DI::String*>(lEntry.Get());
+            const DI::String* lSource = dynamic_cast<const DI::String*>(lEntry.Get());
             assert(NULL != lSource);
 
             std::cout << "Importing " << lSource->Get() << " ..." << std::endl;
 
-            KMS::Text::File_ASCII lFile;
+            Text::File_ASCII lFile;
 
             lFile.Read(lCurrent, lSource->Get());
 
@@ -218,7 +220,7 @@ namespace EBPro
 
     void LabelList::ValidateConfig() const
     {
-        KMS::File::Folder lCurrent(KMS::File::Folder::Id::CURRENT);
+        File::Folder lCurrent(File::Folder::Id::CURRENT);
 
         if (0 < mExported_LBL.GetLength())
         {
@@ -231,9 +233,9 @@ namespace EBPro
 
             KMS_EXCEPTION_ASSERT(0 < mLanguages.GetCount(), APPLICATION_USER_ERROR, "The configuration file must define language", "");
 
-            for (const KMS::DI::Container::Entry& lEntry : mLanguages.mInternal)
+            for (const DI::Container::Entry& lEntry : mLanguages.mInternal)
             {
-                const KMS::DI::String* lLanguage = dynamic_cast<const KMS::DI::String*>(lEntry.Get());
+                const DI::String* lLanguage = dynamic_cast<const DI::String*>(lEntry.Get());
                 assert(NULL != lLanguage);
 
                 sprintf_s(lMsg, "\"%s\" is not a valid language id", lLanguage->Get());
@@ -242,9 +244,9 @@ namespace EBPro
 
             if (0 < mSources.GetCount())
             {
-                for (const KMS::DI::Container::Entry& lEntry : mSources.mInternal)
+                for (const DI::Container::Entry& lEntry : mSources.mInternal)
                 {
-                    const KMS::DI::String* lSource = dynamic_cast<const KMS::DI::String*>(lEntry.Get());
+                    const DI::String* lSource = dynamic_cast<const DI::String*>(lEntry.Get());
                     assert(NULL != lSource);
 
                     lStr = lSource->Get();
@@ -266,7 +268,7 @@ namespace EBPro
             {
                 if ((*lItA)->mName == (*lItB)->mName)
                 {
-                    std::cout << KMS::Console::Color::YELLOW << "WARNING  The label " << (*lItA)->mName.c_str() << " is present twice" << KMS::Console::Color::WHITE << std::endl;
+                    std::cout << Console::Color::YELLOW << "WARNING  The label " << (*lItA)->mName.c_str() << " is present twice" << Console::Color::WHITE << std::endl;
                 }
             }
 
@@ -333,9 +335,9 @@ namespace EBPro
     {
         unsigned int lResult = 0;
 
-        for (const KMS::DI::Container::Entry& lEntry : mLanguages.mInternal)
+        for (const DI::Container::Entry& lEntry : mLanguages.mInternal)
         {
-            const KMS::DI::String* lId = dynamic_cast<const KMS::DI::String*>(lEntry.Get());
+            const DI::String* lId = dynamic_cast<const DI::String*>(lEntry.Get());
             assert(NULL != lId);
 
             if (*lId == aId)

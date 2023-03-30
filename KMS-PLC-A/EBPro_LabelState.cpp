@@ -1,6 +1,6 @@
 
 // Author    KMS - Martin Dubois, P. Eng.
-// Copyright (C) 2022 KMS
+// Copyright (C) 2022-2023 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
 // File      KMS-PLC-A/EBPro_LabelState.cpp
@@ -11,6 +11,8 @@
 #include "../Common/EBPro/LabelState.h"
 
 #include "Convert.h"
+
+using namespace KMS;
 
 namespace EBPro
 {
@@ -48,7 +50,7 @@ namespace EBPro
         return lResult;
     }
 
-    void LabelState::Export(FILE* aFile, const KMS::DI::Array& aLanguages) const
+    void LabelState::Export(FILE* aFile, const DI::Array& aLanguages) const
     {
         assert(NULL != aFile);
 
@@ -60,10 +62,10 @@ namespace EBPro
         {
             if (0 < lStr.size())
             {
-                const KMS::DI::Object* lObj = aLanguages.GetEntry_R(lIndex);
+                const DI::Object* lObj = aLanguages.GetEntry_R(lIndex);
                 if (NULL != lObj)
                 {
-                    const KMS::DI::String* lLanguage = dynamic_cast<const KMS::DI::String*>(lObj);
+                    const DI::String* lLanguage = dynamic_cast<const DI::String*>(lObj);
                     assert(NULL != lLanguage);
 
                     wchar_t lExportable[2048];

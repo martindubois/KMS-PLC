@@ -18,6 +18,8 @@
 
 #include "../Common/TRiLOGY/ObjectList.h"
 
+using namespace KMS;
+
 namespace TRiLOGY
 {
 
@@ -134,7 +136,7 @@ namespace TRiLOGY
         return lResult;
     }
 
-    unsigned int ObjectList::Parse(KMS::Text::File_UTF16* aFile_PC6, unsigned int aLineNo, unsigned int aFlags)
+    unsigned int ObjectList::Parse(Text::File_UTF16* aFile_PC6, unsigned int aLineNo, unsigned int aFlags)
     {
         assert(NULL != mEndMark);
 
@@ -158,7 +160,7 @@ namespace TRiLOGY
         return lLineNo;
     }
 
-    void ObjectList::Verify(const KMS::Text::File_UTF16& aFile_PC6)
+    void ObjectList::Verify(const Text::File_UTF16& aFile_PC6)
     {
         assert(NULL != mElementName);
 
@@ -178,20 +180,22 @@ namespace TRiLOGY
             case 1:
                 lCount++;
                 lObject->AddFlags(Object::FLAG_NOT_USED);
-                std::cout << KMS::Console::Color::YELLOW << "    WARNING  The " << mElementName << " named " << lObject->GetName();
-                std::cout << " (" << lObject->GetIndex() << ") is useless" << KMS::Console::Color::WHITE << std::endl;
+                std::cout << Console::Color::YELLOW << "    WARNING  Line " << lObject->GetLineNo();
+                std::cout << "  The " << mElementName << " named \"" << lObject->GetName();
+                std::cout << "\" (" << lObject->GetIndex() << ") is useless" << Console::Color::WHITE << std::endl;
                 break;
 
             case 2:
                 if (lObject->TestFlag(Object::FLAG_SINGLE_USE_WARNING))
                 {
-                    std::cout << KMS::Console::Color::YELLOW << "    WARNING  The " << mElementName << " named " << lObject->GetName();
-                    std::cout << " (" << lObject->GetIndex() << ") is used only once" << KMS::Console::Color::WHITE << std::endl;
+                    std::cout << Console::Color::YELLOW << "    WARNING  Line " << lObject->GetLineNo();
+                    std::cout << "  The " << mElementName << " named \"" << lObject->GetName();
+                    std::cout << "\" (" << lObject->GetIndex() << ") is used only once" << Console::Color::WHITE << std::endl;
                 }
                 else if (lObject->TestFlag(Object::FLAG_SINGLE_USE_INFO))
                 {
-                    std::cout << "    INFO  The " << mElementName << " named " << lObject->GetName();
-                    std::cout << " (" << lObject->GetIndex() << ") is used only once" << std::endl;
+                    std::cout << "    INFO  The " << mElementName << " named \"" << lObject->GetName();
+                    std::cout << "\" (" << lObject->GetIndex() << ") is used only once" << std::endl;
                 }
                 break;
             }
@@ -199,7 +203,7 @@ namespace TRiLOGY
 
         if (0 < lCount)
         {
-            std::cout << KMS::Console::Color::YELLOW << "    WARNING  " << lCount << " " << mElementName << "s not used" << KMS::Console::Color::WHITE << std::endl;
+            std::cout << Console::Color::YELLOW << "    WARNING  " << lCount << " " << mElementName << "s not used" << Console::Color::WHITE << std::endl;
         }
     }
 
@@ -208,7 +212,7 @@ namespace TRiLOGY
 
     const char* ObjectList::GetElementName() const { return mElementName; }
 
-    KMS::Text::File_UTF16* ObjectList::GetFile_PC6() { return mFile_PC6; }
+    Text::File_UTF16* ObjectList::GetFile_PC6() { return mFile_PC6; }
 
     void ObjectList::SetLineNo_End(unsigned int aLineNo) { mLineNo_End = aLineNo; }
 
@@ -266,7 +270,7 @@ namespace TRiLOGY
         }
 
         char lMsg[64 + NAME_LENGTH];
-        sprintf_s(lMsg, "Line %u  Too many %s", aLineNo, mElementName);
+        sprintf_s(lMsg, "Too many %s", mElementName);
         KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
     }
 

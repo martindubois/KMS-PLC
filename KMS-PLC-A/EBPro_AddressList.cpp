@@ -17,12 +17,14 @@
 
 #include "../Common/EBPro/AddressList.h"
 
+using namespace KMS;
+
 // Constants
 // //////////////////////////////////////////////////////////////////////////
 
-static const KMS::Cfg::MetaData MD_EXPORTED_CSV ("Exported_CSV = {Path}");
-static const KMS::Cfg::MetaData MD_SOURCES      ("Sources += {Path}");
-static const KMS::Cfg::MetaData MD_TO_IMPORT_CSV("ToImport_CSV = {Path}");
+static const Cfg::MetaData MD_EXPORTED_CSV ("Exported_CSV = {Path}");
+static const Cfg::MetaData MD_SOURCES      ("Sources += {Path}");
+static const Cfg::MetaData MD_TO_IMPORT_CSV("ToImport_CSV = {Path}");
 
 // Static function declarations
 // //////////////////////////////////////////////////////////////////////////
@@ -39,7 +41,7 @@ namespace EBPro
 
     AddressList::AddressList()
     {
-        mSources.SetCreator(KMS::DI::String_Expand::Create);
+        mSources.SetCreator(DI::String_Expand::Create);
 
         AddEntry("Exported_CSV", &mExported_CSV, false, &MD_EXPORTED_CSV);
         AddEntry("Sources"     , &mSources     , false, &MD_SOURCES);
@@ -58,16 +60,16 @@ namespace EBPro
 
     void AddressList::Import()
     {
-        for (const KMS::DI::Container::Entry& lEntry : mSources.mInternal)
+        for (const DI::Container::Entry& lEntry : mSources.mInternal)
         {
-            const KMS::DI::String* lSource = dynamic_cast<const KMS::DI::String*>(lEntry.Get());
+            const DI::String* lSource = dynamic_cast<const DI::String*>(lEntry.Get());
             assert(NULL != lSource);
 
             std::cout << "Importing " << lSource->Get() << " ..." << std::endl;
 
-            KMS::Text::File_ASCII lFile;
+            Text::File_ASCII lFile;
 
-            lFile.Read(KMS::File::Folder::CURRENT, lSource->Get());
+            lFile.Read(File::Folder::CURRENT, lSource->Get());
 
             lFile.RemoveComments_Script();
             lFile.RemoveEmptyLines();
@@ -82,7 +84,7 @@ namespace EBPro
 
                 if (3 == sscanf_s(lLine.c_str(), "ADDRESS %[^ \n\r\t] %[^ \n\r\t] %[^ \n\r\t]", lName SizeInfo(lName), lType SizeInfo(lType), lAddr SizeInfo(lAddr)))
                 {
-                    lChanged |= Import(lName, ToAddressType(lType), KMS::Convert::ToUInt16(lAddr));
+                    lChanged |= Import(lName, ToAddressType(lType), Convert::ToUInt16(lAddr));
                 }
             }
 
@@ -90,7 +92,7 @@ namespace EBPro
 
             if (lChanged && (0 < mToImport_CSV.GetLength()))
             {
-                mFile_CSV.Write(KMS::File::Folder::CURRENT, mToImport_CSV.Get());
+                mFile_CSV.Write(File::Folder::CURRENT, mToImport_CSV.Get());
 
                 Instruction_ToImport(mToImport_CSV.Get(), mExported_CSV.Get());
             }
@@ -131,7 +133,7 @@ namespace EBPro
 
         if (lChanged && (0 < mToImport_CSV.GetLength()))
         {
-            mFile_CSV.Write(KMS::File::Folder::CURRENT, mToImport_CSV.Get());
+            mFile_CSV.Write(File::Folder::CURRENT, mToImport_CSV.Get());
 
             Instruction_ToImport(mToImport_CSV.Get(), mExported_CSV.Get());
         }
@@ -162,7 +164,7 @@ namespace EBPro
 
     void AddressList::Read()
     {
-        KMS::File::Folder lCurrent(KMS::File::Folder::Id::CURRENT);
+        File::Folder lCurrent(File::Folder::Id::CURRENT);
 
         if (0 < mExported_CSV.GetLength())
         {
@@ -176,7 +178,7 @@ namespace EBPro
 
     void AddressList::ValidateConfig() const
     {
-        KMS::File::Folder lCurrent(KMS::File::Folder::Id::CURRENT);
+        File::Folder lCurrent(File::Folder::Id::CURRENT);
 
         if (0 < mExported_CSV.GetLength())
         {
@@ -198,15 +200,16 @@ namespace EBPro
             {
                 if (0 == strcmp((*lItA)->GetName(), (*lItB)->GetName()))
                 {
-                    std::cout << KMS::Console::Color::YELLOW << "    WARNING  2 addresses are named ";
-                    std::cout << (*lItA)->GetName() << KMS::Console::Color::WHITE << std::endl;
+                    std::cout << Console::Color::YELLOW << "    WARNING  Line " << (*lItA)->GetLineNo() << " and " << (*lItB)->GetLineNo();
+                    std::cout << "  2 addresses are named \"" << (*lItA)->GetName() << "\"" << Console::Color::WHITE << std::endl;
                 }
 
                 if (   ((*lItA)->GetType() == (*lItB)->GetType())
                     && (0 == strcmp((*lItA)->GetAddress(), (*lItB)->GetAddress())))
                 {
-                    std::cout << KMS::Console::Color::YELLOW << "    WARNING  The addresses named " << (*lItA)->GetName() << " and ";
-                    std::cout << (*lItB)->GetName() << " are the same (" << (*lItA)->GetAddress() << ")" << KMS::Console::Color::WHITE << std::endl;
+                    std::cout << Console::Color::YELLOW << "    WARNING  Line " << (*lItA)->GetLineNo() << " and " << (*lItB)->GetLineNo();
+                    std::cout << "  The addresses named \"" << (*lItA)->GetName() << "\" and \"" << (*lItB)->GetName();
+                    std::cout << "\" are the same (" << (*lItA)->GetAddress() << ")" << Console::Color::WHITE << std::endl;
                 }
             }
         }

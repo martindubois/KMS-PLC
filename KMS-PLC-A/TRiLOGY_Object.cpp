@@ -10,6 +10,8 @@
 // ===== Local ==============================================================
 #include "../Common/TRiLOGY/Object.h"
 
+using namespace KMS;
+
 namespace TRiLOGY
 {
 
@@ -53,7 +55,7 @@ namespace TRiLOGY
 
     Object::Object(unsigned int aIndex) : mFlags(0), mIndex(aIndex), mLineNo(0) {}
 
-    void Object::Update(KMS::Text::File_UTF16* aFile_PC6)
+    void Object::Update(Text::File_UTF16* aFile_PC6)
     {
         assert(NULL != aFile_PC6);
 

@@ -10,6 +10,8 @@
 // ===== Local ==============================================================
 #include "../Common/TRiLOGY/Timer.h"
 
+using namespace KMS;
+
 namespace TRiLOGY
 {
 
@@ -22,7 +24,7 @@ namespace TRiLOGY
         assert(NULL != aName);
     }
 
-    bool Timer::SetInit(unsigned int aInit, KMS::Text::File_UTF16* aFile_PC6)
+    bool Timer::SetInit(unsigned int aInit, Text::File_UTF16* aFile_PC6)
     {
         bool lResult = mInit != aInit;
         if (lResult)

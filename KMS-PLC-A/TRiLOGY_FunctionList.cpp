@@ -16,6 +16,8 @@
 // ===== Local ==============================================================
 #include "../Common/TRiLOGY/FunctionList.h"
 
+using namespace KMS;
+
 namespace TRiLOGY
 {
 
@@ -36,7 +38,7 @@ namespace TRiLOGY
         return dynamic_cast<Function*>(FindObject_ByIndex(aIndex));
     }
 
-    unsigned int FunctionList::Parse_Code(const KMS::Text::File_UTF16& aFile_PC6, unsigned int aLineNo)
+    unsigned int FunctionList::Parse_Code(const Text::File_UTF16& aFile_PC6, unsigned int aLineNo)
     {
         Function   * lFunction  = NULL;
         unsigned int lLineCount = aFile_PC6.GetLineCount();
@@ -90,7 +92,7 @@ namespace TRiLOGY
         return lLineNo;
     }
 
-    unsigned int FunctionList::Parse_Name(const KMS::Text::File_UTF16& aFile_PC6, unsigned int aLineNo)
+    unsigned int FunctionList::Parse_Name(const Text::File_UTF16& aFile_PC6, unsigned int aLineNo)
     {
         unsigned int lLineCount = aFile_PC6.GetLineCount();
         unsigned int lLineNo    = aLineNo;
@@ -133,7 +135,7 @@ namespace TRiLOGY
         return lLineNo;
     }
 
-    void FunctionList::Verify(const KMS::Text::File_UTF16& aFile_PC6)
+    void FunctionList::Verify(const Text::File_UTF16& aFile_PC6)
     {
         std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> lConverter;
 
@@ -151,15 +153,16 @@ namespace TRiLOGY
             case 1:
                 lCount++;
                 lFunction->AddFlags(Object::FLAG_NOT_USED);
-                std::cout << KMS::Console::Color::YELLOW << "    WARNING  The function named " << lFunction->GetName();
-                std::cout << " (" << lFunction->GetIndex() << ") is not used" << KMS::Console::Color::WHITE << std::endl;
+                std::cout << Console::Color::YELLOW << "    WARNING  Line " << lFunction->GetLineNo();
+                std::cout << "  The function named \"" << lFunction->GetName();
+                std::cout << "\" (" << lFunction->GetIndex() << ") is not used" << Console::Color::WHITE << std::endl;
                 break;
             }
         }
 
         if (0 < lCount)
         {
-            std::cout << KMS::Console::Color::YELLOW << "    WARNING  " << lCount << " unused functions" << KMS::Console::Color::WHITE << std::endl;
+            std::cout << Console::Color::YELLOW << "    WARNING  " << lCount << " unused functions" << Console::Color::WHITE << std::endl;
         }
     }
 

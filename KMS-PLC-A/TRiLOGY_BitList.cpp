@@ -1,6 +1,6 @@
 
 // Author    KMS - Martin Dubois, P. Eng.
-// Copyright (C) 2022 KMS
+// Copyright (C) 2022-2023 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGY_BitList.cpp
@@ -14,6 +14,8 @@
 #include "../Common/TRiLOGY/Object.h"
 
 #include "../Common/TRiLOGY/BitList.h"
+
+using namespace KMS;
 
 namespace TRiLOGY
 {
@@ -76,17 +78,17 @@ namespace TRiLOGY
                 return true;
             }
 
-            std::cout << KMS::Console::Color::RED;
+            std::cout << Console::Color::RED;
             std::cout << "ERROR  The index " << aIndex << " is already used";
-            std::cout << KMS::Console::Color::WHITE << std::endl;
+            std::cout << Console::Color::WHITE << std::endl;
             return false;
         }
 
         if (aIndex != lObject->GetIndex())
         {
-            std::cout << KMS::Console::Color::RED;
+            std::cout << Console::Color::RED;
             std::cout << "ERROR  The name " << aName << " is already used for another index";
-            std::cout << KMS::Console::Color::WHITE << std::endl;
+            std::cout << Console::Color::WHITE << std::endl;
         }
 
         return false;

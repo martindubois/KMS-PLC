@@ -1,6 +1,6 @@
 
 // Author    KMS - Martin Dubois, P. Eng.
-// Copyright (C) 2022 KMS
+// Copyright (C) 2022-2023 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
 // File      KMS-PLC-A/EBPro_Label.cpp
@@ -16,6 +16,8 @@
 #include "../Common/EBPro/Label.h"
 
 #include "Convert.h"
+
+using namespace KMS;
 
 // data type
 // //////////////////////////////////////////////////////////////////////////
@@ -61,7 +63,7 @@ namespace EBPro
         }
     }
 
-    void Label::Export(FILE* aFile, const KMS::DI::Array& aLanguages) const
+    void Label::Export(FILE* aFile, const DI::Array& aLanguages) const
     {
         assert(NULL != aFile);
 
@@ -98,7 +100,7 @@ namespace EBPro
                 std::wstring lStr;
 
                 lRR = Read_String(aFile, &lStr);
-                KMS_EXCEPTION_ASSERT(ReadResult::OK != ReadResult::END_OF_LABEL, APPLICATION_ERROR, "Corrupted exported LBL file", "");
+                KMS_EXCEPTION_ASSERT(ReadResult::OK != ReadResult::END_OF_LABEL, APPLICATION_ERROR, "Corrupted exported LBL file", i);
 
                 lState->mStrings.push_back(lStr);
             }
@@ -129,7 +131,7 @@ namespace EBPro
     {
         if (0 >= mStates.size())
         {
-            std::cout << KMS::Console::Color::YELLOW << "WARNING  The label " << mName.c_str() << " has no state" << KMS::Console::Color::WHITE << std::endl;
+            std::cout << Console::Color::YELLOW << "WARNING  The label " << mName.c_str() << " has no state" << Console::Color::WHITE << std::endl;
             return;
         }
 

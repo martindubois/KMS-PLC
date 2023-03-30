@@ -13,6 +13,8 @@
 // ===== Local ==============================================================
 #include "../Common/EBPro/Address.h"
 
+using namespace KMS;
+
 // Constants
 // //////////////////////////////////////////////////////////////////////////
 
@@ -114,7 +116,7 @@ namespace EBPro
 
     uint16_t Address::GetAddress_UInt16() const
     {
-        return KMS::Convert::ToUInt16(mAddress.c_str());
+        return Convert::ToUInt16(mAddress.c_str());
     }
 
     unsigned int Address::GetLineNo() const { return mLineNo; }
