@@ -1,8 +1,8 @@
 
 # Author    KMS - Martin Dubois, P. Eng.
-# Copyright (C) 2022-2023 KMS
+# Copyright (C) 2023
 # License   http://www.apache.org/licenses/LICENSE-2.0
 # Product   KMS-PLC
-# File      KMS-Import.cfg
+# File      Tests/.gitignore
 
-WindowsDependencies += KMS-Framework;0.1.65-dev
+/Test9/

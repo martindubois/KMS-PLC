@@ -17,8 +17,8 @@ Version             ______ . ______ . ______ . ______ - _____________________
                     {Ma}     {Mi}     {Bu}              {Type}
 
 File "_DocUser/Documentation.html"                                        [ ]
-File "_DocUser/KMS.ReadMe.txt"                                            [ ]
-File "KMS-PLC/_DocUser/KMS.KMS-A.ReadMe.txt"                              [ ]
+File "_DocUser/KMS-PLC.ReadMe.txt"                                        [ ]
+File "KMS-PLC/_DocUser/KMS-PLC.KMS-PLC.ReadMe.txt"                        [ ]
 
 Tools "PowerShell" - In the product folder
     .\Import\Binaries\Release_Static_x64\KMS-Build.exe                    [ ]
