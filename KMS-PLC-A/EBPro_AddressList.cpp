@@ -22,9 +22,9 @@ using namespace KMS;
 // Constants
 // //////////////////////////////////////////////////////////////////////////
 
-static const Cfg::MetaData MD_EXPORTED_CSV ("Exported_CSV = {Path}");
-static const Cfg::MetaData MD_SOURCES      ("Sources += {Path}");
-static const Cfg::MetaData MD_TO_IMPORT_CSV("ToImport_CSV = {Path}");
+static const Cfg::MetaData MD_EXPORTED ("Exported = {Path}.csv");
+static const Cfg::MetaData MD_SOURCES  ("Sources += {Path}.in0");
+static const Cfg::MetaData MD_TO_IMPORT("ToImport = {Path}.csv");
 
 // Static function declarations
 // //////////////////////////////////////////////////////////////////////////
@@ -43,9 +43,9 @@ namespace EBPro
     {
         mSources.SetCreator(DI::String_Expand::Create);
 
-        AddEntry("Exported_CSV", &mExported_CSV, false, &MD_EXPORTED_CSV);
-        AddEntry("Sources"     , &mSources     , false, &MD_SOURCES);
-        AddEntry("ToImport_CSV", &mToImport_CSV, false, &MD_TO_IMPORT_CSV);
+        AddEntry("Exported", &mExported, false, &MD_EXPORTED);
+        AddEntry("Sources" , &mSources, false, &MD_SOURCES);
+        AddEntry("ToImport", &mToImport, false, &MD_TO_IMPORT);
     }
 
     AddressList::~AddressList()
@@ -90,11 +90,11 @@ namespace EBPro
 
             std::cout << "Imported" << std::endl;
 
-            if (lChanged && (0 < mToImport_CSV.GetLength()))
+            if (lChanged && (0 < mToImport.GetLength()))
             {
-                mFile_CSV.Write(File::Folder::CURRENT, mToImport_CSV.Get());
+                mFile_CSV.Write(File::Folder::CURRENT, mToImport.Get());
 
-                Instruction_ToImport(mToImport_CSV.Get(), mExported_CSV.Get());
+                Instruction_ToImport(mToImport.Get(), mExported.Get());
             }
         }
     }
@@ -131,11 +131,11 @@ namespace EBPro
             }
         }
 
-        if (lChanged && (0 < mToImport_CSV.GetLength()))
+        if (lChanged && (0 < mToImport.GetLength()))
         {
-            mFile_CSV.Write(File::Folder::CURRENT, mToImport_CSV.Get());
+            mFile_CSV.Write(File::Folder::CURRENT, mToImport.Get());
 
-            Instruction_ToImport(mToImport_CSV.Get(), mExported_CSV.Get());
+            Instruction_ToImport(mToImport.Get(), mExported.Get());
         }
     }
 
@@ -143,7 +143,7 @@ namespace EBPro
     {
         if (!mFile_CSV.mLines.empty())
         {
-            std::cout << "Parsing " << mExported_CSV.Get() << " ..." << std::endl;
+            std::cout << "Parsing " << mExported.Get() << " ..." << std::endl;
 
             unsigned int lLineNo = 0;
 
@@ -164,13 +164,11 @@ namespace EBPro
 
     void AddressList::Read()
     {
-        File::Folder lCurrent(File::Folder::Id::CURRENT);
-
-        if (0 < mExported_CSV.GetLength())
+        if (0 < mExported.GetLength())
         {
-            std::cout << "Reading " << mExported_CSV.Get() << " ..." << std::endl;
+            std::cout << "Reading " << mExported.Get() << " ..." << std::endl;
 
-            mFile_CSV.Read(lCurrent, mExported_CSV.Get());
+            mFile_CSV.Read(File::Folder::CURRENT, mExported.Get());
 
             std::cout << "Read" << std::endl;
         }
@@ -178,15 +176,13 @@ namespace EBPro
 
     void AddressList::ValidateConfig() const
     {
-        File::Folder lCurrent(File::Folder::Id::CURRENT);
-
-        if (0 < mExported_CSV.GetLength())
+        if (0 < mExported.GetLength())
         {
-            const char* lStr = mExported_CSV.Get();
+            const char* lStr = mExported.Get();
 
             char lMsg[64 + PATH_LENGTH];
             sprintf_s(lMsg, "\"%s\" does not exist", lStr);
-            KMS_EXCEPTION_ASSERT(lCurrent.DoesFileExist(lStr), APPLICATION_USER_ERROR, lMsg, "");
+            KMS_EXCEPTION_ASSERT(File::Folder::CURRENT.DoesFileExist(lStr), APPLICATION_USER_ERROR, lMsg, "");
         }
     }
 

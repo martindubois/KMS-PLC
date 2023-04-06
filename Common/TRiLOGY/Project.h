@@ -74,7 +74,7 @@ namespace TRiLOGY
 
         void Verify_BitList(const BitList& aBits) const;
 
-        KMS::Text::File_UTF16 mFile_PC6;
+        KMS::Text::File_UTF16 mFile;
 
         CounterList   mCounters;
         DefineList    mDefines;
@@ -85,8 +85,8 @@ namespace TRiLOGY
         TimerList     mTimers;
 
         // ===== Configurable attributes ====================================
-        KMS::DI::String_Expand mExported_PC6_TXT;
-        KMS::DI::String_Expand mFileName_PC6;
+        KMS::DI::String_Expand mExported;
+        KMS::DI::String_Expand mFileName;
         KMS::DI::String        mSharedAddressRegEx;
         KMS::DI::Array         mSources;
 

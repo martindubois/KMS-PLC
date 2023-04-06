@@ -49,8 +49,6 @@ namespace EBPro
 
         void Verify() const;
 
-        void Write() const;
-
         Internal mAddresses;
 
         ByName mAddresses_ByName;
@@ -68,9 +66,9 @@ namespace EBPro
         KMS::Text::File_ASCII mFile_CSV;
 
         // ===== Configurable attributes ====================================
-        KMS::DI::String_Expand mExported_CSV;
+        KMS::DI::String_Expand mExported;
         KMS::DI::Array         mSources;
-        KMS::DI::String_Expand mToImport_CSV;
+        KMS::DI::String_Expand mToImport;
 
     };
 

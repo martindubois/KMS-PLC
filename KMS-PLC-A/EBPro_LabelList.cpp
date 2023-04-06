@@ -29,10 +29,10 @@ using namespace KMS;
 // Constants
 // //////////////////////////////////////////////////////////////////////////
 
-static const Cfg::MetaData MD_EXPORTED_LBL    ("Exported_LBL = {Path}");
-static const Cfg::MetaData MD_LANGUAGES       ("LANGUAGES += {id}");
-static const Cfg::MetaData MD_SOURCES         ("Sources += {Path}");
-static const Cfg::MetaData MD_TO_IMPORT_LBL   ("ToImport_LBL = {Path}");
+static const Cfg::MetaData MD_EXPORTED ("Exported = {Path}.lbl");
+static const Cfg::MetaData MD_LANGUAGES("Languages += {id}");
+static const Cfg::MetaData MD_SOURCES  ("Sources += {Path}.lbl.in0");
+static const Cfg::MetaData MD_TO_IMPORT("ToImport = {Path}.lbl");
 
 // Static function declarations
 // //////////////////////////////////////////////////////////////////////////
@@ -50,10 +50,10 @@ namespace EBPro
         mLanguages.SetCreator(DI::String::Create);
         mSources  .SetCreator(DI::String_Expand::Create);
 
-        AddEntry("Exported_LBL"    , &mExported_LBL, false , &MD_EXPORTED_LBL);
-        AddEntry("Languages"       , &mLanguages   , false , &MD_LANGUAGES);
-        AddEntry("Sources"         , &mSources     , false , &MD_SOURCES);
-        AddEntry("ToImport_LBL"    , &mToImport_LBL, false , &MD_TO_IMPORT_LBL);
+        AddEntry("Exported_lbl"    , &mExported , false , &MD_EXPORTED);
+        AddEntry("Languages"       , &mLanguages, false , &MD_LANGUAGES);
+        AddEntry("Sources"         , &mSources  , false , &MD_SOURCES);
+        AddEntry("ToImport_lbl"    , &mToImport , false , &MD_TO_IMPORT);
     }
 
     LabelList::~LabelList()
@@ -68,9 +68,9 @@ namespace EBPro
 
     void LabelList::Export() const
     {
-        if (0 < mExported_LBL.GetLength())
+        if (0 < mExported.GetLength())
         {
-            std::string lPath = mExported_LBL.mInternal + ".in0";
+            std::string lPath = mExported.mInternal + ".in0";
 
             std::cout << "Exporting " << lPath << " ..." << std::endl;
 
@@ -98,8 +98,6 @@ namespace EBPro
 
     void LabelList::Import()
     {
-        File::Folder lCurrent(File::Folder::Id::CURRENT);
-
         bool lChanged = false;
 
         for (const DI::Container::Entry& lEntry : mSources.mInternal)
@@ -111,7 +109,7 @@ namespace EBPro
 
             Text::File_ASCII lFile;
 
-            lFile.Read(lCurrent, lSource->Get());
+            lFile.Read(File::Folder::CURRENT, lSource->Get());
 
             lFile.RemoveComments_Script();
             lFile.RemoveEmptyLines();
@@ -165,25 +163,27 @@ namespace EBPro
         }
         else
         {
-            if ((0 < mToImport_LBL.GetLength()) && (lCurrent.DoesFileExist(mToImport_LBL.Get())))
+            if ((0 < mToImport.GetLength()) && (File::Folder::CURRENT.DoesFileExist(mToImport.Get())))
             {
-                lCurrent.Delete(mToImport_LBL.Get());
+                File::Folder lCurrent(File::Folder::Id::CURRENT);
+
+                lCurrent.Delete(mToImport.Get());
             }
         }
     }
 
     void LabelList::Parse()
     {
-        if (0 < mExported_LBL.GetLength())
+        if (0 < mExported.GetLength())
         {
-            std::cout << "Parsing " << mExported_LBL.Get() << " ..." << std::endl;
+            std::cout << "Parsing " << mExported.Get() << " ..." << std::endl;
 
             FILE* lFile;
 
-            errno_t lErr = fopen_s(&lFile, mExported_LBL.Get(), "rb");
+            errno_t lErr = fopen_s(&lFile, mExported.Get(), "rb");
 
             char lMsg[64 + PATH_LENGTH];
-            sprintf_s(lMsg, "Cannot open \"%s\" for reading", mExported_LBL.Get());
+            sprintf_s(lMsg, "Cannot open \"%s\" for reading", mExported.Get());
             KMS_EXCEPTION_ASSERT(0 == lErr, APPLICATION_ERROR, lMsg, lErr);
 
             assert(NULL != lFile);
@@ -220,16 +220,14 @@ namespace EBPro
 
     void LabelList::ValidateConfig() const
     {
-        File::Folder lCurrent(File::Folder::Id::CURRENT);
-
-        if (0 < mExported_LBL.GetLength())
+        if (0 < mExported.GetLength())
         {
-            const char* lStr = mExported_LBL.Get();
+            const char* lStr = mExported.Get();
 
             char lMsg[64 + PATH_LENGTH];
 
             sprintf_s(lMsg, "\"%s\" does not exist", lStr);
-            KMS_EXCEPTION_ASSERT(lCurrent.DoesFileExist(lStr), APPLICATION_ERROR, lMsg, "");
+            KMS_EXCEPTION_ASSERT(File::Folder::CURRENT.DoesFileExist(lStr), APPLICATION_ERROR, lMsg, "");
 
             KMS_EXCEPTION_ASSERT(0 < mLanguages.GetCount(), APPLICATION_USER_ERROR, "The configuration file must define language", "");
 
@@ -252,7 +250,7 @@ namespace EBPro
                     lStr = lSource->Get();
 
                     sprintf_s(lMsg, "\"%s\" does not exist", lStr);
-                    KMS_EXCEPTION_ASSERT(lCurrent.DoesFileExist(lStr), APPLICATION_USER_ERROR, lMsg, "");
+                    KMS_EXCEPTION_ASSERT(File::Folder::CURRENT.DoesFileExist(lStr), APPLICATION_USER_ERROR, lMsg, "");
                 }
             }
         }
@@ -278,10 +276,6 @@ namespace EBPro
         // TODO Verify more
 
         std::cout << "Verified" << std::endl;
-    }
-
-    void LabelList::Write() const
-    {
     }
 
     // Private
@@ -355,16 +349,16 @@ namespace EBPro
     {
         assert(0xffff >= mLabels.size());
 
-        if (0 < mToImport_LBL.GetLength())
+        if (0 < mToImport.GetLength())
         {
-            std::cout << "Saving " << mToImport_LBL.Get() << " ..." << std::endl;
+            std::cout << "Saving " << mToImport.Get() << " ..." << std::endl;
 
             FILE* lFile;
 
-            errno_t lErr = fopen_s(&lFile, mToImport_LBL.Get(), "wb");
+            errno_t lErr = fopen_s(&lFile, mToImport.Get(), "wb");
 
             char lMsg[64 + PATH_LENGTH];
-            sprintf_s(lMsg, "Cannot open \"%s\" for writing", mToImport_LBL.Get());
+            sprintf_s(lMsg, "Cannot open \"%s\" for writing", mToImport.Get());
             KMS_EXCEPTION_ASSERT(0 == lErr, APPLICATION_ERROR, lMsg, lErr);
 
             assert(NULL != lFile);
@@ -401,7 +395,7 @@ namespace EBPro
 
             std::cout << "Saved" << std::endl;
 
-            Instruction_ToImport(mToImport_LBL.Get(), mExported_LBL.Get());
+            Instruction_ToImport(mToImport.Get(), mExported.Get());
         }
     }
 

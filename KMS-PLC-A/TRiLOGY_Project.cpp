@@ -22,10 +22,10 @@ using namespace KMS;
 // Constants
 // //////////////////////////////////////////////////////////////////////////
 
-static const Cfg::MetaData MD_EXPORTED_PC6_TXT     ("Exported_PC6_TXT = {Path}");
-static const Cfg::MetaData MD_FILE_NAME_PC6        ("FileName_PC6 = {Path}");
+static const Cfg::MetaData MD_EXPORTED             ("Exported = {Path}.PC6.txt");
+static const Cfg::MetaData MD_FILE_NAME            ("FileName = {Path}.PC6");
 static const Cfg::MetaData MD_SHARED_ADDRESS_REG_EX("SharedAddressRegEx = {RegEx}");
-static const Cfg::MetaData MD_SOURCES              ("Sources += {Path}");
+static const Cfg::MetaData MD_SOURCES              ("Sources += {Path}.PC6.in0");
 
 // Static function declarations
 // //////////////////////////////////////////////////////////////////////////
@@ -42,13 +42,13 @@ namespace TRiLOGY
     {
         mSources.SetCreator(DI::String_Expand::Create);
 
-        AddEntry("Exported_PC6_TXT"  , &mExported_PC6_TXT  , false, &MD_EXPORTED_PC6_TXT);
-        AddEntry("FileName_PC6"      , &mFileName_PC6      , false, &MD_FILE_NAME_PC6);
+        AddEntry("Exported_PC6_txt"  , &mExported          , false, &MD_EXPORTED);
+        AddEntry("FileName_PC6"      , &mFileName          , false, &MD_FILE_NAME);
         AddEntry("SharedAddressRegEx", &mSharedAddressRegEx, false, &MD_SHARED_ADDRESS_REG_EX);
         AddEntry("Sources"           , &mSources           , false, &MD_SOURCES);
     }
 
-    bool Project::IsValid() const { return 0 < mFile_PC6.GetLineCount(); }
+    bool Project::IsValid() const { return 0 < mFile.GetLineCount(); }
 
     void Project::Clean()
     {
@@ -80,9 +80,9 @@ namespace TRiLOGY
 
     void Project::Edit()
     {
-        KMS_EXCEPTION_ASSERT(0 < mFileName_PC6.GetLength(), APPLICATION_USER_ERROR, "No file name configured", "");
+        KMS_EXCEPTION_ASSERT(0 < mFileName.GetLength(), APPLICATION_USER_ERROR, "No file name configured", "");
 
-        Proc::Process lP(File::Folder::CURRENT, mFileName_PC6.Get());
+        Proc::Process lP(File::Folder::CURRENT, mFileName.Get());
 
         lP.SetVerb("open");
 
@@ -94,11 +94,11 @@ namespace TRiLOGY
 
     void Project::Export()
     {
-        if (0 < mExported_PC6_TXT.GetLength())
+        if (0 < mExported.GetLength())
         {
-            std::cout << "Exporting " << mExported_PC6_TXT.Get() << " ..." << std::endl;
+            std::cout << "Exporting " << mExported.Get() << " ..." << std::endl;
 
-            mFile_PC6.Write_ASCII(File::Folder::CURRENT, mExported_PC6_TXT.Get());
+            mFile.Write_ASCII(File::Folder::CURRENT, mExported.Get());
 
             std::cout << "Exported" << std::endl;
         }
@@ -195,50 +195,48 @@ namespace TRiLOGY
 
     void Project::Parse()
     {
-        if (0 < mFile_PC6.GetLineCount())
+        if (0 < mFile.GetLineCount())
         {
-            std::cout << "Parsing " << mFileName_PC6.Get() << " ..." << std::endl;
+            std::cout << "Parsing " << mFileName.Get() << " ..." << std::endl;
 
             const wchar_t* lLine;
             unsigned int   lLineNo = 1;
-            unsigned int   lLineCount = mFile_PC6.GetLineCount();
+            unsigned int   lLineCount = mFile.GetLineCount();
 
-            lLineNo = mInputs  .Parse(&mFile_PC6, lLineNo, TRiLOGY::Object::FLAG_SINGLE_USE_INFO);
-            lLineNo = mOutputs .Parse(&mFile_PC6, lLineNo, TRiLOGY::Object::FLAG_SINGLE_USE_INFO);
-            lLineNo = mRelays  .Parse(&mFile_PC6, lLineNo, TRiLOGY::Object::FLAG_SINGLE_USE_INFO);
-            lLineNo = mTimers  .Parse(&mFile_PC6, lLineNo, TRiLOGY::Object::FLAG_SINGLE_USE_WARNING);
-            lLineNo = mCounters.Parse(&mFile_PC6, lLineNo, TRiLOGY::Object::FLAG_SINGLE_USE_WARNING);
+            lLineNo = mInputs  .Parse(&mFile, lLineNo, TRiLOGY::Object::FLAG_SINGLE_USE_INFO);
+            lLineNo = mOutputs .Parse(&mFile, lLineNo, TRiLOGY::Object::FLAG_SINGLE_USE_INFO);
+            lLineNo = mRelays  .Parse(&mFile, lLineNo, TRiLOGY::Object::FLAG_SINGLE_USE_INFO);
+            lLineNo = mTimers  .Parse(&mFile, lLineNo, TRiLOGY::Object::FLAG_SINGLE_USE_WARNING);
+            lLineNo = mCounters.Parse(&mFile, lLineNo, TRiLOGY::Object::FLAG_SINGLE_USE_WARNING);
 
             // ===== Circuits ===============================================
             for (; lLineNo < lLineCount; lLineNo++)
             {
-                lLine = mFile_PC6.GetLine(lLineNo);
+                lLine = mFile.GetLine(lLineNo);
                 if (0 == wcscmp(L"~END_CIRCUIT~\r", lLine)) { lLineNo++; break; }
             }
 
-            lLineNo = mFunctions.Parse_Code(mFile_PC6, lLineNo);
-            lLineNo = mFunctions.Parse_Name(mFile_PC6, lLineNo);
+            lLineNo = mFunctions.Parse_Code(mFile, lLineNo);
+            lLineNo = mFunctions.Parse_Name(mFile, lLineNo);
 
             // ===== Quick tags =============================================
             for (; lLineNo < lLineCount; lLineNo++)
             {
-                lLine = mFile_PC6.GetLine(lLineNo);
+                lLine = mFile.GetLine(lLineNo);
                 if (0 == wcscmp(L"~END_QUICKTAGS~\r", lLine)) { lLineNo++; break; }
             }
 
-            lLineNo = mDefines.Parse(&mFile_PC6, lLineNo);
+            lLineNo = mDefines.Parse(&mFile, lLineNo);
         }
     }
 
     void Project::Read()
     {
-        if (0 < mFileName_PC6.GetLength())
+        if (0 < mFileName.GetLength())
         {
-            File::Folder lCurrent(File::Folder::Id::CURRENT);
+            std::cout << "Reading " << mFileName.Get() << " ..." << std::endl;
 
-            std::cout << "Reading " << mFileName_PC6.Get() << " ..." << std::endl;
-
-            mFile_PC6.Read(lCurrent, mFileName_PC6.Get());
+            mFile.Read(File::Folder::CURRENT, mFileName.Get());
 
             std::cout << "Read" << std::endl;
         }
@@ -246,14 +244,12 @@ namespace TRiLOGY
 
     void Project::ValidateConfig() const
     {
-        File::Folder lCurrent(File::Folder::Id::CURRENT);
-
         char lMsg[64 + PATH_LENGTH];
 
-        if (0 < mFileName_PC6.GetLength())
+        if (0 < mFileName.GetLength())
         {
-            sprintf_s(lMsg, "\"%s\" does not exist", mFileName_PC6.Get());
-            KMS_EXCEPTION_ASSERT(lCurrent.DoesFileExist(mFileName_PC6.Get()), APPLICATION_USER_ERROR, lMsg, "");
+            sprintf_s(lMsg, "\"%s\" does not exist", mFileName.Get());
+            KMS_EXCEPTION_ASSERT(File::Folder::CURRENT.DoesFileExist(mFileName.Get()), APPLICATION_USER_ERROR, lMsg, "");
         }
 
         for (const DI::Container::Entry& lEntry : mSources.mInternal)
@@ -262,26 +258,26 @@ namespace TRiLOGY
             assert(NULL != lSource);
 
             sprintf_s(lMsg, "\"%s\" does not exist", lSource->Get());
-            KMS_EXCEPTION_ASSERT(lCurrent.DoesFileExist(lSource->Get()), APPLICATION_USER_ERROR, lMsg, "");
+            KMS_EXCEPTION_ASSERT(File::Folder::CURRENT.DoesFileExist(lSource->Get()), APPLICATION_USER_ERROR, lMsg, "");
         }
     }
 
     void Project::Verify()
     {
-        if (0 < mFile_PC6.GetLineCount())
+        if (0 < mFile.GetLineCount())
         {
-            std::cout << "Verifying " << mFileName_PC6.Get() << " ..." << std::endl;
+            std::cout << "Verifying " << mFileName.Get() << " ..." << std::endl;
 
             // TODO For the verification, use a version of mFile_PC6 without
             //      comment
 
-            mCounters  .Verify(mFile_PC6);
-            mDefines   .Verify(mFile_PC6);
-            mFunctions .Verify(mFile_PC6);
-            mInputs    .Verify(mFile_PC6);
-            mOutputs   .Verify(mFile_PC6);
-            mRelays    .Verify(mFile_PC6);
-            mTimers    .Verify(mFile_PC6);
+            mCounters  .Verify(mFile);
+            mDefines   .Verify(mFile);
+            mFunctions .Verify(mFile);
+            mInputs    .Verify(mFile);
+            mOutputs   .Verify(mFile);
+            mRelays    .Verify(mFile);
+            mTimers    .Verify(mFile);
 
             // TODO
 
@@ -346,9 +342,9 @@ namespace TRiLOGY
     {
         std::cout << "Writing ..." << std::endl;
 
-        File::Folder::CURRENT.Backup(mFileName_PC6.Get(), File::Folder::FLAG_BACKUP_RENAME);
+        File::Folder::CURRENT.Backup(mFileName.Get(), File::Folder::FLAG_BACKUP_RENAME);
 
-        mFile_PC6.Write(File::Folder::CURRENT, mFileName_PC6.Get());
+        mFile.Write(File::Folder::CURRENT, mFileName.Get());
 
         std::cout << "Written" << std::endl;
     }

@@ -41,8 +41,6 @@ namespace EBPro
 
         void Verify() const;
 
-        void Write() const;
-
     // Internal
 
         typedef std::vector<Label*> Internal;
@@ -69,8 +67,8 @@ namespace EBPro
 
         // ===== Configurable attributes ====================================
 
-        KMS::DI::String_Expand mExported_LBL;
-        KMS::DI::String_Expand mToImport_LBL;
+        KMS::DI::String_Expand mExported;
+        KMS::DI::String_Expand mToImport;
 
         KMS::DI::Array mLanguages;
         KMS::DI::Array mSources;
