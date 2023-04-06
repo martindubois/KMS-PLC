@@ -20,7 +20,7 @@ using namespace KMS;
 // Constants
 // //////////////////////////////////////////////////////////////////////////
 
-static const Cfg::MetaData MD_FILE_NAME_EMTP("FileName_emtp = {Path}");
+static const Cfg::MetaData MD_FILE_NAME("FileName = {Path}.emtp");
 
 namespace EBPro
 {
@@ -30,17 +30,18 @@ namespace EBPro
 
     Project::Project()
     {
-        AddEntry("FileName_emtp", &mFileName_emtp, false, &MD_FILE_NAME_EMTP);
+        AddEntry("FileName", &mFileName, false, &MD_FILE_NAME);
 
         AddEntry("Addresses", &mAddresses, false);
+        AddEntry("Functions", &mFunctions, false);
         AddEntry("Labels"   , &mLabels   , false);
     }
 
     void Project::Edit()
     {
-        KMS_EXCEPTION_ASSERT(0 < mFileName_emtp.GetLength(), APPLICATION_USER_ERROR, "No file name configured", "");
+        KMS_EXCEPTION_ASSERT(0 < mFileName.GetLength(), APPLICATION_USER_ERROR, "No file name configured", "");
 
-        Proc::Process lP(File::Folder::CURRENT, mFileName_emtp.Get());
+        Proc::Process lP(File::Folder::CURRENT, mFileName.Get());
 
         lP.SetVerb("open");
 
@@ -56,7 +57,8 @@ namespace EBPro
 
     void Project::Import()
     {
-        mLabels.Import();
+        mFunctions.Import();
+        mLabels   .Import();
     }
 
     void Project::Import(const ::AddressList& aAL)
@@ -67,30 +69,33 @@ namespace EBPro
     void Project::Parse()
     {
         mAddresses.Parse();
+        mFunctions.Parse();
         mLabels   .Parse();
     }
 
     void Project::Read()
     {
         mAddresses.Read();
+        mFunctions.Read();
         mLabels   .Read();
     }
 
     void Project::ValidateConfig() const
     {
         mAddresses.ValidateConfig();
+        mFunctions.ValidateConfig();
         mLabels   .ValidateConfig();
     }
 
     void Project::Verify() const
     {
         mAddresses.Verify();
+        mFunctions.Verify();
         mLabels   .Verify();
     }
 
     void Project::Write() const
     {
-        mLabels.Write();
     }
 
 }

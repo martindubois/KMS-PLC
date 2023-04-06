@@ -31,6 +31,7 @@
     <ClCompile Include="Convert.cpp" />
     <ClCompile Include="EBPro_Address.cpp" />
     <ClCompile Include="EBPro_AddressList.cpp" />
+    <ClCompile Include="EBPro_FunctionList.cpp" />
     <ClCompile Include="EBPro_Label.cpp" />
     <ClCompile Include="EBPro_LabelList.cpp" />
     <ClCompile Include="EBPro_LabelState.cpp" />

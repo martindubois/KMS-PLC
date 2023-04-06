@@ -10,6 +10,7 @@
 // ===== Local ==============================================================
 #include "../Address.h"
 #include "AddressList.h"
+#include "FunctionList.h"
 #include "LabelList.h"
 
 namespace EBPro
@@ -43,11 +44,12 @@ namespace EBPro
         AddressList mAddresses;
 
         // ===== Configurable attributes ====================================
-        KMS::DI::String_Expand mFileName_emtp;
+        KMS::DI::String_Expand mFileName;
 
     private:
 
-        LabelList mLabels;
+        LabelList    mLabels;
+        FunctionList mFunctions;
 
     };
 
