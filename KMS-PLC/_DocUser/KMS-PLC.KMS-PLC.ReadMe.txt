@@ -4,6 +4,9 @@ Copyright (C) 2022-2023 KMS
 Product   KMS-PLC
 File      KMS-PLC/_DocUser/KMS.ReadMe.txt
 
+0.0.9-dev Windows 2023-04-04
+* Remove extension from configurable attribute names
+
 0.0.8-dev Windows 2023-04-04
 * Clear instructions for import and write (KP-14)
 * Edit command (KP-7)
