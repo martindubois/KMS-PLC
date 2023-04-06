@@ -50,10 +50,10 @@ namespace EBPro
         mLanguages.SetCreator(DI::String::Create);
         mSources  .SetCreator(DI::String_Expand::Create);
 
-        AddEntry("Exported_lbl"    , &mExported , false , &MD_EXPORTED);
-        AddEntry("Languages"       , &mLanguages, false , &MD_LANGUAGES);
-        AddEntry("Sources"         , &mSources  , false , &MD_SOURCES);
-        AddEntry("ToImport_lbl"    , &mToImport , false , &MD_TO_IMPORT);
+        AddEntry("Exported" , &mExported , false , &MD_EXPORTED);
+        AddEntry("Languages", &mLanguages, false , &MD_LANGUAGES);
+        AddEntry("Sources"  , &mSources  , false , &MD_SOURCES);
+        AddEntry("ToImport" , &mToImport , false , &MD_TO_IMPORT);
     }
 
     LabelList::~LabelList()

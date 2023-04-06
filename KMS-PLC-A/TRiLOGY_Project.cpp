@@ -42,8 +42,8 @@ namespace TRiLOGY
     {
         mSources.SetCreator(DI::String_Expand::Create);
 
-        AddEntry("Exported_PC6_txt"  , &mExported          , false, &MD_EXPORTED);
-        AddEntry("FileName_PC6"      , &mFileName          , false, &MD_FILE_NAME);
+        AddEntry("Exported"          , &mExported          , false, &MD_EXPORTED);
+        AddEntry("FileName"          , &mFileName          , false, &MD_FILE_NAME);
         AddEntry("SharedAddressRegEx", &mSharedAddressRegEx, false, &MD_SHARED_ADDRESS_REG_EX);
         AddEntry("Sources"           , &mSources           , false, &MD_SOURCES);
     }
