@@ -1,6 +1,6 @@
 
 // Author    KMS - Martin Dubois, P. Eng.
-// Copyright (C) 2022 KMS
+// Copyright (C) 2022-2023 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
 // File      Common/EBPro/LabelList.h
@@ -49,9 +49,7 @@ namespace EBPro
 
     private:
 
-        LabelList(const LabelList&);
-
-        const LabelList& operator = (const LabelList&);
+        NO_COPY(LabelList);
 
         Label* Create(const wchar_t* aName);
 

@@ -71,9 +71,7 @@ namespace TRiLOGY
 
     private:
 
-        ObjectList(const ObjectList&);
-
-        const ObjectList& operator = (const ObjectList&);
+        NO_COPY(ObjectList);
 
         const char   * mElementName;
         const wchar_t* mEndMark;

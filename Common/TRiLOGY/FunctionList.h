@@ -1,6 +1,6 @@
 
 // Author    KMS - Martin Dubois, P. Eng.
-// Copyright (C) 2022 KMS
+// Copyright (C) 2022-2023 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
 // File      Common/TRiLOGY/FunctionList.h
@@ -42,9 +42,7 @@ namespace TRiLOGY
 
     private:
 
-        FunctionList(const FunctionList&);
-
-        const FunctionList& operator = (const FunctionList&);
+        NO_COPY(FunctionList);
 
         unsigned int mLineNo_End_Code;
 
