@@ -344,7 +344,7 @@ namespace TRiLOGY
 
         File::Folder::CURRENT.Backup(mFileName.Get(), File::Folder::FLAG_BACKUP_RENAME);
 
-        mFile.Write(File::Folder::CURRENT, mFileName.Get());
+        mFile.Write(File::Folder::CURRENT, mFileName.Get(), L"\r");
 
         std::cout << "Written" << std::endl;
     }
