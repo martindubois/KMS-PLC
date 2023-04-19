@@ -5,6 +5,8 @@
 // Product   KMS-PLC
 // File      KMS-PLC/KMS-PLC.cpp
 
+#include <KMS/Base.h>
+
 // ===== Import/Includes ====================================================
 #include <KMS/Banner.h>
 

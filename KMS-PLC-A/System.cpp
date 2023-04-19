@@ -11,6 +11,8 @@
 #include <KMS/Cfg/Configurator.h>
 #include <KMS/Console/Color.h>
 #include <KMS/Dbg/Log.h>
+#include <KMS/Dbg/Stats.h>
+#include <KMS/Dbg/Stats_Timer.h>
 
 // ===== Local ==============================================================
 #include "../Common/EBPro/Address.h"
@@ -34,6 +36,9 @@ int System::Main(int aCount, const char** aVector)
 
     int lResult = __LINE__;
 
+    auto lET = new Dbg::Stats_Timer("ExecutionTime");
+    lET->Start();
+
     try
     {
         Cfg::Configurator lC;
@@ -42,6 +47,7 @@ int System::Main(int aCount, const char** aVector)
         lC.AddConfigurable(&lS);
 
         lC.AddConfigurable(&Dbg::gLog);
+        lC.AddConfigurable(&Dbg::gStats);
 
         lC.ParseFile(File::Folder::CURRENT, CONFIG_FILE);
 
@@ -50,8 +56,10 @@ int System::Main(int aCount, const char** aVector)
         lResult = lS.Run();
     }
     KMS_CATCH_RESULT(lResult);
+
+    lET->Stop();
     
-    return 0;
+    return lResult;
 }
 
 System::System()
