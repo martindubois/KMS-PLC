@@ -11,9 +11,8 @@
 #include <KMS/Console/Color.h>
 
 // ===== Local ==============================================================
-#include "../Common/EBPro/LabelState.h"
-
-#include "../Common/EBPro/Label.h"
+#include "EBPro/LabelState.h"
+#include "EBPro/Label.h"
 
 #include "Convert.h"
 

@@ -8,7 +8,7 @@
 #include "Component.h"
 
 // ===== Local ==============================================================
-#include "../Common/TRiLOGY/Counter.h"
+#include "TRiLOGY/Counter.h"
 
 using namespace KMS;
 

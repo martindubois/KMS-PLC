@@ -3,7 +3,7 @@
 // Copyright (C) 2023 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
-// File      Common/EBPro/Function.h
+// File      KMS-PLC-A/EBPro/Function.h
 
 #pragma once
 
@@ -15,7 +15,7 @@
 #include <KMS/Text/File_ASCII.h>
 
 // ===== Local ==============================================================
-#include "DataType.h"
+#include "EBPro/DataType.h"
 
 namespace EBPro
 {

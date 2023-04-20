@@ -11,11 +11,12 @@
 #include <KMS/Cfg/MetaData.h>
 
 // ===== Local ==============================================================
-#include "../Common/EBPro/DataPtr.h"
-#include "../Common/EBPro/Function.h"
 #include "../Common/EBPro/Software.h"
 
 #include "../Common/EBPro/FunctionList.h"
+
+#include "EBPro/DataPtr.h"
+#include "EBPro/Function.h"
 
 using namespace KMS;
 

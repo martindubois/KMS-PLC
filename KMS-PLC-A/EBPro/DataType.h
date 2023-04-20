@@ -3,7 +3,7 @@
 // Copyright (C) 2023 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
-// File      Common/EBPro/DataType.h
+// File      KMS-PLC-A/EBPro/DataType.h
 
 #pragma once
 

@@ -8,7 +8,7 @@
 #include "Component.h"
 
 // ===== Local ==============================================================
-#include "../Common/TRiLOGY/Object.h"
+#include "TRiLOGY/Object.h"
 
 using namespace KMS;
 

@@ -8,9 +8,9 @@
 #include "Component.h"
 
 // ===== Local ==============================================================
-#include "../Common/TRiLOGY/Word.h"
-
 #include "../Common/TRiLOGY/WordList.h"
+
+#include "TRiLOGY/Word.h"
 
 // Constants
 // /////////////////////////////////////////////////////////////////////////

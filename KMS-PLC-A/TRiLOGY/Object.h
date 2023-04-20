@@ -3,7 +3,7 @@
 // Copyright (C) 2022-2023 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
-// File      Common/TRiLOGY/Object.h
+// File      KMS-PLC-A/TRiLOGY/Object.h
 
 #pragma once
 

@@ -12,9 +12,9 @@
 #include <KMS/Text/File_ASCII.h>
 
 // ===== Local ==============================================================
-#include "../Common/TRiLOGY/Word.h"
-
 #include "../Common/TRiLOGY/Project.h"
+
+#include "TRiLOGY/Word.h"
 
 using namespace KMS;
 

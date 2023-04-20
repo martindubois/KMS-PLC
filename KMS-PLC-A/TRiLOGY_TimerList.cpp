@@ -8,9 +8,9 @@
 #include "Component.h"
 
 // ===== Local ==============================================================
-#include "../Common/TRiLOGY/Timer.h"
-
 #include "../Common/TRiLOGY/TimerList.h"
+
+#include "TRiLOGY/Timer.h"
 
 namespace TRiLOGY
 {

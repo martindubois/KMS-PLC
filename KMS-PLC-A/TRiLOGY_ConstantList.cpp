@@ -8,9 +8,9 @@
 #include "Component.h"
 
 // ===== Local ==============================================================
-#include "../Common/TRiLOGY/Constant.h"
-
 #include "../Common/TRiLOGY/ConstantList.h"
+
+#include "TRiLOGY/Constant.h"
 
 namespace TRiLOGY
 {

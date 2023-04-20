@@ -1,9 +1,9 @@
 
 // Author    KMS - Martin Dubois, P. Eng.
-// Copyright (C) 2022 KMS
+// Copyright (C) 2022-2023 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
-// File      Common/TRiLOGY/Function.h
+// File      KMS-PLC-A/TRiLOGY/Counter.h
 
 #pragma once
 
@@ -13,22 +13,25 @@
 namespace TRiLOGY
 {
 
-    class Function : public Object
+    class Counter : public Object
     {
 
     public:
 
-        Function(unsigned int aIndex, unsigned int aLineNo);
+        Counter(const char* aName, unsigned int aIndex, unsigned int aLineNo, unsigned int aInit, unsigned int aFlags);
+
+        unsigned int GetInit () const;
+
+        bool SetInit(unsigned int aInit, KMS::Text::File_UTF16* aFile_PC6);
 
         // ===== Object =====================================================
-        virtual ~Function();
+        virtual ~Counter();
         virtual void GetLine(wchar_t* aOut, unsigned int aOutSize_byte) const;
+
 
     private:
 
-        unsigned int mLength;
-        unsigned int mLineNo_Code_Begin;
-        unsigned int mLineNo_Code_End;
+        unsigned int mInit;
 
     };
 

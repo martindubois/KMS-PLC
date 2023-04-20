@@ -8,7 +8,7 @@
 #include "Component.h"
 
 // ===== Local ==============================================================
-#include "../Common/EBPro/DataPtr.h"
+#include "EBPro/DataPtr.h"
 
 using namespace KMS;
 

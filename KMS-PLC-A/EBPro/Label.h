@@ -1,9 +1,9 @@
 
 // Author    KMS - Martin Dubois, P. Eng.
-// Copyright (C) 2022 KMS
+// Copyright (C) 2022-2023 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
-// File      Common/EBPro/LabelState.h
+// File      KMS-PLC-A/EBPro/Label.h
 
 #pragma once
 
@@ -17,18 +17,32 @@
 namespace EBPro
 {
 
-    class LabelState
+    class LabelState;
+
+    class Label
     {
 
     public:
 
-        typedef std::vector<std::wstring> StringList;
+        typedef std::vector<LabelState*> StateList;
 
-        bool Set(unsigned int aLanguage, const wchar_t* aText);
+        Label(const wchar_t* aName = L"");
+
+        ~Label();
 
         void Export(FILE* aFile, const KMS::DI::Array& aLanguages) const;
 
-        StringList mStrings;
+        void Read(FILE* aFile);
+
+        void Verify() const;
+
+        void Write(FILE* aFile) const;
+
+        LabelState* FindOrCreate(unsigned int aState, bool* aChanged);
+
+        std::wstring mName;
+
+        StateList mStates;
 
     };
 

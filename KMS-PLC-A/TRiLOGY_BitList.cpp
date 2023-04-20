@@ -11,9 +11,10 @@
 #include <KMS/Console/Color.h>
 
 // ===== Local ==============================================================
-#include "../Common/TRiLOGY/Object.h"
 
 #include "../Common/TRiLOGY/BitList.h"
+
+#include "TRiLOGY/Object.h"
 
 using namespace KMS;
 

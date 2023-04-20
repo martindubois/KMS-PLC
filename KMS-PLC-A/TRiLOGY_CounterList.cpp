@@ -14,9 +14,9 @@
 #include <KMS/Console/Color.h>
 
 // ===== Local ==============================================================
-#include "../Common/TRiLOGY/Counter.h"
-
 #include "../Common/TRiLOGY/CounterList.h"
+
+#include "TRiLOGY/Counter.h"
 
 namespace TRiLOGY
 {

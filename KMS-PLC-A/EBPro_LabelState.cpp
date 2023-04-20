@@ -8,7 +8,7 @@
 #include "Component.h"
 
 // ===== Local ==============================================================
-#include "../Common/EBPro/LabelState.h"
+#include "EBPro/LabelState.h"
 
 #include "Convert.h"
 

@@ -11,11 +11,12 @@
 #include <KMS/Text/File_UTF16.h>
 
 // ===== Local ==============================================================
-#include "Function.h"
 #include "ObjectList.h"
 
 namespace TRiLOGY
 {
+
+    class Function;
 
     class FunctionList : public ObjectList
     {

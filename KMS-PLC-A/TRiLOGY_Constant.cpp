@@ -11,7 +11,7 @@
 #include <KMS/Console/Color.h>
 
 // ===== Local ==============================================================
-#include "../Common/TRiLOGY/Constant.h"
+#include "TRiLOGY/Constant.h"
 
 using namespace KMS;
 

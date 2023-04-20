@@ -15,9 +15,9 @@
 #include <KMS/Dbg/Stats_Timer.h>
 
 // ===== Local ==============================================================
-#include "../Common/EBPro/Address.h"
-
 #include "../Common/System.h"
+
+#include "EBPro/Address.h"
 
 using namespace KMS;
 

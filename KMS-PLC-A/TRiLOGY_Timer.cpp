@@ -8,7 +8,7 @@
 #include "Component.h"
 
 // ===== Local ==============================================================
-#include "../Common/TRiLOGY/Timer.h"
+#include "TRiLOGY/Timer.h"
 
 using namespace KMS;
 

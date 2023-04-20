@@ -8,7 +8,7 @@
 #include "Component.h"
 
 // ===== Local ==============================================================
-#include "../Common/TRiLOGY/Function.h"
+#include "TRiLOGY/Function.h"
 
 namespace TRiLOGY
 {

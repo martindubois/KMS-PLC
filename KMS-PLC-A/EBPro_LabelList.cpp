@@ -17,11 +17,12 @@
 #include <KMS/Text/File_ASCII.h>
 
 // ===== Local ==============================================================
-#include "../Common/EBPro/Label.h"
-#include "../Common/EBPro/LabelState.h"
 #include "../Common/EBPro/Software.h"
 
 #include "../Common/EBPro/LabelList.h"
+
+#include "EBPro/LabelState.h"
+#include "EBPro/Label.h"
 
 #include "Convert.h"
 

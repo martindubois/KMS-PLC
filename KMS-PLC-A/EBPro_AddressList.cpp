@@ -13,10 +13,11 @@
 #include <KMS/Convert.h>
 
 // ===== Local ==============================================================
-#include "../Common/EBPro/Address.h"
 #include "../Common/EBPro/Software.h"
 
 #include "../Common/EBPro/AddressList.h"
+
+#include "EBPro/Address.h"
 
 using namespace KMS;
 

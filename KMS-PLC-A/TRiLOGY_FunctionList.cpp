@@ -16,6 +16,8 @@
 // ===== Local ==============================================================
 #include "../Common/TRiLOGY/FunctionList.h"
 
+#include "TRiLOGY/Function.h"
+
 using namespace KMS;
 
 namespace TRiLOGY

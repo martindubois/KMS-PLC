@@ -11,11 +11,10 @@
 #include <KMS/Console/Color.h>
 
 // ===== Local ==============================================================
-#include "../Common/TRiLOGY/Object.h"
-#include "../Common/TRiLOGY/Constant.h"
-#include "../Common/TRiLOGY/Word.h"
-
 #include "../Common/TRiLOGY/DefineList.h"
+
+#include "TRiLOGY/Constant.h"
+#include "TRiLOGY/Word.h"
 
 using namespace KMS;
 
