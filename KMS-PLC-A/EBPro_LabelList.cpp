@@ -126,7 +126,7 @@ namespace EBPro
                 char lText[LINE_LENGTH];
 
                 // TODO Support something else than 4 spaces.
-                if (0 == strcmp("    STATE", lLine.c_str()))
+                if (0 == strncmp("    STATE", lLine.c_str(), 9))
                 {
                     KMS_EXCEPTION_ASSERT(NULL != lLabel, APPLICATION_ERROR, "Corruted source file", lLine.c_str());
 
