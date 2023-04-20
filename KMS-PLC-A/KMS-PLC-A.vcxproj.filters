@@ -16,7 +16,7 @@
     <Filter Include="Source Files\EBPro">
       <UniqueIdentifier>{f7cf23f7-2c86-4ce1-ab68-eabe2ba34f54}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\TRiLOGY">
+    <Filter Include="Source Files\TRiLOGI">
       <UniqueIdentifier>{e2d57991-06f3-4b45-b7c1-5e14caf01ecb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -48,50 +48,50 @@
     <ClCompile Include="EBPro_Project.cpp">
       <Filter>Source Files\EBPro</Filter>
     </ClCompile>
-    <ClCompile Include="TRiLOGY_BitList.cpp">
-      <Filter>Source Files\TRiLOGY</Filter>
+    <ClCompile Include="TRiLOGI_BitList.cpp">
+      <Filter>Source Files\TRiLOGI</Filter>
     </ClCompile>
-    <ClCompile Include="TRiLOGY_Constant.cpp">
-      <Filter>Source Files\TRiLOGY</Filter>
+    <ClCompile Include="TRiLOGI_Constant.cpp">
+      <Filter>Source Files\TRiLOGI</Filter>
     </ClCompile>
-    <ClCompile Include="TRiLOGY_ConstantList.cpp">
-      <Filter>Source Files\TRiLOGY</Filter>
+    <ClCompile Include="TRiLOGI_ConstantList.cpp">
+      <Filter>Source Files\TRiLOGI</Filter>
     </ClCompile>
-    <ClCompile Include="TRiLOGY_Counter.cpp">
-      <Filter>Source Files\TRiLOGY</Filter>
+    <ClCompile Include="TRiLOGI_Counter.cpp">
+      <Filter>Source Files\TRiLOGI</Filter>
     </ClCompile>
-    <ClCompile Include="TRiLOGY_CounterList.cpp">
-      <Filter>Source Files\TRiLOGY</Filter>
+    <ClCompile Include="TRiLOGI_CounterList.cpp">
+      <Filter>Source Files\TRiLOGI</Filter>
     </ClCompile>
-    <ClCompile Include="TRiLOGY_DefineList.cpp">
-      <Filter>Source Files\TRiLOGY</Filter>
+    <ClCompile Include="TRiLOGI_DefineList.cpp">
+      <Filter>Source Files\TRiLOGI</Filter>
     </ClCompile>
-    <ClCompile Include="TRiLOGY_Function.cpp">
-      <Filter>Source Files\TRiLOGY</Filter>
+    <ClCompile Include="TRiLOGI_Function.cpp">
+      <Filter>Source Files\TRiLOGI</Filter>
     </ClCompile>
-    <ClCompile Include="TRiLOGY_FunctionList.cpp">
-      <Filter>Source Files\TRiLOGY</Filter>
+    <ClCompile Include="TRiLOGI_FunctionList.cpp">
+      <Filter>Source Files\TRiLOGI</Filter>
     </ClCompile>
-    <ClCompile Include="TRiLOGY_Object.cpp">
-      <Filter>Source Files\TRiLOGY</Filter>
+    <ClCompile Include="TRiLOGI_Object.cpp">
+      <Filter>Source Files\TRiLOGI</Filter>
     </ClCompile>
-    <ClCompile Include="TRiLOGY_ObjectList.cpp">
-      <Filter>Source Files\TRiLOGY</Filter>
+    <ClCompile Include="TRiLOGI_ObjectList.cpp">
+      <Filter>Source Files\TRiLOGI</Filter>
     </ClCompile>
-    <ClCompile Include="TRiLOGY_Project.cpp">
-      <Filter>Source Files\TRiLOGY</Filter>
+    <ClCompile Include="TRiLOGI_Project.cpp">
+      <Filter>Source Files\TRiLOGI</Filter>
     </ClCompile>
-    <ClCompile Include="TRiLOGY_Timer.cpp">
-      <Filter>Source Files\TRiLOGY</Filter>
+    <ClCompile Include="TRiLOGI_Timer.cpp">
+      <Filter>Source Files\TRiLOGI</Filter>
     </ClCompile>
-    <ClCompile Include="TRiLOGY_TimerList.cpp">
-      <Filter>Source Files\TRiLOGY</Filter>
+    <ClCompile Include="TRiLOGI_TimerList.cpp">
+      <Filter>Source Files\TRiLOGI</Filter>
     </ClCompile>
-    <ClCompile Include="TRiLOGY_Word.cpp">
-      <Filter>Source Files\TRiLOGY</Filter>
+    <ClCompile Include="TRiLOGI_Word.cpp">
+      <Filter>Source Files\TRiLOGI</Filter>
     </ClCompile>
-    <ClCompile Include="TRiLOGY_WordList.cpp">
-      <Filter>Source Files\TRiLOGY</Filter>
+    <ClCompile Include="TRiLOGI_WordList.cpp">
+      <Filter>Source Files\TRiLOGI</Filter>
     </ClCompile>
     <ClCompile Include="EBPro_FunctionList.cpp">
       <Filter>Source Files\EBPro</Filter>
@@ -105,8 +105,8 @@
     <ClCompile Include="EBPro_Software.cpp">
       <Filter>Source Files\EBPro</Filter>
     </ClCompile>
-    <ClCompile Include="TRiLOGY_Software.cpp">
-      <Filter>Source Files\TRiLOGY</Filter>
+    <ClCompile Include="TRiLOGI_Software.cpp">
+      <Filter>Source Files\TRiLOGI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

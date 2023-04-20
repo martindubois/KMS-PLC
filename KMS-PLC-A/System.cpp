@@ -65,29 +65,29 @@ int System::Main(int aCount, const char** aVector)
 System::System()
 {
     AddEntry("EBPro"     , &mEBPro     , false);
-    AddEntry("TRiLOGY"   , &mTRiLOGY   , false);
+    AddEntry("TRiLOGI"   , &mTRiLOGI   , false);
 }
 
 void System::Clean()
 {
-    mTRiLOGY.Clean();
+    mTRiLOGI.Clean();
 }
 
 void System::Edit_emtp() { mEBPro  .Edit(); }
-void System::Edit_PC6 () { mTRiLOGY.Edit(); }
+void System::Edit_PC6 () { mTRiLOGI.Edit(); }
 
 void System::Export()
 {
     mEBPro  .Export();
-    mTRiLOGY.Export();
+    mTRiLOGI.Export();
 }
 
 void System::Import()
 {
     mEBPro  .Import();
-    mTRiLOGY.Import();
+    mTRiLOGI.Import();
 
-    AddressList* lAL = mTRiLOGY.GetSharedAddresses();
+    AddressList* lAL = mTRiLOGI.GetSharedAddresses();
     if ((NULL != lAL) && (0 < lAL->size()))
     {
         mEBPro.Import(*lAL);
@@ -97,21 +97,21 @@ void System::Import()
 void System::Parse()
 {
     mEBPro  .Parse();
-    mTRiLOGY.Parse();
+    mTRiLOGI.Parse();
 }
 
 void System::Read()
 {
     mEBPro  .Read();
-    mTRiLOGY.Read();
+    mTRiLOGI.Read();
 }
 
 void System::Verify()
 {
     mEBPro  .Verify();
-    mTRiLOGY.Verify();
+    mTRiLOGI.Verify();
 
-    if ((0 < mEBPro.mAddresses.GetCount()) && mTRiLOGY.IsValid())
+    if ((0 < mEBPro.mAddresses.GetCount()) && mTRiLOGI.IsValid())
     {
         std::cout << "Verifying shared addresses ..." << std::endl;
 
@@ -120,7 +120,7 @@ void System::Verify()
             switch (lA->GetType())
             {
             case AddressType::MODBUS_RTU_1X:
-                if (!mTRiLOGY.VerifyAddress_1X(lA->GetAddress_UInt16()))
+                if (!mTRiLOGI.VerifyAddress_1X(lA->GetAddress_UInt16()))
                 {
                     std::cout << Console::Color::RED << "    ERROR  The HMI access an invalid PLC address named \"";
                     std::cout << lA->GetName() << "\" (1x-" << lA->GetAddress() << ")" << Console::Color::WHITE << std::endl;
@@ -128,7 +128,7 @@ void System::Verify()
                 break;
 
             case AddressType::MODBUS_RTU_4X:
-                if (!mTRiLOGY.VerifyAddress_4X(lA->GetAddress_UInt16()))
+                if (!mTRiLOGI.VerifyAddress_4X(lA->GetAddress_UInt16()))
                 {
                     std::cout << Console::Color::RED << "    ERROR  The HMI access an invalid PLC address named \"";
                     std::cout << lA->GetName() << "\" (4x-" << lA->GetAddress() << ")" << Console::Color::WHITE << std::endl;
@@ -143,7 +143,7 @@ void System::Verify()
 
 void System::Write()
 {
-    mTRiLOGY.Write();
+    mTRiLOGI.Write();
 }
 
 // ===== CLI::Tool ==========================================================
@@ -182,7 +182,7 @@ void System::ExecuteCommand(const char* aC)
 int System::Run()
 {
     mEBPro  .ValidateConfig();
-    mTRiLOGY.ValidateConfig();
+    mTRiLOGI.ValidateConfig();
 
     Read  ();
     Parse ();

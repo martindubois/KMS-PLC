@@ -12,7 +12,7 @@
 
 // ===== Local ==============================================================
 #include "EBPro/Project.h"
-#include "TRiLOGY/Project.h"
+#include "TRiLOGI/Project.h"
 
 class System : public KMS::CLI::Tool
 {
@@ -48,13 +48,11 @@ public:
 
 private:
 
-    System(const System&);
-
-    const System& operator = (const System&);
+    NO_COPY(System);
 
     void ExecuteOperations();
 
     EBPro::Project   mEBPro;
-    TRiLOGY::Project mTRiLOGY;
+    TRiLOGI::Project mTRiLOGI;
 
 };

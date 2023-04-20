@@ -14,14 +14,14 @@ File      KMS-PLC/_DocUser/KMS.ReadMe.txt
 0.0.8-dev Windows 2023-04-04
 * Clear instructions for import and write (KP-14)
 * Edit command (KP-7)
-* TRiLOGY - No warning for a define used only once (KP-11)
+* TRiLOGI - No warning for a define used only once (KP-11)
 
 0.0.7-dev Windows 2023-01-23
 * EBPro::AddressList - Import addresses (KP-12)
 - KP-13 and 15 fixed
 
 0.0.5-dev Windows 2022-10-26
-* TRiLOGY
+* TRiLOGI
     * Clean
     * Export
     * Import
