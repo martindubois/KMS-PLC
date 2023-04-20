@@ -11,6 +11,9 @@
 #include <KMS/Cfg/MetaData.h>
 
 // ===== Local ==============================================================
+#include "../Common/EBPro/DataPtr.h"
+#include "../Common/EBPro/Function.h"
+
 #include "../Common/EBPro/FunctionList.h"
 
 using namespace KMS;
@@ -22,13 +25,18 @@ static const Cfg::MetaData MD_EXPORTED ("Exported = {Path}.mlb");
 static const Cfg::MetaData MD_SOURCES  ("Sources += {Path}.mlb.in0");
 static const Cfg::MetaData MD_TO_IMPORT("ToImport = {Path}.mlb");
 
+// Static function declarations
+// //////////////////////////////////////////////////////////////////////////
+
+static void Instruction_ToImport(const char* aImp, const char* aExp);
+
 namespace EBPro
 {
 
     // Public
     // //////////////////////////////////////////////////////////////////////
 
-    FunctionList::FunctionList()
+    FunctionList::FunctionList() : mFile(NULL), mFile_Data(NULL)
     {
         mSources.SetCreator(DI::String_Expand::Create);
 
@@ -39,17 +47,94 @@ namespace EBPro
 
     FunctionList::~FunctionList()
     {
-        // TODO
+        for (ByName::value_type lPair : mFunctions_ByName)
+        {
+            assert(NULL != lPair.second);
+
+            delete lPair.second;
+        }
+
+        if (NULL != mFile)
+        {
+            delete mFile;
+        }
     }
 
     void FunctionList::Import()
     {
-        // TODO
+        if (0 < mSources.GetCount())
+        {
+            std::cout << "Importing sources ..." << std::endl;
+
+            bool lChanged = false;
+
+            for (const DI::Container::Entry& lEntry : mSources.mInternal)
+            {
+                const DI::String* lSource = dynamic_cast<const DI::String*>(lEntry.Get());
+                assert(NULL != lSource);
+
+                lChanged |= Import(lSource->Get());
+            }
+
+            if (lChanged)
+            {
+                std::cout << "Imported\n";
+
+                char lPath[PATH_LENGTH];
+
+                File::Folder::CURRENT.GetPath(mToImport.Get(), lPath, sizeof(lPath));
+
+                FILE* lFile;
+
+                int lRet = fopen_s(&lFile, lPath, "wb");
+
+                char lMsg[64 + PATH_LENGTH];
+                sprintf_s(lMsg, "Cannot open \"%s\" for writting", lPath);
+                KMS_EXCEPTION_ASSERT(0 == lRet, APPLICATION_ERROR, lMsg, lRet);
+
+                Header_Write(lFile);
+
+                for (const ByName::value_type lPair : mFunctions_ByName)
+                {
+                    assert(NULL != lPair.second);
+
+                    lPair.second->Write(lFile);
+                }
+
+                fprintf(lFile, "\r\n");
+
+                lRet = fclose(lFile);
+                assert(0 == lRet);
+
+                Instruction_ToImport(mToImport.Get(), mExported.Get());
+            }
+            else
+            {
+                std::cout << "Imported - No change" << std::endl;
+            }
+        }
     }
 
     void FunctionList::Parse()
     {
-        // TODO
+        if (NULL != mFile_Data)
+        {
+            std::cout << "Parsing " << mExported.Get() << " ..." << std::endl;
+
+            DataPtr lPtr(mFile_Data, mFile->GetMappedSize());
+
+            Header_Parse(&lPtr);
+
+            while (!lPtr.IsAtEnd())
+            {
+                auto* lFunction = new Function();
+                lFunction->Read(&lPtr);
+
+                Add(lFunction);
+            }
+
+            std::cout << "Parsed" << std::endl;
+        }
     }
 
     void FunctionList::Read()
@@ -58,7 +143,11 @@ namespace EBPro
         {
             std::cout << "Reading " << mExported.Get() << " ..." << std::endl;
 
-            mFile.Read(File::Folder::CURRENT, mExported.Get());
+            mFile = new File::Binary(File::Folder::CURRENT, mExported);
+            assert(NULL != mFile);
+
+            mFile_Data = reinterpret_cast<const char*>(mFile->Map());
+            assert(NULL != mFile_Data);
 
             std::cout << "Read" << std::endl;
         }
@@ -91,9 +180,140 @@ namespace EBPro
         }
     }
 
-    void FunctionList::Verify() const
+    // Private
+    // //////////////////////////////////////////////////////////////////////
+
+    void FunctionList::Add(Function* aIn)
     {
-        // TODO
+        assert(NULL != aIn);
+
+        mFunctions_ByName.insert(ByName::value_type(aIn->GetName(), aIn));
     }
 
+    Function* FunctionList::FindByName(const char* aName)
+    {
+        assert(NULL != aName);
+
+        ByName::iterator lIt = mFunctions_ByName.find(aName);
+        if (mFunctions_ByName.end() == lIt)
+        {
+            return NULL;
+        }
+
+        assert(NULL != lIt->second);
+
+        return lIt->second;
+    }
+
+    void FunctionList::Header_Parse(DataPtr* aPtr)
+    {
+        assert(NULL != aPtr);
+
+        aPtr->Read(&mParsed_Type);
+        aPtr->Verify(14);
+        aPtr->Verify(1048577);
+        aPtr->Read(&mParsed_Name);
+        aPtr->Verify(63);
+        aPtr->Verify(65535);
+    }
+
+    void FunctionList::Header_Write(FILE* aOut)
+    {
+        DataPtr::Write(aOut, mParsed_Type);
+        DataPtr::Write(aOut, 14);
+        DataPtr::Write(aOut, 1048577);
+        DataPtr::Write(aOut, mParsed_Name);
+        DataPtr::Write(aOut, 63);
+        DataPtr::Write(aOut, 65535);
+    }
+
+    bool FunctionList::Import(const char* aFileName)
+    {
+        Text::File_ASCII lFile;
+
+        lFile.Read(File::Folder::CURRENT, aFileName);
+
+        lFile.RemoveComments_Script();
+
+        unsigned int lLineNo = 0;
+        bool         lResult = false;
+
+        while (lFile.GetLineCount() > lLineNo)
+        {
+            if (0 == strncmp(lFile.GetLine(lLineNo), "FUNCTION", 8))
+            {
+                auto lFunction = new Function();
+
+                lLineNo = lFunction->Read(lFile, lLineNo);
+
+                auto lExisting = FindByName(lFunction->GetName());
+                if (NULL == lExisting)
+                {
+                    Add(lFunction);
+                    lResult = true;
+                }
+                else
+                {
+                    if (*lFunction != *lExisting)
+                    {
+                        Replace(lFunction);
+                        lResult = true;
+                    }
+                }
+            }
+        }
+
+        return lResult;
+    }
+
+    void FunctionList::Replace(Function* aIn)
+    {
+        assert(NULL != aIn);
+
+        ByName::iterator lIt = mFunctions_ByName.find(aIn->GetName());
+        assert(mFunctions_ByName.end() != lIt);
+        assert(NULL != lIt->second);
+
+        delete lIt->second;
+
+        lIt->second = aIn;
+    }
+
+}
+
+// Static function declarations
+// //////////////////////////////////////////////////////////////////////////
+
+void Instruction_ToImport(const char* aImp, const char* aExp)
+{
+    assert(NULL != aImp);
+    assert(NULL != aExp);
+
+    std::cout << "INSTRUCTION\n";
+    std::cout << "    Tool \"EBPro\"\n";
+    //                     1           2          3          4          5           6         7
+    //            1234567890 12345678 9012345678 90123456 7890123456 789012 345678 90123456789012 3  456789
+    std::cout << "    - Tab \"Project\" - Group \"Library\" - Click \"Macro\" --> \"Macro Manager\"\n";
+    //            12345678901234567890123456789012345678901234567890123456789012345678901234567   89
+    std::cout << "      dialog                                                              [ ]\n";
+    //            1234567890123456 78901234567 890 12 34567890123456789012345 6789012345678901234567  89
+    std::cout << "        - Click \"Library...\" --> \"Macro Function Library\" dialog           [ ]\n";
+    //            12345678901234567890 1234567890 12 345 67890 123456789012345 6789012345678901234567  89
+    std::cout << "            - Click \"Import...\" --> \"Open\" dialog                           [ ]\n";
+    std::cout << "                - Select \"" << aImp << "\"\n";
+    //            1234567890123456789012345678 90123 45678901234567890123456789012345678901234567  89
+    std::cout << "                  and click \"Open\"                                        [ ]\n";
+    //            12345678901234567890 1234567890 123456 78901 234567890123456789012345678901234567  89
+    std::cout << "            - Click \"Export...\" --> \"Open\" dialog                         [ ]\n";
+    std::cout << "                - Select \"" << aExp << "\"\n";
+    //            1234567890123456789012345678 90123 45678901234567890123456789012345678901234567  89
+    std::cout << "                  and click \"Open\"                                        [ ]\n";
+    //            12345678901234567890 12345 6789012345678901234567890123456789012345678901234567  89
+    std::cout << "            - Click \"Exit\"                                                [ ]\n";
+    //            1234567890123456 78901 234 56789 012345678901234567890123456789012345678901234567   89
+    std::cout << "        - Click \"Exit\"                                                      [ ]\n";
+    std::cout << "Presse ENTER to continue" << std::endl;
+
+    char lLine[LINE_LENGTH];
+    fgets(lLine, sizeof(lLine), stdin);
 }

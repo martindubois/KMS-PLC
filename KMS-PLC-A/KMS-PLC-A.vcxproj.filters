@@ -96,6 +96,12 @@
     <ClCompile Include="EBPro_FunctionList.cpp">
       <Filter>Source Files\EBPro</Filter>
     </ClCompile>
+    <ClCompile Include="EBPro_DataPtr.cpp">
+      <Filter>Source Files\EBPro</Filter>
+    </ClCompile>
+    <ClCompile Include="EBPro_Function.cpp">
+      <Filter>Source Files\EBPro</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Convert.h">

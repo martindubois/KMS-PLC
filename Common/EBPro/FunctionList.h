@@ -11,7 +11,7 @@
 #include <KMS/DI/Array.h>
 #include <KMS/DI/Dictionary.h>
 #include <KMS/DI/String_Expand.h>
-#include <KMS/Text/File_ASCII.h>
+#include <KMS/File/Binary.h>
 
 namespace EBPro
 {
@@ -37,8 +37,6 @@ namespace EBPro
 
         void ValidateConfig() const;
 
-        void Verify() const;
-
         ByName mFunctions_ByName;
 
         // ===== Configurable attributes ====================================
@@ -48,13 +46,24 @@ namespace EBPro
 
     private:
 
-        FunctionList(const FunctionList&);
+        NO_COPY(FunctionList);
 
-        const FunctionList& operator = (const FunctionList&);
+        void Add(Function* aIn);
 
         Function* FindByName(const char* aName);
 
-        KMS::Text::File_ASCII mFile;
+        void Header_Parse(DataPtr* aPtr);
+        void Header_Write(FILE   * aOut);
+
+        bool Import(const char* aFileName);
+
+        void Replace(Function* aIn);
+
+        KMS::File::Binary* mFile;
+        const char       * mFile_Data;
+
+        std::string mParsed_Name;
+        std::string mParsed_Type;
 
     };
 
