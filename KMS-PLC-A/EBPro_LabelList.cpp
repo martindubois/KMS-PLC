@@ -19,6 +19,7 @@
 // ===== Local ==============================================================
 #include "../Common/EBPro/Label.h"
 #include "../Common/EBPro/LabelState.h"
+#include "../Common/EBPro/Software.h"
 
 #include "../Common/EBPro/LabelList.h"
 
@@ -34,19 +35,16 @@ static const Cfg::MetaData MD_LANGUAGES("Languages += {id}");
 static const Cfg::MetaData MD_SOURCES  ("Sources += {Path}.lbl.in0");
 static const Cfg::MetaData MD_TO_IMPORT("ToImport = {Path}.lbl");
 
-// Static function declarations
-// //////////////////////////////////////////////////////////////////////////
-
-static void Instruction_ToImport(const char* aImp, const char* aExp);
-
 namespace EBPro
 {
 
     // Public
     // //////////////////////////////////////////////////////////////////////
 
-    LabelList::LabelList()
+    LabelList::LabelList(Software* aSoftware) : mSoftware(aSoftware)
     {
+        assert(NULL != aSoftware);
+
         mLanguages.SetCreator(DI::String::Create);
         mSources  .SetCreator(DI::String_Expand::Create);
 
@@ -348,6 +346,7 @@ namespace EBPro
     void LabelList::Save_ToImport_LBL() const
     {
         assert(0xffff >= mLabels.size());
+        assert(NULL != mSoftware);
 
         if (0 < mToImport.GetLength())
         {
@@ -395,40 +394,8 @@ namespace EBPro
 
             std::cout << "Saved" << std::endl;
 
-            Instruction_ToImport(mToImport.Get(), mExported.Get());
+            mSoftware->ImportLabels(mToImport.Get(), mExported.Get());
         }
     }
 
-}
-// Static function declarations
-// //////////////////////////////////////////////////////////////////////////
-
-void Instruction_ToImport(const char* aImp, const char* aExp)
-{
-    assert(NULL != aImp);
-    assert(NULL != aExp);
-
-    std::cout << "INSTRUCTION\n";
-    std::cout << "    Tool \"EBPro\"\n";
-    //                     1           2          3          4          5           6         7
-    //            1234567890 12345678 9012345678 90123456 7890123456 789012 345678 901234567890123456 7   89
-    std::cout << "    - Tab \"Project\" - Group \"Library\" - Click \"Label\" ==> \"Label Tag Library\"\n";
-    //            12345678901234567890123456789012345678901234567890123456789012345678901234567   89
-    std::cout << "      dialog                                                              [ ]\n";
-    //            1234567890123456 7890123456789012345 678901 23456 7890123456789012345678901234567   89
-    std::cout << "        - Click \"Load Label File...\" ==> \"Open\" dialog                    [ ]\n";
-    std::cout << "            - Select \"" << aImp << "\"\n";
-    //            123456789012345678901234 56789 012345678901234567890123456789012345678901234567   89
-    std::cout << "              and click \"Open\"                                            [ ]\n";
-    //            1234567890123456 7890123456789012345 678901 23456 7890123456789012345678901234567   89
-    std::cout << "        - Click \"Save Label File...\" ==> \"Open\" dialog                    [ ]\n";
-    std::cout << "            - Select \"" << aExp << "\"\n";
-    //            123456789012345678901234 56789 012345678901234567890123456789012345678901234567   89
-    std::cout << "              and click \"Open\"                                            [ ]\n";
-    //            1234567890123456 789 0123456789012345678901234567890123456789012345678901234567   89
-    std::cout << "        - Click \"OK\"                                                      [ ]\n";
-    std::cout << "Presse ENTER to continue" << std::endl;
-
-    char lLine[LINE_LENGTH];
-    fgets(lLine, sizeof(lLine), stdin);
 }

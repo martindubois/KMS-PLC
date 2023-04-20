@@ -13,6 +13,7 @@
 // ===== Local ==============================================================
 #include "../Common/EBPro/DataPtr.h"
 #include "../Common/EBPro/Function.h"
+#include "../Common/EBPro/Software.h"
 
 #include "../Common/EBPro/FunctionList.h"
 
@@ -25,19 +26,16 @@ static const Cfg::MetaData MD_EXPORTED ("Exported = {Path}.mlb");
 static const Cfg::MetaData MD_SOURCES  ("Sources += {Path}.mlb.in0");
 static const Cfg::MetaData MD_TO_IMPORT("ToImport = {Path}.mlb");
 
-// Static function declarations
-// //////////////////////////////////////////////////////////////////////////
-
-static void Instruction_ToImport(const char* aImp, const char* aExp);
-
 namespace EBPro
 {
 
     // Public
     // //////////////////////////////////////////////////////////////////////
 
-    FunctionList::FunctionList() : mFile(NULL), mFile_Data(NULL)
+    FunctionList::FunctionList(Software* aSoftware) : mFile(NULL), mFile_Data(NULL), mSoftware(aSoftware)
     {
+        assert(NULL != aSoftware);
+
         mSources.SetCreator(DI::String_Expand::Create);
 
         AddEntry("Exported", &mExported, false, &MD_EXPORTED);
@@ -62,6 +60,8 @@ namespace EBPro
 
     void FunctionList::Import()
     {
+        assert(NULL != mSoftware);
+
         if (0 < mSources.GetCount())
         {
             std::cout << "Importing sources ..." << std::endl;
@@ -106,7 +106,7 @@ namespace EBPro
                 lRet = fclose(lFile);
                 assert(0 == lRet);
 
-                Instruction_ToImport(mToImport.Get(), mExported.Get());
+                mSoftware->ImportFunctions(mToImport.Get(), mExported.Get());
             }
             else
             {
@@ -279,41 +279,4 @@ namespace EBPro
         lIt->second = aIn;
     }
 
-}
-
-// Static function declarations
-// //////////////////////////////////////////////////////////////////////////
-
-void Instruction_ToImport(const char* aImp, const char* aExp)
-{
-    assert(NULL != aImp);
-    assert(NULL != aExp);
-
-    std::cout << "INSTRUCTION\n";
-    std::cout << "    Tool \"EBPro\"\n";
-    //                     1           2          3          4          5           6         7
-    //            1234567890 12345678 9012345678 90123456 7890123456 789012 345678 90123456789012 3  456789
-    std::cout << "    - Tab \"Project\" - Group \"Library\" - Click \"Macro\" --> \"Macro Manager\"\n";
-    //            12345678901234567890123456789012345678901234567890123456789012345678901234567   89
-    std::cout << "      dialog                                                              [ ]\n";
-    //            1234567890123456 78901234567 890 12 34567890123456789012345 6789012345678901234567  89
-    std::cout << "        - Click \"Library...\" --> \"Macro Function Library\" dialog           [ ]\n";
-    //            12345678901234567890 1234567890 12 345 67890 123456789012345 6789012345678901234567  89
-    std::cout << "            - Click \"Import...\" --> \"Open\" dialog                           [ ]\n";
-    std::cout << "                - Select \"" << aImp << "\"\n";
-    //            1234567890123456789012345678 90123 45678901234567890123456789012345678901234567  89
-    std::cout << "                  and click \"Open\"                                        [ ]\n";
-    //            12345678901234567890 1234567890 123456 78901 234567890123456789012345678901234567  89
-    std::cout << "            - Click \"Export...\" --> \"Open\" dialog                         [ ]\n";
-    std::cout << "                - Select \"" << aExp << "\"\n";
-    //            1234567890123456789012345678 90123 45678901234567890123456789012345678901234567  89
-    std::cout << "                  and click \"Open\"                                        [ ]\n";
-    //            12345678901234567890 12345 6789012345678901234567890123456789012345678901234567  89
-    std::cout << "            - Click \"Exit\"                                                [ ]\n";
-    //            1234567890123456 78901 234 56789 012345678901234567890123456789012345678901234567   89
-    std::cout << "        - Click \"Exit\"                                                      [ ]\n";
-    std::cout << "Presse ENTER to continue" << std::endl;
-
-    char lLine[LINE_LENGTH];
-    fgets(lLine, sizeof(lLine), stdin);
 }

@@ -1,6 +1,6 @@
 
 // Author    KMS - Martin Dubois, P. Eng.
-// Copyright (C) 2022 KMS
+// Copyright (C) 2022-2023 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
 // File      Common/EBPro/Project.h
@@ -8,10 +8,10 @@
 #pragma once
 
 // ===== Local ==============================================================
-#include "../Address.h"
 #include "AddressList.h"
 #include "FunctionList.h"
 #include "LabelList.h"
+#include "Software.h"
 
 namespace EBPro
 {
@@ -39,8 +39,6 @@ namespace EBPro
 
         void Verify() const;
 
-        void Write() const;
-
         AddressList mAddresses;
 
         // ===== Configurable attributes ====================================
@@ -50,6 +48,7 @@ namespace EBPro
 
         LabelList    mLabels;
         FunctionList mFunctions;
+        Software     mSoftware;
 
     };
 

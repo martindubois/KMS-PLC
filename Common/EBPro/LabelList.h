@@ -19,13 +19,14 @@ namespace EBPro
 {
 
     class Label;
+    class Software;
 
     class LabelList : public KMS::DI::Dictionary
     {
 
     public:
 
-        LabelList();
+        LabelList(Software* aSoftware);
 
         ~LabelList();
 
@@ -62,6 +63,8 @@ namespace EBPro
         void Save_ToImport_LBL() const;
 
         uint8_t mHeader[18];
+
+        Software* mSoftware;
 
         // ===== Configurable attributes ====================================
 

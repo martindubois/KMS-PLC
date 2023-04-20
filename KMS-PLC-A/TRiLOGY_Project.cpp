@@ -9,7 +9,6 @@
 
 // ===== Import/Includes ====================================================
 #include <KMS/Cfg/MetaData.h>
-#include <KMS/Proc/Process.h>
 #include <KMS/Text/File_ASCII.h>
 
 // ===== Local ==============================================================
@@ -82,11 +81,7 @@ namespace TRiLOGY
     {
         KMS_EXCEPTION_ASSERT(0 < mFileName.GetLength(), APPLICATION_USER_ERROR, "No file name configured", "");
 
-        Proc::Process lP(File::Folder::CURRENT, mFileName.Get());
-
-        lP.SetVerb("open");
-
-        lP.Run(0xffffffff);
+        mSoftware.Edit(mFileName.Get());
 
         Read();
         Reparse();

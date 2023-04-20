@@ -1,6 +1,6 @@
 
 // Author    KMS - Martin Dubois, P. Eng.
-// Copyright (C) 2022 KMS
+// Copyright (C) 2022-2023 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
 // File      KMS-PLC-A/EBPro_Project.cpp
@@ -28,7 +28,7 @@ namespace EBPro
     // Public
     // //////////////////////////////////////////////////////////////////////
 
-    Project::Project()
+    Project::Project() : mAddresses(&mSoftware), mFunctions(&mSoftware), mLabels(&mSoftware)
     {
         AddEntry("FileName", &mFileName, false, &MD_FILE_NAME);
 
@@ -41,13 +41,7 @@ namespace EBPro
     {
         KMS_EXCEPTION_ASSERT(0 < mFileName.GetLength(), APPLICATION_USER_ERROR, "No file name configured", "");
 
-        Proc::Process lP(File::Folder::CURRENT, mFileName.Get());
-
-        lP.SetVerb("open");
-
-        lP.Start();
-
-        lP.Detach();
+        mSoftware.Open(mFileName.Get());
     }
 
     void Project::Export() const
@@ -90,12 +84,7 @@ namespace EBPro
     void Project::Verify() const
     {
         mAddresses.Verify();
-        mFunctions.Verify();
         mLabels   .Verify();
-    }
-
-    void Project::Write() const
-    {
     }
 
 }

@@ -143,7 +143,6 @@ void System::Verify()
 
 void System::Write()
 {
-    mEBPro  .Write();
     mTRiLOGY.Write();
 }
 

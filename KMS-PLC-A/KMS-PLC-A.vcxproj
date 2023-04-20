@@ -38,6 +38,7 @@
     <ClCompile Include="EBPro_LabelList.cpp" />
     <ClCompile Include="EBPro_LabelState.cpp" />
     <ClCompile Include="EBPro_Project.cpp" />
+    <ClCompile Include="EBPro_Software.cpp" />
     <ClCompile Include="System.cpp" />
     <ClCompile Include="TRiLOGY_BitList.cpp" />
     <ClCompile Include="TRiLOGY_Constant.cpp" />
@@ -50,6 +51,7 @@
     <ClCompile Include="TRiLOGY_Project.cpp" />
     <ClCompile Include="TRiLOGY_Counter.cpp" />
     <ClCompile Include="TRiLOGY_CounterList.cpp" />
+    <ClCompile Include="TRiLOGY_Software.cpp" />
     <ClCompile Include="TRiLOGY_Timer.cpp" />
     <ClCompile Include="TRiLOGY_TimerList.cpp" />
     <ClCompile Include="TRiLOGY_Word.cpp" />

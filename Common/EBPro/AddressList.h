@@ -23,6 +23,7 @@ namespace EBPro
 {
 
     class Address;
+    class Software;
 
     class AddressList : public KMS::DI::Dictionary
     {
@@ -33,7 +34,7 @@ namespace EBPro
 
         typedef std::vector<Address*> Internal;
 
-        AddressList();
+        AddressList(Software* aSoftware);
 
         ~AddressList();
 
@@ -62,6 +63,8 @@ namespace EBPro
         bool Import(const char* aName, AddressType aType, uint16_t aAddr);
 
         KMS::Text::File_ASCII mFile_CSV;
+
+        Software* mSoftware;
 
         // ===== Configurable attributes ====================================
         KMS::DI::String_Expand mExported;

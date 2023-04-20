@@ -102,6 +102,12 @@
     <ClCompile Include="EBPro_Function.cpp">
       <Filter>Source Files\EBPro</Filter>
     </ClCompile>
+    <ClCompile Include="EBPro_Software.cpp">
+      <Filter>Source Files\EBPro</Filter>
+    </ClCompile>
+    <ClCompile Include="TRiLOGY_Software.cpp">
+      <Filter>Source Files\TRiLOGY</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Convert.h">

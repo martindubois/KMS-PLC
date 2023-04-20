@@ -16,7 +16,9 @@
 namespace EBPro
 {
 
+    class DataPtr;
     class Function;
+    class Software;
 
     class FunctionList : public KMS::DI::Dictionary
     {
@@ -25,7 +27,7 @@ namespace EBPro
 
         typedef std::map<std::string, Function*> ByName;
 
-        FunctionList();
+        FunctionList(Software* aSoftware);
 
         ~FunctionList();
 
@@ -64,6 +66,8 @@ namespace EBPro
 
         std::string mParsed_Name;
         std::string mParsed_Type;
+
+        Software* mSoftware;
 
     };
 

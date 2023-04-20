@@ -14,11 +14,11 @@
 #include <KMS/Text/File_UTF16.h>
 
 // ===== Local ==============================================================
-#include "../Address.h"
 #include "BitList.h"
 #include "CounterList.h"
 #include "DefineList.h"
 #include "FunctionList.h"
+#include "Software.h"
 #include "TimerList.h"
 
 namespace TRiLOGY
@@ -80,6 +80,7 @@ namespace TRiLOGY
         BitList       mInputs;
         BitList       mOutputs;
         BitList       mRelays;
+        Software      mSoftware;
         TimerList     mTimers;
 
         // ===== Configurable attributes ====================================
