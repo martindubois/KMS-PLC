@@ -26,7 +26,7 @@ namespace TRiLOGI
     // Public
     // //////////////////////////////////////////////////////////////////////
 
-    FunctionList::FunctionList() : ObjectList("function", L"~END_CUSTFNLABEL~\r", 256) {}
+    FunctionList::FunctionList() : ObjectList("function", 256) {}
 
     void FunctionList::Clear()
     {
@@ -43,14 +43,14 @@ namespace TRiLOGI
     unsigned int FunctionList::Parse_Code(const Text::File_UTF16& aFile_PC6, unsigned int aLineNo)
     {
         Function   * lFunction  = NULL;
-        unsigned int lLineCount = aFile_PC6.GetLineCount();
+        auto         lLineCount = aFile_PC6.GetLineCount();
         unsigned int lIndex;
-        unsigned int lLineNo    = aLineNo;
+        auto         lLineNo    = aLineNo;
         char         lMsg[64];
 
         for (; lLineNo < lLineCount; lLineNo++)
         {
-            const wchar_t* lLine = aFile_PC6.GetLine(lLineNo);
+            auto lLine = aFile_PC6.GetLine(lLineNo);
             assert(NULL != lLine);
 
             if (0 == wcscmp(L"~END_CUSTFN~\r", lLine)) { mLineNo_End_Code = lLineNo; lLineNo++; break; }
@@ -59,7 +59,7 @@ namespace TRiLOGI
             {
                 if (NULL != lFunction)
                 {
-                    std::pair<ByIndex::iterator, bool> lBI = mObjects_ByIndex.insert(ByIndex::value_type(lIndex, lFunction));
+                    auto lBI = mObjects_ByIndex.insert(ByIndex::value_type(lIndex, lFunction));
 
                     sprintf_s(lMsg, "Line %u  A function already exist at index %u", lLineNo, lIndex);
                     KMS_EXCEPTION_ASSERT(lBI.second, APPLICATION_ERROR, lMsg, "");
@@ -72,7 +72,7 @@ namespace TRiLOGI
 
                 unsigned int lLength;
 
-                int lRet = swscanf_s(lLine, L"Fn#%u,%u", &lIndex, &lLength);
+                auto lRet = swscanf_s(lLine, L"Fn#%u,%u", &lIndex, &lLength);
 
                 sprintf_s(lMsg, "Line %u  Corrupted PC6 file", lLineNo);
                 KMS_EXCEPTION_ASSERT(2 == lRet, APPLICATION_ERROR, lMsg, lRet);
@@ -83,7 +83,7 @@ namespace TRiLOGI
 
         if (NULL != lFunction)
         {
-            std::pair<ByIndex::iterator, bool> lBI = mObjects_ByIndex.insert(ByIndex::value_type(lIndex, lFunction));
+            auto lBI = mObjects_ByIndex.insert(ByIndex::value_type(lIndex, lFunction));
 
             sprintf_s(lMsg, "Line %u  A function already exist at index %u", aLineNo, lIndex);
             KMS_EXCEPTION_ASSERT(lBI.second, APPLICATION_ERROR, lMsg, "");
@@ -96,29 +96,29 @@ namespace TRiLOGI
 
     unsigned int FunctionList::Parse_Name(const Text::File_UTF16& aFile_PC6, unsigned int aLineNo)
     {
-        unsigned int lLineCount = aFile_PC6.GetLineCount();
-        unsigned int lLineNo    = aLineNo;
+        auto lLineCount = aFile_PC6.GetLineCount();
+        auto lLineNo    = aLineNo;
 
         for (; lLineNo < lLineCount; lLineNo++)
         {
-            const wchar_t* lLine = aFile_PC6.GetLine(lLineNo);
+            auto lLine = aFile_PC6.GetLine(lLineNo);
             if (0 == wcscmp(L"~END_CUSTFNLABEL~\r", lLine)) { SetLineNo_End(lLineNo); lLineNo++; break; }
 
             unsigned int lIndex;
             char         lMsg[64 + NAME_LENGTH];
             char         lName[NAME_LENGTH];
 
-            int lRet = swscanf_s(lLine, L"%u,%S", &lIndex, lName SizeInfo(lName));
+            auto lRet = swscanf_s(lLine, L"%u,%S", &lIndex, lName SizeInfo(lName));
 
             sprintf_s(lMsg, "Line %u  Corrupted PC6 file", aLineNo);
             KMS_EXCEPTION_ASSERT(2 == lRet, APPLICATION_ERROR, lMsg, lRet);
 
-            Function* lFunction = Find_ByIndex(lIndex);
+            auto lFunction = Find_ByIndex(lIndex);
             if (NULL == lFunction)
             {
                 lFunction = new Function(lIndex, 0);
 
-                std::pair<ByIndex::iterator, bool> lBI = mObjects_ByIndex.insert(ByIndex::value_type(lIndex, lFunction));
+                auto lBI = mObjects_ByIndex.insert(ByIndex::value_type(lIndex, lFunction));
 
                 sprintf_s(lMsg, "Line %u  A function already exist at index %u", aLineNo, lIndex);
                 KMS_EXCEPTION_ASSERT(lBI.second, APPLICATION_ERROR, lMsg, "");
@@ -126,7 +126,7 @@ namespace TRiLOGI
 
             lFunction->SetName(lName, lLineNo);
 
-            std::pair<ByName::iterator, bool> lBI = mObjects_ByName.insert(ByName::value_type(lName, lFunction));
+            auto lBI = mObjects_ByName.insert(ByName::value_type(lName, lFunction));
 
             sprintf_s(lMsg, "Line %u  A function named \"%s\" already exist", lLineNo, lName);
             KMS_EXCEPTION_ASSERT(lBI.second, APPLICATION_ERROR, lMsg, "");
@@ -143,9 +143,9 @@ namespace TRiLOGI
 
         unsigned int lCount = 0;
 
-        for (ByIndex::value_type& lVT : mObjects_ByIndex)
+        for (auto& lVT : mObjects_ByIndex)
         {
-            Object* lFunction = lVT.second;
+            auto lFunction = lVT.second;
             assert(NULL != lFunction);
 
             switch (aFile_PC6.CountOccurrence(lConverter.from_bytes(lFunction->GetName()).c_str()))

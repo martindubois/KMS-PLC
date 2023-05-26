@@ -52,7 +52,7 @@ namespace EBPro
 
     AddressList::~AddressList()
     {
-        for (Address* lAddress : mAddresses)
+        for (auto lAddress : mAddresses)
         {
             assert(NULL != lAddress);
 
@@ -64,9 +64,9 @@ namespace EBPro
     {
         assert(NULL != mSoftware);
 
-        for (const DI::Container::Entry& lEntry : mSources.mInternal)
+        for (const auto& lEntry : mSources.mInternal)
         {
-            const DI::String* lSource = dynamic_cast<const DI::String*>(lEntry.Get());
+            auto lSource = dynamic_cast<const DI::String*>(lEntry.Get());
             assert(NULL != lSource);
 
             std::cout << "Importing " << lSource->Get() << " ..." << std::endl;
@@ -78,9 +78,9 @@ namespace EBPro
             lFile.RemoveComments_Script();
             lFile.RemoveEmptyLines();
 
-            bool lChanged = false;
+            auto lChanged = false;
 
-            for (const std::string& lLine : lFile.mLines)
+            for (const auto& lLine : lFile.mLines)
             {
                 char lName[NAME_LENGTH];
                 char lType[NAME_LENGTH];
@@ -107,13 +107,13 @@ namespace EBPro
     {
         assert(NULL != mSoftware);
 
-        bool lChanged = false;
+        auto lChanged = false;
 
-        for (const ::Address& lA : aAL)
+        for (auto& lA : aAL)
         {
             char lLine[LINE_LENGTH];
 
-            Address* lAddress = Find_ByName(lA.GetName());
+            auto lAddress = Find_ByName(lA.GetName());
             if (NULL == lAddress)
             {
                 lChanged = true;
@@ -153,9 +153,9 @@ namespace EBPro
 
             unsigned int lLineNo = 0;
 
-            for (const std::string lLine : mFile_CSV.mLines)
+            for (const auto lLine : mFile_CSV.mLines)
             {
-                Address* lA = new Address(lLine.c_str(), lLineNo);
+                auto lA = new Address(lLine.c_str(), lLineNo);
 
                 mAddresses.push_back(lA);
 
@@ -184,7 +184,7 @@ namespace EBPro
     {
         if (0 < mExported.GetLength())
         {
-            const char* lStr = mExported.Get();
+            auto lStr = mExported.Get();
 
             char lMsg[64 + PATH_LENGTH];
             sprintf_s(lMsg, "\"%s\" does not exist", lStr);
@@ -196,9 +196,9 @@ namespace EBPro
     {
         std::cout << "Verifying addresses ..." << std::endl;
 
-        for (Internal::const_iterator lItA = mAddresses.begin(); lItA != mAddresses.end(); lItA++)
+        for (auto lItA = mAddresses.begin(); lItA != mAddresses.end(); lItA++)
         {
-            for (Internal::const_iterator lItB = lItA + 1; lItB != mAddresses.end(); lItB++)
+            for (auto lItB = lItA + 1; lItB != mAddresses.end(); lItB++)
             {
                 if (0 == strcmp((*lItA)->GetName(), (*lItB)->GetName()))
                 {
@@ -224,7 +224,7 @@ namespace EBPro
 
     Address* AddressList::Find_ByName(const char* aName)
     {
-        ByName::iterator lIt = mAddresses_ByName.find(aName);
+        auto lIt = mAddresses_ByName.find(aName);
         if (mAddresses_ByName.end() == lIt)
         {
             return NULL;
@@ -241,7 +241,7 @@ namespace EBPro
 
         char lLine[LINE_LENGTH];
 
-        Address* lAddress = Find_ByName(aName);
+        auto lAddress = Find_ByName(aName);
         if (NULL == lAddress)
         {
             lResult = true;

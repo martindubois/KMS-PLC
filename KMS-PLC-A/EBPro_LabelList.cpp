@@ -57,7 +57,7 @@ namespace EBPro
 
     LabelList::~LabelList()
     {
-        for (Label* lLabel : mLabels)
+        for (auto lLabel : mLabels)
         {
             assert(NULL != lLabel);
 
@@ -69,13 +69,13 @@ namespace EBPro
     {
         if (0 < mExported.GetLength())
         {
-            std::string lPath = mExported.mInternal + ".in0";
+            auto lPath = mExported.mInternal + ".in0";
 
             std::cout << "Exporting " << lPath << " ..." << std::endl;
 
             FILE* lFile;
 
-            errno_t lErr = fopen_s(&lFile, lPath.c_str(), "w,ccs=UTF-8");
+            auto lErr = fopen_s(&lFile, lPath.c_str(), "w,ccs=UTF-8");
 
             char lMsg[64 + PATH_LENGTH];
             sprintf_s(lMsg, "Cannot open \"%s\" for writing", lPath.c_str());
@@ -83,12 +83,12 @@ namespace EBPro
 
             assert(NULL != lFile);
 
-            for (const Label* lLabel : mLabels)
+            for (auto lLabel : mLabels)
             {
                 lLabel->Export(lFile, mLanguages);
             }
 
-            int lRet = fclose(lFile);
+            auto lRet = fclose(lFile);
             assert(0 == lRet);
 
             std::cout << "Exported" << std::endl;
@@ -97,11 +97,11 @@ namespace EBPro
 
     void LabelList::Import()
     {
-        bool lChanged = false;
+        auto lChanged = false;
 
-        for (const DI::Container::Entry& lEntry : mSources.mInternal)
+        for (const auto& lEntry : mSources.mInternal)
         {
-            const DI::String* lSource = dynamic_cast<const DI::String*>(lEntry.Get());
+            auto lSource = dynamic_cast<const DI::String*>(lEntry.Get());
             assert(NULL != lSource);
 
             std::cout << "Importing " << lSource->Get() << " ..." << std::endl;
@@ -119,7 +119,7 @@ namespace EBPro
 
             std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> lConverter;
 
-            for (const std::string& lLine : lFile.mLines)
+            for (const auto& lLine : lFile.mLines)
             {
                 char lLanguage[NAME_LENGTH];
                 char lText[LINE_LENGTH];
@@ -179,7 +179,7 @@ namespace EBPro
 
             FILE* lFile;
 
-            errno_t lErr = fopen_s(&lFile, mExported.Get(), "rb");
+            auto lErr = fopen_s(&lFile, mExported.Get(), "rb");
 
             char lMsg[64 + PATH_LENGTH];
             sprintf_s(lMsg, "Cannot open \"%s\" for reading", mExported.Get());
@@ -189,7 +189,7 @@ namespace EBPro
 
             uint16_t lLabelCount;
 
-            size_t lSize_byte = fread_s(&lLabelCount SizeInfo(lLabelCount) + 1, 1, sizeof(lLabelCount), lFile);
+            auto lSize_byte = fread_s(&lLabelCount SizeInfo(lLabelCount) + 1, 1, sizeof(lLabelCount), lFile);
             KMS_EXCEPTION_ASSERT(sizeof(lLabelCount) == lSize_byte, APPLICATION_ERROR, "Cannot read the exported LBL file", lSize_byte);
 
             lSize_byte = fread_s(mHeader SizeInfo(mHeader) + 1, 1, sizeof(mHeader), lFile);
@@ -197,7 +197,7 @@ namespace EBPro
 
             while (!feof(lFile))
             {
-                Label* lLabel = new Label;
+                auto lLabel = new Label;
 
                 lLabel->Read(lFile);
 
@@ -208,7 +208,7 @@ namespace EBPro
 
             KMS_EXCEPTION_ASSERT(lLabelCount == mLabels.size(), APPLICATION_ERROR, "Corrupted exported LBL file", lLabelCount);
 
-            int lRet = fclose(lFile);
+            auto lRet = fclose(lFile);
             assert(0 == lRet);
 
             std::cout << "Parsed" << std::endl;
@@ -221,7 +221,7 @@ namespace EBPro
     {
         if (0 < mExported.GetLength())
         {
-            const char* lStr = mExported.Get();
+            auto lStr = mExported.Get();
 
             char lMsg[64 + PATH_LENGTH];
 
@@ -230,9 +230,9 @@ namespace EBPro
 
             KMS_EXCEPTION_ASSERT(0 < mLanguages.GetCount(), APPLICATION_USER_ERROR, "The configuration file must define language", "");
 
-            for (const DI::Container::Entry& lEntry : mLanguages.mInternal)
+            for (auto& lEntry : mLanguages.mInternal)
             {
-                const DI::String* lLanguage = dynamic_cast<const DI::String*>(lEntry.Get());
+                auto lLanguage = dynamic_cast<const DI::String*>(lEntry.Get());
                 assert(NULL != lLanguage);
 
                 sprintf_s(lMsg, "\"%s\" is not a valid language id", lLanguage->Get());
@@ -241,9 +241,9 @@ namespace EBPro
 
             if (0 < mSources.GetCount())
             {
-                for (const DI::Container::Entry& lEntry : mSources.mInternal)
+                for (auto& lEntry : mSources.mInternal)
                 {
-                    const DI::String* lSource = dynamic_cast<const DI::String*>(lEntry.Get());
+                    auto lSource = dynamic_cast<const DI::String*>(lEntry.Get());
                     assert(NULL != lSource);
 
                     lStr = lSource->Get();
@@ -282,7 +282,7 @@ namespace EBPro
 
     Label* LabelList::Create(const wchar_t* aName)
     {
-        Label* lResult = new Label(aName);
+        auto lResult = new Label(aName);
 
         mLabels.push_back(lResult);
 
@@ -291,7 +291,7 @@ namespace EBPro
 
     Label* LabelList::Find(const wchar_t* aName)
     {
-        for (Label* lLabel : mLabels)
+        for (auto lLabel : mLabels)
         {
             assert(NULL != lLabel);
 
@@ -313,7 +313,7 @@ namespace EBPro
 
         std::wstring lName(lConverter.from_bytes(aName));
 
-        Label* lResult = Find(lName.c_str());
+        auto lResult = Find(lName.c_str());
         if (NULL == lResult)
         {
             *aChanged = true;
@@ -328,9 +328,9 @@ namespace EBPro
     {
         unsigned int lResult = 0;
 
-        for (const DI::Container::Entry& lEntry : mLanguages.mInternal)
+        for (auto& lEntry : mLanguages.mInternal)
         {
-            const DI::String* lId = dynamic_cast<const DI::String*>(lEntry.Get());
+            auto lId = dynamic_cast<const DI::String*>(lEntry.Get());
             assert(NULL != lId);
 
             if (*lId == aId)
@@ -355,7 +355,7 @@ namespace EBPro
 
             FILE* lFile;
 
-            errno_t lErr = fopen_s(&lFile, mToImport.Get(), "wb");
+            auto lErr = fopen_s(&lFile, mToImport.Get(), "wb");
 
             char lMsg[64 + PATH_LENGTH];
             sprintf_s(lMsg, "Cannot open \"%s\" for writing", mToImport.Get());
@@ -363,19 +363,19 @@ namespace EBPro
 
             assert(NULL != lFile);
 
-            uint16_t lLabelCount = static_cast<uint16_t>(mLabels.size());
+            auto lLabelCount = static_cast<uint16_t>(mLabels.size());
 
-            size_t lSize_byte = fwrite(&lLabelCount, 1, sizeof(lLabelCount), lFile);
+            auto lSize_byte = fwrite(&lLabelCount, 1, sizeof(lLabelCount), lFile);
             KMS_EXCEPTION_ASSERT(sizeof(lLabelCount) == lSize_byte, APPLICATION_ERROR, "Cannot write the output LBL file", lSize_byte);
 
             lSize_byte = fwrite(mHeader, 1, sizeof(mHeader), lFile);
             KMS_EXCEPTION_ASSERT(sizeof(mHeader) == lSize_byte, APPLICATION_ERROR, "Cannot write the output LBL file", lSize_byte);
 
-            bool lFirst = true;
+            auto lFirst = true;
 
             uint8_t lMark[2] = { 0x01, 0x80 };
 
-            for (const Label* lLabel : mLabels)
+            for (auto lLabel : mLabels)
             {
                 if (lFirst)
                 {
@@ -390,7 +390,7 @@ namespace EBPro
                 lLabel->Write(lFile);
             }
 
-            int lRet = fclose(lFile);
+            auto lRet = fclose(lFile);
             assert(0 == lRet);
 
             std::cout << "Saved" << std::endl;

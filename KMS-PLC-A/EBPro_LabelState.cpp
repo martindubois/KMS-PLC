@@ -58,7 +58,7 @@ namespace EBPro
 
         unsigned int lIndex = 0;
 
-        for (const std::wstring& lStr : mStrings)
+        for (auto& lStr : mStrings)
         {
             if (0 < lStr.size())
             {

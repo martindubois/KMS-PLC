@@ -124,7 +124,7 @@ namespace EBPro
         DataPtr::Write(aOut, DataType_to_UInt32(mReturnType));
         DataPtr::Write(aOut, static_cast<uint32_t>(mArguments.size()));
 
-        for (DataType lType : mArguments)
+        for (auto lType : mArguments)
         {
             DataPtr::Write(aOut, DataType_to_UInt32(lType));
         }

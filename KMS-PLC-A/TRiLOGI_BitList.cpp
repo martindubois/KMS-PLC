@@ -25,16 +25,16 @@ namespace TRiLOGI
     // //////////////////////////////////////////////////////////////////////
 
     BitList::BitList(const char* aElementName, unsigned int aStartAddress, unsigned int aMaxQty)
-        : ObjectList(aElementName, L"~\r", aMaxQty), mStartAddress(aStartAddress)
+        : ObjectList(aElementName, aMaxQty), mStartAddress(aStartAddress)
     {}
 
     void BitList::GetAddresses(const std::regex& aRegEx, AddressList* aOut) const
     {
         assert(NULL != aOut);
 
-        for (ByIndex::value_type lVT : mObjects_ByIndex)
+        for (auto lVT : mObjects_ByIndex)
         {
-            Object* lBit = lVT.second;
+            auto lBit = lVT.second;
             assert(NULL != lBit);
 
             if ((!lBit->TestFlag(Object::FLAG_NOT_USED)) && std::regex_match(lBit->GetName(), aRegEx))
@@ -46,7 +46,7 @@ namespace TRiLOGI
 
     bool BitList::Import(const char* aName)
     {
-        Object* lObject = FindObject_ByName(aName);
+        auto lObject = FindObject_ByName(aName);
         if (NULL == lObject)
         {
             unsigned int lIndex;
@@ -65,13 +65,13 @@ namespace TRiLOGI
 
     bool BitList::Import(const char* aName, unsigned int aIndex)
     {
-        Object* lObject = FindObject_ByName(aName);
+        auto lObject = FindObject_ByName(aName);
         if (NULL == lObject)
         {
             lObject = FindObject_ByIndex(aIndex);
             if (NULL == lObject)
             {
-                unsigned int lLineNo = FindLineNo(aIndex);
+                auto lLineNo = FindLineNo(aIndex);
 
                 lObject = new Object(aName, aIndex, lLineNo, Object::FLAG_TO_INSERT);
 

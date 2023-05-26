@@ -46,7 +46,7 @@ namespace EBPro
 
     FunctionList::~FunctionList()
     {
-        for (ByName::value_type lPair : mFunctions_ByName)
+        for (auto lPair : mFunctions_ByName)
         {
             assert(NULL != lPair.second);
 
@@ -67,9 +67,9 @@ namespace EBPro
         {
             std::cout << "Importing sources ..." << std::endl;
 
-            bool lChanged = false;
+            auto lChanged = false;
 
-            for (const DI::Container::Entry& lEntry : mSources.mInternal)
+            for (const auto& lEntry : mSources.mInternal)
             {
                 const DI::String* lSource = dynamic_cast<const DI::String*>(lEntry.Get());
                 assert(NULL != lSource);
@@ -87,7 +87,7 @@ namespace EBPro
 
                 FILE* lFile;
 
-                int lRet = fopen_s(&lFile, lPath, "wb");
+                auto lRet = fopen_s(&lFile, lPath, "wb");
 
                 char lMsg[64 + PATH_LENGTH];
                 sprintf_s(lMsg, "Cannot open \"%s\" for writting", lPath);
@@ -95,7 +95,7 @@ namespace EBPro
 
                 Header_Write(lFile);
 
-                for (const ByName::value_type lPair : mFunctions_ByName)
+                for (const auto lPair : mFunctions_ByName)
                 {
                     assert(NULL != lPair.second);
 
@@ -128,7 +128,7 @@ namespace EBPro
 
             while (!lPtr.IsAtEnd())
             {
-                auto* lFunction = new Function();
+                auto lFunction = new Function();
                 lFunction->Read(&lPtr);
 
                 Add(lFunction);
@@ -160,15 +160,15 @@ namespace EBPro
 
         if (0 < mExported.GetLength())
         {
-            const char* lStr = mExported.Get();
+            auto lStr = mExported.Get();
 
             sprintf_s(lMsg, "\"%s\" does not exist", lStr);
             KMS_EXCEPTION_ASSERT(File::Folder::CURRENT.DoesFileExist(lStr), APPLICATION_USER_ERROR, lMsg, "");
         }
 
-        for (const DI::Container::Entry& lEntry : mSources.mInternal)
+        for (auto& lEntry : mSources.mInternal)
         {
-            const DI::String* lSource = dynamic_cast<const DI::String*>(lEntry.Get());
+            auto lSource = dynamic_cast<const DI::String*>(lEntry.Get());
             assert(NULL != lSource);
 
             sprintf_s(lMsg, "\"%s\" does not exist", lSource->Get());
@@ -195,7 +195,7 @@ namespace EBPro
     {
         assert(NULL != aName);
 
-        ByName::iterator lIt = mFunctions_ByName.find(aName);
+        auto lIt = mFunctions_ByName.find(aName);
         if (mFunctions_ByName.end() == lIt)
         {
             return NULL;
@@ -237,7 +237,7 @@ namespace EBPro
         lFile.RemoveComments_Script();
 
         unsigned int lLineNo = 0;
-        bool         lResult = false;
+        auto         lResult = false;
 
         while (lFile.GetLineCount() > lLineNo)
         {
@@ -271,7 +271,7 @@ namespace EBPro
     {
         assert(NULL != aIn);
 
-        ByName::iterator lIt = mFunctions_ByName.find(aIn->GetName());
+        auto lIt = mFunctions_ByName.find(aIn->GetName());
         assert(mFunctions_ByName.end() != lIt);
         assert(NULL != lIt->second);
 

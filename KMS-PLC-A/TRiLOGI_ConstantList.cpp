@@ -35,7 +35,7 @@ namespace TRiLOGI
 
     void ConstantList::Verify() const
     {
-        for (const ByName::value_type& lVT : mConstants_ByName)
+        for (auto& lVT : mConstants_ByName)
         {
             assert(NULL != lVT.second);
 

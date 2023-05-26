@@ -115,7 +115,7 @@ void System::Verify()
     {
         std::cout << "Verifying shared addresses ..." << std::endl;
 
-        for (const EBPro::Address* lA : mEBPro.mAddresses.mAddresses)
+        for (const auto lA : mEBPro.mAddresses.mAddresses)
         {
             switch (lA->GetType())
             {

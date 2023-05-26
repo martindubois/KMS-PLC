@@ -24,7 +24,7 @@ namespace TRiLOGI
     // Public
     // //////////////////////////////////////////////////////////////////////
 
-    DefineList::DefineList() : ObjectList("define", L"~END_DEFINES~\r", 2000) {}
+    DefineList::DefineList() : ObjectList("define", 2000) {}
 
     void DefineList::Clear()
     {
@@ -36,7 +36,7 @@ namespace TRiLOGI
 
     bool DefineList::ImportConstant(const char* aName, const char* aValue)
     {
-        Object* lObject = FindObject_ByName(aName);
+        auto lObject = FindObject_ByName(aName);
         if (NULL == lObject)
         {
             unsigned int lIndex;
@@ -44,7 +44,7 @@ namespace TRiLOGI
 
             FindIndexAndLineNo(&lIndex, &lLineNo);
 
-            Constant* lConstant = new Constant(aName, lIndex, lLineNo, aValue, "", Object::FLAG_TO_INSERT);
+            auto lConstant = new Constant(aName, lIndex, lLineNo, aValue, "", Object::FLAG_TO_INSERT);
 
             mConstants.AddConstant(lConstant);
 
@@ -53,7 +53,7 @@ namespace TRiLOGI
             return true;
         }
 
-        Constant* lConstant = dynamic_cast<Constant*>(lObject);
+        auto lConstant = dynamic_cast<Constant*>(lObject);
         if (NULL == lConstant)
         {
             std::cout << Console::Color::RED;
@@ -67,7 +67,7 @@ namespace TRiLOGI
 
     bool DefineList::ImportWord(const char* aName)
     {
-        Object* lObject = FindObject_ByName(aName);
+        auto lObject = FindObject_ByName(aName);
         if (NULL == lObject)
         {
             unsigned int lIndex;
@@ -82,7 +82,7 @@ namespace TRiLOGI
             return true;
         }
 
-        Word* lWord = dynamic_cast<Word*>(lObject);
+        auto lWord = dynamic_cast<Word*>(lObject);
         if (NULL == lWord)
         {
             std::cout << Console::Color::RED;
@@ -96,10 +96,10 @@ namespace TRiLOGI
 
     bool DefineList::ImportWord(const char* aName, unsigned int aOffset)
     {
-        Object* lObject = FindObject_ByName(aName);
+        auto lObject = FindObject_ByName(aName);
         if (NULL == lObject)
         {
-            const Word* lWord = mWords.Find_ByOffset(aOffset);
+            auto lWord = mWords.Find_ByOffset(aOffset);
             if (NULL != lWord)
             {
                 std::cout << Console::Color::RED;
@@ -113,7 +113,7 @@ namespace TRiLOGI
 
             FindIndexAndLineNo(&lIndex, &lLineNo);
 
-            Word* lNewWord = new Word(aName, lIndex, lLineNo, aOffset, "", Object::FLAG_TO_INSERT);
+            auto lNewWord = new Word(aName, lIndex, lLineNo, aOffset, "", Object::FLAG_TO_INSERT);
 
             mWords.AddWord(lNewWord);
 
@@ -122,7 +122,7 @@ namespace TRiLOGI
             return true;
         }
 
-        Word* lWord = dynamic_cast<Word*>(lObject);
+        auto lWord = dynamic_cast<Word*>(lObject);
         if (NULL == lWord)
         {
             std::cout << Console::Color::RED;
@@ -146,7 +146,7 @@ namespace TRiLOGI
     {
         assert(NULL != aFile_PC6);
 
-        unsigned int lResult = ObjectList::Parse(aFile_PC6, aLineNo, 0);
+        auto lResult = ObjectList::Parse(aFile_PC6, aLineNo, 0);
 
         std::cout << "    " << mConstants.GetCount() << " constants\n";
         std::cout << "    " << mWords    .GetCount() << " words" << std::endl;
@@ -174,7 +174,7 @@ namespace TRiLOGI
         char         lMsg[64];
         char         lText[LINE_LENGTH];
 
-        int lRet = swscanf_s(aLine, L"%u,%S", &lIndex, lText SizeInfo(lText));
+        auto lRet = swscanf_s(aLine, L"%u,%S", &lIndex, lText SizeInfo(lText));
 
         sprintf_s(lMsg, "Line %u  Invalid define line", aLineNo);
         KMS_EXCEPTION_ASSERT(2 == lRet, APPLICATION_ERROR, lMsg, lRet);
@@ -190,7 +190,7 @@ namespace TRiLOGI
 
         if (2 <= sscanf_s(lText, "%[^,],DM[%u],%[^\n\r\t]", &lName SizeInfo(lName), &lOffset, lComment SizeInfo(lComment)))
         {
-            Word* lWord = new Word(lName, lIndex, aLineNo, lOffset, lComment, aFlags);
+            auto lWord = new Word(lName, lIndex, aLineNo, lOffset, lComment, aFlags);
 
             mWords.AddWord(lWord);
 
@@ -198,7 +198,7 @@ namespace TRiLOGI
         }
         else if (1 <= sscanf_s(lText, "%[^,],%[^,],%[^\n\r\t]", &lName SizeInfo(lName), lValue SizeInfo(lValue), lComment SizeInfo(lComment)))
         {
-            Constant* lConstant = new Constant(lName, lIndex, aLineNo, lValue, lComment, aFlags);
+            auto lConstant = new Constant(lName, lIndex, aLineNo, lValue, lComment, aFlags);
 
             mConstants.AddConstant(lConstant);
 

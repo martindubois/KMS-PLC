@@ -54,7 +54,7 @@ namespace EBPro
 
     Label::~Label()
     {
-        for (LabelState* lState : mStates)
+        for (auto lState : mStates)
         {
             assert(NULL != lState);
 
@@ -68,7 +68,7 @@ namespace EBPro
 
         fwprintf(aFile, L"LABEL %s\n", mName.c_str());
 
-        for (const LabelState* lState : mStates)
+        for (auto lState : mStates)
         {
             lState->Export(aFile, aLanguages);
         }
@@ -78,7 +78,7 @@ namespace EBPro
     {
         assert(NULL != aFile);
 
-        ReadResult lRR = Read_String(aFile, &mName);
+        auto lRR = Read_String(aFile, &mName);
         KMS_EXCEPTION_ASSERT(ReadResult::OK == lRR, APPLICATION_ERROR, "Corrupted exported LBL file", "");
 
         uint16_t lStateCount;
@@ -87,14 +87,14 @@ namespace EBPro
 
         for (unsigned int i = 0; i < lStateCount; i++)
         {
-            LabelState* lState = new LabelState;
+            auto lState = new LabelState;
 
             mStates.push_back(lState);
         }
 
         for (unsigned int i = 0; i < LANGUAGE_QTY; i++)
         {
-            for (LabelState* lState : mStates)
+            for (auto lState : mStates)
             {
                 std::wstring lStr;
 
@@ -145,13 +145,13 @@ namespace EBPro
 
         Write_String(aFile, mName);
 
-        uint16_t lStateCount = static_cast<uint16_t>(mStates.size());
+        auto lStateCount = static_cast<uint16_t>(mStates.size());
 
         Write_Data(aFile, &lStateCount, sizeof(lStateCount));
 
         for (unsigned int i = 0; i < LANGUAGE_QTY; i++)
         {
-            for (const LabelState* lState : mStates)
+            for (auto lState : mStates)
             {
                 Write_String(aFile, lState->mStrings[i]);
             }
@@ -159,7 +159,7 @@ namespace EBPro
 
         std::wstring lEmpty(L"");
 
-        size_t lEmptyString = mStates.size() * 16;
+        auto lEmptyString = mStates.size() * 16;
         for (unsigned int i = 0; i < lEmptyString; i++)
         {
             Write_String(aFile, lEmpty);
@@ -202,7 +202,7 @@ void Read_Data(FILE* aFile, void* aOut, unsigned int aOutSize_byte)
     assert(NULL != aOut);
     assert(0 < aOutSize_byte);
 
-    size_t lSize_byte = fread_s(aOut SizeInfoV(aOutSize_byte + 1), 1, aOutSize_byte, aFile);
+    auto lSize_byte = fread_s(aOut SizeInfoV(aOutSize_byte + 1), 1, aOutSize_byte, aFile);
     KMS_EXCEPTION_ASSERT(aOutSize_byte == lSize_byte, APPLICATION_ERROR, "Corrupted exported LBL file", lSize_byte);
 }
 
@@ -212,7 +212,7 @@ ReadResult Read_String(FILE* aFile, std::wstring* aOut)
 
     uint8_t lHeader[4];
 
-    size_t lSize_byte = fread_s(lHeader SizeInfoV(3), 1, 2, aFile);
+    auto lSize_byte = fread_s(lHeader SizeInfoV(3), 1, 2, aFile);
     if (0 == lSize_byte)
     {
         return ReadResult::END_OF_LABEL;
@@ -269,7 +269,7 @@ void Write_Data(FILE* aFile, const void* aIn, unsigned int aInSize_byte)
     assert(NULL != aIn);
     assert(0 < aInSize_byte);
 
-    size_t lSize_byte = fwrite(aIn, 1, aInSize_byte, aFile);
+    auto lSize_byte = fwrite(aIn, 1, aInSize_byte, aFile);
     KMS_EXCEPTION_ASSERT(aInSize_byte == lSize_byte, APPLICATION_ERROR, "Cannot write the output LBL file", lSize_byte);
 }
 
@@ -277,7 +277,7 @@ void Write_String(FILE* aFile, const std::wstring& aIn)
 {
     assert(0xffff >= aIn.size());
 
-    uint16_t lLength = static_cast<uint16_t>(aIn.size());
+    auto lLength = static_cast<uint16_t>(aIn.size());
 
     uint8_t lHeader[4];
 

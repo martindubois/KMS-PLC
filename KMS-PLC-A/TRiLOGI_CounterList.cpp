@@ -24,7 +24,7 @@ namespace TRiLOGI
     // Public
     // //////////////////////////////////////////////////////////////////////
 
-    CounterList::CounterList() : ObjectList("counter", L"~\r", 256) {}
+    CounterList::CounterList() : ObjectList("counter", 256) {}
 
     // Protected
     // //////////////////////////////////////////////////////////////////////
@@ -39,13 +39,13 @@ namespace TRiLOGI
         unsigned int lInit;
         char         lName[NAME_LENGTH];
 
-        int lRet = swscanf_s(aLine, L"%u,%S %u", &lIndex, lName SizeInfo(lName), &lInit);
+        auto lRet = swscanf_s(aLine, L"%u,%S %u", &lIndex, lName SizeInfo(lName), &lInit);
 
         char lMsg[64];
         sprintf_s(lMsg, "Line %u  Invalid timer line", aLineNo);
         KMS_EXCEPTION_ASSERT(3 == lRet, APPLICATION_ERROR, lMsg, lRet);
 
-        Counter* lCounter = new Counter(lName, lIndex, aLineNo, lInit, aFlags);
+        auto lCounter = new Counter(lName, lIndex, aLineNo, lInit, aFlags);
 
         ObjectList::AddObject(lCounter);
     }
@@ -54,7 +54,7 @@ namespace TRiLOGI
     {
         Counter* lCounter;
 
-        Object* lObject = FindObject_ByName(aName);
+        auto lObject = FindObject_ByName(aName);
         if (NULL == lObject)
         {
             unsigned int lIndex;
