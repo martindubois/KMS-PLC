@@ -3,7 +3,7 @@ Author    KMS - Martin Dubois, P. Eng.
 Copyright (C) 2022-2023 KMS
 License   http://www.apache.org/licenses/LICENSE-2.0
 Product   KMS-PLC
-File      _DocUser/KMS.ReadMe.txt
+File      _DocUser/KMS-PLC.ReadMe.txt
 
 0.0.10-dev Windows 2023-04-06
 

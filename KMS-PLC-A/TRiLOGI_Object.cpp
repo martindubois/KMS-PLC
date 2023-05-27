@@ -21,7 +21,8 @@ namespace TRiLOGI
     const unsigned int Object::FLAG_NOT_USED           = 0x00000001;
     const unsigned int Object::FLAG_SINGLE_USE_INFO    = 0x00000002;
     const unsigned int Object::FLAG_SINGLE_USE_WARNING = 0x00000004;
-    const unsigned int Object::FLAG_TO_INSERT          = 0x00000008;
+    const unsigned int Object::FLAG_TO_APPLY           = 0x00000008;
+    const unsigned int Object::FLAG_TO_INSERT          = 0x00000010;
 
     Object::Object(const char* aName, unsigned int aIndex, unsigned int aLineNo, unsigned int aFlags)
         : mFlags(aFlags), mIndex(aIndex), mLineNo(aLineNo), mName(aName)

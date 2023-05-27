@@ -88,10 +88,9 @@ namespace TRiLOGI
             std::cout << Console::Color::RED;
             std::cout << "ERROR  The name " << aName << " is already used for a constant";
             std::cout << Console::Color::WHITE << std::endl;
-            return false;
         }
 
-        return true;
+        return false;
     }
 
     bool DefineList::ImportWord(const char* aName, unsigned int aOffset)

@@ -16,6 +16,8 @@
 // ===== Local ==============================================================
 #include "../Common/TRiLOGI/FunctionList.h"
 
+#include "Function.h"
+
 #include "TRiLOGI/Function.h"
 
 using namespace KMS;
@@ -35,54 +37,169 @@ namespace TRiLOGI
         ObjectList::Clear();
     }
 
+    void FunctionList::SetLineNo_End_Code(unsigned int aLineNo)
+    {
+        mLineNo_End_Code = aLineNo;
+    }
+
     Function* FunctionList::Find_ByIndex(unsigned int aIndex)
     {
         return dynamic_cast<Function*>(FindObject_ByIndex(aIndex));
     }
 
-    unsigned int FunctionList::Parse_Code(const Text::File_UTF16& aFile_PC6, unsigned int aLineNo)
+    Function* FunctionList::Find_ByName(const char* aName)
     {
+        return dynamic_cast<Function*>(FindObject_ByName(aName));
+    }
+
+    bool FunctionList::Apply_Code()
+    {
+        auto lFile   = GetFile_PC6();
+        auto lResult = false;
+
+        for (auto lIt = mObjects_ByIndex.rbegin(); lIt != mObjects_ByIndex.rend(); lIt++)
+        {
+            Function* lFunction = dynamic_cast<Function*>(lIt->second);
+
+            if (lIt->second->TestFlag(Object::FLAG_TO_APPLY))
+            {
+                lResult = true;
+
+                lFunction->Apply(lFile);
+            }
+
+            if (lIt->second->TestFlag(Object::FLAG_TO_INSERT))
+            {
+                lResult = true;
+
+                lFunction->Insert(lFile);
+            }
+        }
+
+        return lResult;
+    }
+
+    bool FunctionList::Import(const char* aName, Text::File_ASCII* aFile, Text::File_ASCII::Internal::iterator* aIt)
+    {
+        unsigned int lCodeBegin;
+        unsigned int lCodeEnd;
+        unsigned int lFlags;
+        unsigned int lIndex;
+        unsigned int lLineNo;
+
+        auto lFunction = Find_ByName(aName);
+        if (NULL == lFunction)
+        {
+            lCodeBegin = mLineNo_End_Code;
+            lCodeEnd   = mLineNo_End_Code;
+            lFlags     = Object::FLAG_TO_INSERT;
+            FindIndexAndLineNo(&lIndex, &lLineNo);
+        }
+        else
+        {
+            lCodeBegin = lFunction->GetLineNo_Code_Begin();
+            lCodeEnd   = lFunction->GetLineNo_Code_End  ();
+            lFlags     = Object::FLAG_TO_APPLY;
+            lIndex     = lFunction->GetIndex ();
+            lLineNo    = lFunction->GetLineNo();
+        }
+
+        auto lNew = new Function(aName, lIndex, lLineNo, lFlags);
+
+        lNew->SetLineNo_Code(lCodeBegin, lCodeEnd);
+
+        try
+        {
+            lNew->Parse(aFile, aIt);
+        }
+        catch (...)
+        {
+            delete lNew;
+            throw;
+        }
+
+        bool lResult = true;
+
+        if (NULL == lFunction)
+        {
+            AddObject(lNew);
+        }
+        else
+        {
+            if (*lNew != *lFunction)
+            {
+                Replace(lFunction, lNew);
+            }
+            else
+            {
+                delete lNew;
+                lResult = false;
+            }
+        }
+
+        return lResult;
+    }
+
+    unsigned int FunctionList::Parse_Code(Text::File_UTF16* aFile_PC6, unsigned int aLineNo)
+    {
+        assert(NULL != aFile_PC6);
+        assert(0 < aLineNo);
+
+        unsigned int lBegin;
         Function   * lFunction  = NULL;
-        auto         lLineCount = aFile_PC6.GetLineCount();
+        auto         lLineCount = aFile_PC6->GetLineCount();
         unsigned int lIndex;
         auto         lLineNo    = aLineNo;
         char         lMsg[64];
 
         for (; lLineNo < lLineCount; lLineNo++)
         {
-            auto lLine = aFile_PC6.GetLine(lLineNo);
+            unsigned int lLength;
+
+            auto lLine = aFile_PC6->GetLine(lLineNo);
             assert(NULL != lLine);
 
-            if (0 == wcscmp(L"~END_CUSTFN~\r", lLine)) { mLineNo_End_Code = lLineNo; lLineNo++; break; }
+            if (0 == wcscmp(L"~END_CUSTFN~", lLine)) { mLineNo_End_Code = lLineNo; lLineNo++; break; }
 
-            if (0 == wcscmp(L"�\r", lLine))
+            if (0 == wcscmp(L"\xc8", lLine))
             {
                 if (NULL != lFunction)
                 {
+                    lFunction->SetLineNo_Code(lBegin, lLineNo);
+
                     auto lBI = mObjects_ByIndex.insert(ByIndex::value_type(lIndex, lFunction));
 
                     sprintf_s(lMsg, "Line %u  A function already exist at index %u", lLineNo, lIndex);
                     KMS_EXCEPTION_ASSERT(lBI.second, APPLICATION_ERROR, lMsg, "");
+
+                    lFunction = NULL;
                 }
+            }
+            else if (2 == swscanf_s(lLine, L"Fn#%u,%u", &lIndex, &lLength))
+            {
+                sprintf_s(lMsg, "Line %u  A function is malformed", lLineNo);
+                KMS_EXCEPTION_ASSERT(NULL == lFunction, APPLICATION_ERROR, lMsg, "");
 
-                lLineNo++;
-
-                lLine = aFile_PC6.GetLine(lLineNo);
-                assert(NULL != lLine);
-
-                unsigned int lLength;
-
-                auto lRet = swscanf_s(lLine, L"Fn#%u,%u", &lIndex, &lLength);
-
-                sprintf_s(lMsg, "Line %u  Corrupted PC6 file", lLineNo);
-                KMS_EXCEPTION_ASSERT(2 == lRet, APPLICATION_ERROR, lMsg, lRet);
-
+                lBegin    = lLineNo;
                 lFunction = new Function(lIndex, lLength);
+            }
+            else
+            {
+                if (NULL != lFunction)
+                {
+                    char lLine8[LINE_LENGTH];
+
+                    sprintf_s(lLine8, "%S", lLine);
+
+                    lFunction->AddLine(lLine8);
+                }
             }
         }
 
         if (NULL != lFunction)
         {
+            lFunction->SetLineNo_Code(lBegin, lLineNo);
+
             auto lBI = mObjects_ByIndex.insert(ByIndex::value_type(lIndex, lFunction));
 
             sprintf_s(lMsg, "Line %u  A function already exist at index %u", aLineNo, lIndex);
@@ -94,15 +211,18 @@ namespace TRiLOGI
         return lLineNo;
     }
 
-    unsigned int FunctionList::Parse_Name(const Text::File_UTF16& aFile_PC6, unsigned int aLineNo)
+    unsigned int FunctionList::Parse_Name(Text::File_UTF16* aFile_PC6, unsigned int aLineNo)
     {
-        auto lLineCount = aFile_PC6.GetLineCount();
+        assert(NULL != aFile_PC6);
+        assert(0 < aLineNo);
+
+        auto lLineCount = aFile_PC6->GetLineCount();
         auto lLineNo    = aLineNo;
 
         for (; lLineNo < lLineCount; lLineNo++)
         {
-            auto lLine = aFile_PC6.GetLine(lLineNo);
-            if (0 == wcscmp(L"~END_CUSTFNLABEL~\r", lLine)) { SetLineNo_End(lLineNo); lLineNo++; break; }
+            auto lLine = aFile_PC6->GetLine(lLineNo);
+            if (0 == wcscmp(L"~END_CUSTFNLABEL~", lLine)) { SetFile(aFile_PC6, lLineNo); lLineNo++; break; }
 
             unsigned int lIndex;
             char         lMsg[64 + NAME_LENGTH];

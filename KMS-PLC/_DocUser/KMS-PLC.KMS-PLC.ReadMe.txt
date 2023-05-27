@@ -7,6 +7,7 @@ File      KMS-PLC/_DocUser/KMS.ReadMe.txt
 * EBPro
     * Functions (Project library)
     * Labels - Comment allowed after STATE in .lbl.in0 files (KP-19)
+* TRiLOGI - Functions
 
 0.0.10-dev Windows 2023-04-06
 * Remove extension from configurable attribute names

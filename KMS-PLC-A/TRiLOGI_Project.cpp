@@ -21,6 +21,7 @@ using namespace KMS;
 // Constants
 // //////////////////////////////////////////////////////////////////////////
 
+static const Cfg::MetaData MD_CREATE_IF_NEEDED     ("CreateIfNeeded = false | true");
 static const Cfg::MetaData MD_EXPORTED             ("Exported = {Path}.PC6.txt");
 static const Cfg::MetaData MD_FILE_NAME            ("FileName = {Path}.PC6");
 static const Cfg::MetaData MD_SHARED_ADDRESS_REG_EX("SharedAddressRegEx = {RegEx}");
@@ -41,6 +42,7 @@ namespace TRiLOGI
     {
         mSources.SetCreator(DI::String_Expand::Create);
 
+        AddEntry("CreateIfNeeded"    , &mCreateIfNeeded    , false, &MD_CREATE_IF_NEEDED);
         AddEntry("Exported"          , &mExported          , false, &MD_EXPORTED);
         AddEntry("FileName"          , &mFileName          , false, &MD_FILE_NAME);
         AddEntry("SharedAddressRegEx", &mSharedAddressRegEx, false, &MD_SHARED_ADDRESS_REG_EX);
@@ -105,7 +107,7 @@ namespace TRiLOGI
 
         bool lChanged = false;
 
-        for (const DI::Container::Entry& lEntry : mSources.mInternal)
+        for (const auto& lEntry : mSources.mInternal)
         {
             const DI::String* lSource = dynamic_cast<const DI::String*>(lEntry.Get());
             assert(NULL != lSource);
@@ -117,7 +119,7 @@ namespace TRiLOGI
             lFile.RemoveEmptyLines();
             lFile.RemoveComments_Script();
 
-            for (const std::string& lLine : lFile.mLines)
+            for (auto lIt = lFile.mLines.begin(); lIt != lFile.mLines.end(); lIt++)
             {
                 unsigned int lIndex;
                 unsigned int lInit;
@@ -128,43 +130,43 @@ namespace TRiLOGI
                 // TODO Import Constant and Word comment or at least put the source file name in the
                 //      comment of newly created ones.
 
-                if (2 == sscanf_s(lLine.c_str(), "COUNTER %[0-9A-Za-z_] %u", lName SizeInfo(lName), &lInit))
+                if (2 == sscanf_s(lIt->c_str(), "COUNTER %[0-9A-Za-z_] %u", lName SizeInfo(lName), &lInit))
                 {
                     lChanged |= mCounters.Import(lName, lInit);
                 }
-                else if (2 == sscanf_s(lLine.c_str(), "CONSTANT %[0-9A-Za-z_] %s", lName SizeInfo(lName), lValue SizeInfo(lValue)))
+                else if (2 == sscanf_s(lIt->c_str(), "CONSTANT %[0-9A-Za-z_] %s", lName SizeInfo(lName), lValue SizeInfo(lValue)))
                 {
                     lChanged |= mDefines.ImportConstant(lName, lValue);
                 }
-                else if (1 == sscanf_s(lLine.c_str(), "FUNCTION %[0-9A-Za-z_]", lName SizeInfo(lName)))
+                else if (1 == sscanf_s(lIt->c_str(), "FUNCTION %[0-9A-Za-z_]", lName SizeInfo(lName)))
                 {
-                    // TODO
+                    lChanged |= mFunctions.Import(lName, &lFile, &lIt);
                 }
-                else if (2 == sscanf_s(lLine.c_str(), "INPUT %[0-9A-Za-z_] %u", lName SizeInfo(lName), &lIndex))
+                else if (2 == sscanf_s(lIt->c_str(), "INPUT %[0-9A-Za-z_] %u", lName SizeInfo(lName), &lIndex))
                 {
                     lChanged |= mInputs.Import(lName, lIndex);
                 }
-                else if (2 == sscanf_s(lLine.c_str(), "OUTPUT %[0-9A-Za-z_] %u", lName SizeInfo(lName), &lIndex))
+                else if (2 == sscanf_s(lIt->c_str(), "OUTPUT %[0-9A-Za-z_] %u", lName SizeInfo(lName), &lIndex))
                 {
                     lChanged |= mOutputs.Import(lName, lIndex);
                 }
-                else if (2 == sscanf_s(lLine.c_str(), "RELAY %[0-9A-Za-z_] %u", lName SizeInfo(lName), &lIndex))
+                else if (2 == sscanf_s(lIt->c_str(), "RELAY %[0-9A-Za-z_] %u", lName SizeInfo(lName), &lIndex))
                 {
                     lChanged |= mRelays.Import(lName, lIndex);
                 }
-                else if (1 == sscanf_s(lLine.c_str(), "RELAY %[0-9A-Za-z_]", lName SizeInfo(lName)))
+                else if (1 == sscanf_s(lIt->c_str(), "RELAY %[0-9A-Za-z_]", lName SizeInfo(lName)))
                 {
                     lChanged |= mRelays.Import(lName);
                 }
-                else if (2 == sscanf_s(lLine.c_str(), "TIMER %[0-9A-Za-z_] %u", lName SizeInfo(lName), &lInit))
+                else if (2 == sscanf_s(lIt->c_str(), "TIMER %[0-9A-Za-z_] %u", lName SizeInfo(lName), &lInit))
                 {
                     lChanged |= mTimers.Import(lName, lInit);
                 }
-                else if (2 == sscanf_s(lLine.c_str(), "WORD %[0-9A-Za-z_] %u", lName SizeInfo(lName), &lOffset))
+                else if (2 == sscanf_s(lIt->c_str(), "WORD %[0-9A-Za-z_] %u", lName SizeInfo(lName), &lOffset))
                 {
                     lChanged |= mDefines.ImportWord(lName, lOffset);
                 }
-                else if (1 == sscanf_s(lLine.c_str(), "WORD %[0-9A-Za-z_]", lName SizeInfo(lName)))
+                else if (1 == sscanf_s(lIt->c_str(), "WORD %[0-9A-Za-z_]", lName SizeInfo(lName)))
                 {
                     lChanged |= mDefines.ImportWord(lName);
                 }
@@ -194,9 +196,8 @@ namespace TRiLOGI
         {
             std::cout << "Parsing " << mFileName.Get() << " ..." << std::endl;
 
-            const wchar_t* lLine;
-            unsigned int   lLineNo = 1;
-            unsigned int   lLineCount = mFile.GetLineCount();
+            unsigned int lLineNo    = 1;
+            auto         lLineCount = mFile.GetLineCount();
 
             lLineNo = mInputs  .Parse(&mFile, lLineNo, TRiLOGI::Object::FLAG_SINGLE_USE_INFO);
             lLineNo = mOutputs .Parse(&mFile, lLineNo, TRiLOGI::Object::FLAG_SINGLE_USE_INFO);
@@ -204,30 +205,30 @@ namespace TRiLOGI
             lLineNo = mTimers  .Parse(&mFile, lLineNo, TRiLOGI::Object::FLAG_SINGLE_USE_WARNING);
             lLineNo = mCounters.Parse(&mFile, lLineNo, TRiLOGI::Object::FLAG_SINGLE_USE_WARNING);
 
-            // ===== Circuits ===============================================
-            for (; lLineNo < lLineCount; lLineNo++)
-            {
-                lLine = mFile.GetLine(lLineNo);
-                if (0 == wcscmp(L"~END_CIRCUIT~\r", lLine)) { lLineNo++; break; }
-            }
+            // Circuits
+            lLineNo = ParseNothing(lLineNo);
 
-            lLineNo = mFunctions.Parse_Code(mFile, lLineNo);
-            lLineNo = mFunctions.Parse_Name(mFile, lLineNo);
+            lLineNo = mFunctions.Parse_Code(&mFile, lLineNo);
+            lLineNo = mFunctions.Parse_Name(&mFile, lLineNo);
 
-            // ===== Quick tags =============================================
-            for (; lLineNo < lLineCount; lLineNo++)
-            {
-                lLine = mFile.GetLine(lLineNo);
-                if (0 == wcscmp(L"~END_QUICKTAGS~\r", lLine)) { lLineNo++; break; }
-            }
+            // Quick tags
+            lLineNo = ParseNothing(lLineNo);
 
             lLineNo = mDefines.Parse(&mFile, lLineNo);
+        }
+        else if (mCreateIfNeeded)
+        {
+            std::cout << "Creating " << mFileName.Get() << " ..." << std::endl;
+
+            Create();
+
+            Instruction_Write();
         }
     }
 
     void Project::Read()
     {
-        if (0 < mFileName.GetLength())
+        if ((0 < mFileName.GetLength()) && File::Folder::CURRENT.DoesFileExist(mFileName.Get()))
         {
             std::cout << "Reading " << mFileName.Get() << " ..." << std::endl;
 
@@ -243,11 +244,14 @@ namespace TRiLOGI
 
         if (0 < mFileName.GetLength())
         {
-            sprintf_s(lMsg, "\"%s\" does not exist", mFileName.Get());
-            KMS_EXCEPTION_ASSERT(File::Folder::CURRENT.DoesFileExist(mFileName.Get()), APPLICATION_USER_ERROR, lMsg, "");
+            if (!mCreateIfNeeded)
+            {
+                sprintf_s(lMsg, "\"%s\" does not exist", mFileName.Get());
+                KMS_EXCEPTION_ASSERT(File::Folder::CURRENT.DoesFileExist(mFileName.Get()), APPLICATION_USER_ERROR, lMsg, "");
+            }
         }
 
-        for (const DI::Container::Entry& lEntry : mSources.mInternal)
+        for (auto& lEntry : mSources.mInternal)
         {
             const DI::String* lSource = dynamic_cast<const DI::String*>(lEntry.Get());
             assert(NULL != lSource);
@@ -337,9 +341,12 @@ namespace TRiLOGI
     {
         std::cout << "Writing ..." << std::endl;
 
-        File::Folder::CURRENT.Backup(mFileName.Get(), File::Folder::FLAG_BACKUP_RENAME);
+        if (File::Folder::CURRENT.DoesFileExist(mFileName.Get()))
+        {
+            File::Folder::CURRENT.Backup(mFileName.Get(), File::Folder::FLAG_BACKUP_RENAME);
+        }
 
-        mFile.Write(File::Folder::CURRENT, mFileName.Get(), L"\r");
+        mFile.Write(File::Folder::CURRENT, mFileName.Get(), L"\r\n");
 
         std::cout << "Written" << std::endl;
     }
@@ -371,15 +378,52 @@ namespace TRiLOGI
     {
         bool lResult = false;
 
-        lResult |= mDefines .Apply();
-        // TODO Functions
-        lResult |= mCounters.Apply();
-        lResult |= mTimers  .Apply();
-        lResult |= mRelays  .Apply();
-        lResult |= mOutputs .Apply();
-        lResult |= mInputs  .Apply();
+        lResult |= mDefines  .Apply();
+        lResult |= mFunctions.Apply();
+        lResult |= mFunctions.Apply_Code();
+        lResult |= mCounters .Apply();
+        lResult |= mTimers   .Apply();
+        lResult |= mRelays   .Apply();
+        lResult |= mOutputs  .Apply();
+        lResult |= mInputs   .Apply();
 
         return lResult;
+    }
+
+    void Project::Create()
+    {
+        mFile.AddLine(L"\x00f8\x00f5TRiLOGI Ver 5.0");
+        mFile.AddLine(L"~"); mInputs  .SetFile(&mFile, 1);
+        mFile.AddLine(L"~"); mOutputs .SetFile(&mFile, 2);
+        mFile.AddLine(L"~"); mRelays  .SetFile(&mFile, 3);
+        mFile.AddLine(L"~"); mTimers  .SetFile(&mFile, 4);
+        mFile.AddLine(L"~"); mCounters.SetFile(&mFile, 5);
+        mFile.AddLine(L"~END_CIRCUIT~");
+        mFile.AddLine(L"~END_CUSTFN~"     ); mFunctions.SetLineNo_End_Code(7);
+        mFile.AddLine(L"~END_CUSTFNLABEL~"); mFunctions.SetFile(&mFile, 8);
+        mFile.AddLine(L"~END_QUICKTAGS~");
+        mFile.AddLine(L"~END_DEFINES~"); mDefines.SetFile(&mFile, 10);
+        mFile.AddLine(L"~END_BREAKPOINTS~");
+    }
+
+    unsigned int Project::ParseNothing(unsigned int aLineNo)
+    {
+        assert(0 < aLineNo);
+
+        auto lLineCount = mFile.GetLineCount();
+        auto lLineNo    = aLineNo;
+
+        for (; lLineNo < lLineCount; lLineNo++)
+        {
+            const wchar_t* lLine = mFile.GetLine(lLineNo);
+            if (L'~' == lLine[0])
+            {
+                lLineNo++;
+                break;
+            }
+        }
+
+        return lLineNo;
     }
 
     void Project::Reparse()

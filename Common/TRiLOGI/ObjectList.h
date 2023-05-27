@@ -24,7 +24,7 @@ namespace TRiLOGI
 
     public:
 
-        ObjectList(const char* aElementName, const wchar_t* aEndMark, unsigned int aMaxQty);
+        ObjectList(const char* aElementName, unsigned int aMaxQty);
 
         ~ObjectList();
 
@@ -32,6 +32,8 @@ namespace TRiLOGI
         void Clear();
 
         unsigned int GetCount() const;
+
+        void SetFile(KMS::Text::File_UTF16* aFile_PC6, unsigned int aLineNo_End);
 
         const Object* FindObject_ByIndex(unsigned int aIndex) const;
 
@@ -56,8 +58,6 @@ namespace TRiLOGI
 
         KMS::Text::File_UTF16* GetFile_PC6();
 
-        void SetLineNo_End(unsigned int aLineNo);
-
         void AddObject(Object* aObject);
 
         virtual void AddObject(const wchar_t* aLine, unsigned int aLineNo, unsigned int aFlags);
@@ -65,6 +65,8 @@ namespace TRiLOGI
         void FindIndexAndLineNo(unsigned int* aIndex, unsigned int* aLineNo);
 
         unsigned int FindLineNo(unsigned int aIndex);
+
+        void Replace(Object* aOld, Object* aNew);
 
         ByIndex mObjects_ByIndex;
         ByName  mObjects_ByName;
@@ -74,7 +76,6 @@ namespace TRiLOGI
         NO_COPY(ObjectList);
 
         const char   * mElementName;
-        const wchar_t* mEndMark;
 
         KMS::Text::File_UTF16* mFile_PC6;
 

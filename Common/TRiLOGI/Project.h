@@ -9,6 +9,7 @@
 
 // ===== Import =============================================================
 #include <KMS/DI/Array.h>
+#include <KMS/DI/Boolean.h>
 #include <KMS/DI/Dictionary.h>
 #include <KMS/DI/String_Expand.h>
 #include <KMS/Text/File_UTF16.h>
@@ -56,11 +57,23 @@ namespace TRiLOGI
 
         AddressList* GetSharedAddresses() const;
 
+        // ===== Configurable attributes ====================================
+        KMS::DI::Boolean       mCreateIfNeeded;
+        KMS::DI::String_Expand mExported;
+        KMS::DI::String_Expand mFileName;
+        KMS::DI::String        mSharedAddressRegEx;
+        KMS::DI::Array         mSources;
+
+
     private:
 
         NO_COPY(Project);
 
         bool Apply();
+
+        void Create();
+
+        unsigned int ParseNothing(unsigned int aLineNo);
 
         void Reparse();
 
@@ -82,12 +95,6 @@ namespace TRiLOGI
         BitList       mRelays;
         Software      mSoftware;
         TimerList     mTimers;
-
-        // ===== Configurable attributes ====================================
-        KMS::DI::String_Expand mExported;
-        KMS::DI::String_Expand mFileName;
-        KMS::DI::String        mSharedAddressRegEx;
-        KMS::DI::Array         mSources;
 
     };
 

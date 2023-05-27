@@ -27,25 +27,27 @@ namespace TRiLOGI
 
     Object* WordList::AddWord(const char* aName, unsigned int aIndex, unsigned int aLineNo, const char* aComment, unsigned int aFlags)
     {
+        char lMsg[64];
+        sprintf_s(lMsg, "Line %u  Too many word", aLineNo);
+        KMS_EXCEPTION_ASSERT(OFFSET_MAX > mWords_ByOffset.size(), APPLICATION_ERROR, lMsg, aName);
+
         unsigned int lOffset = OFFSET_MAX;
 
-        for (ByOffset::reverse_iterator lIt = mWords_ByOffset.rbegin(); lIt != mWords_ByOffset.rend(); lIt++)
+        for (auto lIt = mWords_ByOffset.rbegin(); lIt != mWords_ByOffset.rend(); lIt++)
         {
             if (lOffset > lIt->first)
             {
-                Word* lWord = new Word(aName, aIndex, aLineNo, lOffset, aComment, aFlags);
-
-                AddWord(lWord);
-
-                return lWord;
+                break;
             }
 
             lOffset = lIt->first - 1;
         }
 
-        char lMsg[64];
-        sprintf_s(lMsg, "Line %u  Too many word", aLineNo);
-        KMS_EXCEPTION(APPLICATION_ERROR, lMsg, aName);
+        auto lResult = new Word(aName, aIndex, aLineNo, lOffset, aComment, aFlags);
+
+        AddWord(lResult);
+
+        return lResult;
     }
 
     void WordList::AddWord(Word* aWord)
@@ -54,12 +56,12 @@ namespace TRiLOGI
 
         char lMsg[64 + NAME_LENGTH];
 
-        std::pair<ByName::iterator, bool> lBN = mWords_ByName.insert(ByName::value_type(aWord->GetName(), aWord));
+        auto lBN = mWords_ByName.insert(ByName::value_type(aWord->GetName(), aWord));
 
         sprintf_s(lMsg, "A word named \"%s\" already exist", aWord->GetName());
         KMS_EXCEPTION_ASSERT(lBN.second, APPLICATION_ERROR, lMsg, "");
 
-        std::pair<ByOffset::iterator, bool> lBO = mWords_ByOffset.insert(ByOffset::value_type(aWord->GetOffset(), aWord));
+        auto lBO = mWords_ByOffset.insert(ByOffset::value_type(aWord->GetOffset(), aWord));
 
         sprintf_s(lMsg, "A word already exist at offset %u", aWord->GetOffset());
         KMS_EXCEPTION_ASSERT(lBO.second, APPLICATION_ERROR, lMsg, "");
@@ -71,9 +73,9 @@ namespace TRiLOGI
     {
         assert(NULL != aOut);
 
-        for (ByOffset::value_type lVT : mWords_ByOffset)
+        for (auto lVT : mWords_ByOffset)
         {
-            Word* lWord = lVT.second;
+            auto lWord = lVT.second;
             assert(NULL != lWord);
 
             if ((!lWord->TestFlag(Object::FLAG_NOT_USED)) && std::regex_match(lWord->GetName(), aRegEx))
@@ -87,7 +89,7 @@ namespace TRiLOGI
 
     const Word* WordList::Find_ByOffset(unsigned int aOffset) const
     {
-        ByOffset::const_iterator lIt = mWords_ByOffset.find(aOffset);
+        auto lIt = mWords_ByOffset.find(aOffset);
         if (mWords_ByOffset.end() == lIt)
         {
             return NULL;

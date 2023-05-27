@@ -8,6 +8,7 @@
 #pragma once
 
 // ===== Import/Includes ====================================================
+#include <KMS/Text/File_ASCII.h>
 #include <KMS/Text/File_UTF16.h>
 
 // ===== Local ==============================================================
@@ -25,19 +26,22 @@ namespace TRiLOGI
 
         FunctionList();
 
-        void AddFunction(Function* aFunction);
-
         void Clear();
 
-        unsigned int SetEndLine_Code (unsigned int aEndLine);
+        void SetLineNo_End_Code(unsigned int aLineNo);
 
         void Display_ByIndex(FILE* aOut) const;
         void Display_ByName (FILE* aOut) const;
 
         Function* Find_ByIndex(unsigned int aIndex);
+        Function* Find_ByName (const char* aName);
 
-        unsigned int Parse_Code(const KMS::Text::File_UTF16& aFile_PC6, unsigned int aLineNo);
-        unsigned int Parse_Name(const KMS::Text::File_UTF16& aFile_PC6, unsigned int aLineNo);
+        bool Apply_Code();
+
+        bool Import(const char* aName, KMS::Text::File_ASCII* aFile, KMS::Text::File_ASCII::Internal::iterator* aIt);
+
+        unsigned int Parse_Code(KMS::Text::File_UTF16* aFile_PC6, unsigned int aLineNo);
+        unsigned int Parse_Name(KMS::Text::File_UTF16* aFile_PC6, unsigned int aLineNo);
 
         void Verify(const KMS::Text::File_UTF16& aFile_PC6);
 

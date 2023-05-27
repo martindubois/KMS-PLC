@@ -24,6 +24,7 @@ namespace TRiLOGI
         static const unsigned int FLAG_NOT_USED;
         static const unsigned int FLAG_SINGLE_USE_INFO;
         static const unsigned int FLAG_SINGLE_USE_WARNING;
+        static const unsigned int FLAG_TO_APPLY;
         static const unsigned int FLAG_TO_INSERT;
 
         Object(const char* aName, unsigned int mIndex, unsigned int aLineNo, unsigned int aFlags);

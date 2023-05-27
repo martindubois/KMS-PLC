@@ -108,6 +108,9 @@
     <ClCompile Include="TRiLOGI_Software.cpp">
       <Filter>Source Files\TRiLOGI</Filter>
     </ClCompile>
+    <ClCompile Include="Function.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Convert.h">
