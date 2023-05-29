@@ -5,6 +5,8 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGI_Function.cpp
 
+// TEST COVERAGE 2023-05-29 KMS - Martin Dubois, P. Eng.
+
 #include "Component.h"
 
 // ===== C++ ================================================================
@@ -46,12 +48,15 @@ namespace TRiLOGI
         mLineNo_Code_End   = aEnd  ;
     }
 
+    // NOT TESTED
     void Function::Apply(Text::File_UTF16* aFile)
     {
+        assert(mLineNo_Code_Begin < mLineNo_Code_End);
+
         unsigned int lIndex    = 0;
         unsigned int lLineNo   = mLineNo_Code_Begin + 1;
         unsigned int lNewCount = GetLineCount();
-        unsigned int lOldCount = mLineNo_Code_End - mLineNo_Code_Begin - 2;
+        unsigned int lOldCount = mLineNo_Code_End - mLineNo_Code_Begin - 1;
 
         std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> lConverter;
 

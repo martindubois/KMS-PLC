@@ -1,0 +1,24 @@
+
+# Author    KMS - Martin Dubois, P. Eng.
+# Copyright (C) 2023 KMS
+# License   http://www.apache.org/licenses/LICENSE-2.0
+# Product   KMS-PLC
+# File      Tests/Test1/PLC.PC6.in0
+
+# ===== Public ==============================================================
+
+RELAY rAlarm_Hrw
+RELAY rEnable_Hrw
+
+WORD wPulseCount_Add_Hrw
+WORD wPulseCount_Hrw
+
+# ===== Private =============================================================
+
+INPUT iAlarm_Left 0
+INPUT iAlarm_Right 1
+
+OUTPUT oPulse 0
+
+FUNCTION Enabled_01
+FUNCTION END
