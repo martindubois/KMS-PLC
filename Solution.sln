@@ -12,6 +12,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KMS-PLC", "KMS-PLC\KMS-PLC.
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "KMS-PLC-Setup", "KMS-PLC-Setup\KMS-PLC-Setup.vdproj", "{E6B418B5-75E1-4B90-9B6A-FE5B3FA5C4A4}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KMS-PLC-A-Test", "KMS-PLC-A-Test\KMS-PLC-A-Test.vcxproj", "{5EE8BFFA-96A8-499B-9D8B-1A275B80C7E9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8289A214-A18C-469D-9ED2-507AFF4C72AF} = {8289A214-A18C-469D-9ED2-507AFF4C72AF}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -53,6 +58,18 @@ Global
 		{E6B418B5-75E1-4B90-9B6A-FE5B3FA5C4A4}.Release_Static|x86.ActiveCfg = Release
 		{E6B418B5-75E1-4B90-9B6A-FE5B3FA5C4A4}.Release|x64.ActiveCfg = Release
 		{E6B418B5-75E1-4B90-9B6A-FE5B3FA5C4A4}.Release|x86.ActiveCfg = Release
+		{5EE8BFFA-96A8-499B-9D8B-1A275B80C7E9}.Debug|x64.ActiveCfg = Debug|x64
+		{5EE8BFFA-96A8-499B-9D8B-1A275B80C7E9}.Debug|x64.Build.0 = Debug|x64
+		{5EE8BFFA-96A8-499B-9D8B-1A275B80C7E9}.Debug|x86.ActiveCfg = Debug|Win32
+		{5EE8BFFA-96A8-499B-9D8B-1A275B80C7E9}.Debug|x86.Build.0 = Debug|Win32
+		{5EE8BFFA-96A8-499B-9D8B-1A275B80C7E9}.Release_Static|x64.ActiveCfg = Release|x64
+		{5EE8BFFA-96A8-499B-9D8B-1A275B80C7E9}.Release_Static|x64.Build.0 = Release|x64
+		{5EE8BFFA-96A8-499B-9D8B-1A275B80C7E9}.Release_Static|x86.ActiveCfg = Release|Win32
+		{5EE8BFFA-96A8-499B-9D8B-1A275B80C7E9}.Release_Static|x86.Build.0 = Release|Win32
+		{5EE8BFFA-96A8-499B-9D8B-1A275B80C7E9}.Release|x64.ActiveCfg = Release|x64
+		{5EE8BFFA-96A8-499B-9D8B-1A275B80C7E9}.Release|x64.Build.0 = Release|x64
+		{5EE8BFFA-96A8-499B-9D8B-1A275B80C7E9}.Release|x86.ActiveCfg = Release|Win32
+		{5EE8BFFA-96A8-499B-9D8B-1A275B80C7E9}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

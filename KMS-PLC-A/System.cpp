@@ -5,6 +5,8 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/System.cpp
 
+// TEST COVERAGE 2023-05-29 KMS - Martin Dubois, P. Eng.
+
 #include "Component.h"
 
 // ===== Import/Includes ====================================================
@@ -68,11 +70,10 @@ System::System()
     AddEntry("TRiLOGI"   , &mTRiLOGI   , false);
 }
 
-void System::Clean()
-{
-    mTRiLOGI.Clean();
-}
+// NOT TESTED
+void System::Clean() { mTRiLOGI.Clean(); }
 
+// NOT TESTED
 void System::Edit_emtp() { mEBPro  .Edit(); }
 void System::Edit_PC6 () { mTRiLOGI.Edit(); }
 
@@ -90,6 +91,7 @@ void System::Import()
     AddressList* lAL = mTRiLOGI.GetSharedAddresses();
     if ((NULL != lAL) && (0 < lAL->size()))
     {
+        // NOT TESTED
         mEBPro.Import(*lAL);
     }
 }
@@ -117,6 +119,7 @@ void System::Verify()
 
         for (const auto lA : mEBPro.mAddresses.mAddresses)
         {
+            // NOT TESTED
             switch (lA->GetType())
             {
             case AddressType::MODBUS_RTU_1X:
@@ -141,10 +144,8 @@ void System::Verify()
     }
 }
 
-void System::Write()
-{
-    mTRiLOGI.Write();
-}
+// NOT TESTED
+void System::Write() { mTRiLOGI.Write(); }
 
 // ===== CLI::Tool ==========================================================
 
@@ -157,6 +158,7 @@ void System::DisplayHelp(FILE* aOut) const
         "Edit emtp | PC6\n"
         "Export\n"
         "Import\n"
+        "Verify\n"
         "Write\n");
 
     CLI::Tool::DisplayHelp(aOut);
