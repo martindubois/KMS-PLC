@@ -4,7 +4,7 @@ Copyright (C) 2022-2023 KMS
 Product   KMS-PLC
 File      KMS-PLC/_DocUser/KMS.ReadMe.txt
 
-0.1.0-dev Windows 2023-05-29
+0.1.1-dev Windows 2023-05-29
 * EBPro
     * Functions (Project library)
     * Labels - Comment allowed after STATE in .lbl.in0 files (KP-19)
