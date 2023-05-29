@@ -127,18 +127,15 @@ namespace TRiLOGI
             std::cout << Console::Color::RED;
             std::cout << "ERROR  The name " << aName << " is already used for a constant";
             std::cout << Console::Color::WHITE << std::endl;
-            return false;
         }
-
-        if (lWord->GetOffset() != aOffset)
+        else if (lWord->GetOffset() != aOffset)
         {
             std::cout << Console::Color::RED;
             std::cout << "ERROR  The name " << aName << " is already uses witch another offset";
             std::cout << Console::Color::WHITE << std::endl;
-            return false;
         }
 
-        return true;
+        return false;
     }
 
     unsigned int DefineList::Parse(Text::File_UTF16* aFile_PC6, unsigned int aLineNo)
