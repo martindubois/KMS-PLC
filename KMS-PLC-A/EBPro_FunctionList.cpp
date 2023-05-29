@@ -37,6 +37,8 @@ namespace EBPro
     {
         assert(NULL != aSoftware);
 
+        memset(&mParsed_Values, 0, sizeof(mParsed_Values));
+
         mSources.SetCreator(DI::String_Expand::Create);
 
         AddEntry("Exported", &mExported, false, &MD_EXPORTED);
@@ -214,8 +216,8 @@ namespace EBPro
         aPtr->Verify(14);
         aPtr->Verify(1048577);
         aPtr->Read(&mParsed_Name);
-        aPtr->Verify(63);
-        aPtr->Verify(65535);
+        aPtr->Read(mParsed_Values + 0);
+        aPtr->Read(mParsed_Values + 1);
     }
 
     void FunctionList::Header_Write(FILE* aOut)
@@ -224,8 +226,8 @@ namespace EBPro
         DataPtr::Write(aOut, 14);
         DataPtr::Write(aOut, 1048577);
         DataPtr::Write(aOut, mParsed_Name);
-        DataPtr::Write(aOut, 63);
-        DataPtr::Write(aOut, 65535);
+        DataPtr::Write(aOut, mParsed_Values[0]);
+        DataPtr::Write(aOut, mParsed_Values[1]);
     }
 
     bool FunctionList::Import(const char* aFileName)

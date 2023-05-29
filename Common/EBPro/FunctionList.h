@@ -66,6 +66,7 @@ namespace EBPro
 
         std::string mParsed_Name;
         std::string mParsed_Type;
+        uint32_t    mParsed_Values[2];
 
         Software* mSoftware;
 

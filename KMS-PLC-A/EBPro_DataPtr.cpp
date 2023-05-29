@@ -40,12 +40,7 @@ namespace EBPro
         assert(2 <= aSize_byte);
     }
 
-    bool DataPtr::IsAtEnd() const
-    {
-        assert(mOffset_byte <= mSize_byte);
-
-        return mSize_byte <= mOffset_byte;
-    }
+    bool DataPtr::IsAtEnd() const { return mSize_byte <= mOffset_byte; }
 
     void DataPtr::Read(std::string* aOut)
     {
