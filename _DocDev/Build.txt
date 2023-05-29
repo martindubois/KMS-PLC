@@ -11,19 +11,16 @@ Date and time       20 ______ - ______ - ______               ______ : ______
 
 Computer            _________________________________________________________
 
-File "Common/Version.h" - Edit the Version
+File "Common/Version.h" - Edit the Version                                [ ]
 
 Version             ______ . ______ . ______ . ______ - _____________________
                     {Ma}     {Mi}     {Bu}              {Type}
 
-File "_DocUser/Documentation.html"                                        [ ]
 File "_DocUser/KMS-PLC.ReadMe.txt"                                        [ ]
 File "KMS-PLC/_DocUser/KMS-PLC.KMS-PLC.ReadMe.txt"                        [ ]
 
 Tools "PowerShell" - In the product folder
     .\Import\Binaries\Release_Static_x64\KMS-Build.exe                    [ ]
-
-Tools "Visual Studio" - Build KMS-PLC-Setup (Release_Static - x64)        [ ]
 
 Tools "GIT GUI"
 - Commit modified File with {Ma}.{Mi}.{Bu}[-{Type}] Windows as message    [ ]
