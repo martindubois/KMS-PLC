@@ -5,7 +5,7 @@ License   http://www.apache.org/licenses/LICENSE-2.0
 Product   KMS-PLC
 File      _DocUser/KMS-PLC.ReadMe.txt
 
-0.1.1-dev Windows 2023-05-29
+0.1.2-dev Windows 2023-05-29
 
 0.0.10-dev Windows 2023-04-06
 

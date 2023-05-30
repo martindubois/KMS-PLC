@@ -26,7 +26,7 @@ Tools "GIT GUI"
 - Commit modified File with {Ma}.{Mi}.{Bu}[-{Type}] Windows as message    [ ]
 - Push the servers                                                        [ ]
 
-If needed, publish the installer on GitHub.com                            [ ]
+If needed, publish the package on GitHub.com                              [ ]
 
 Time and duration   ______ : ______           ______ hours and ______ minutes
 
