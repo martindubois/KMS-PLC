@@ -127,6 +127,7 @@ namespace EBPro
                 // TODO Support something else than 4 spaces.
                 if (0 == strncmp("    STATE", lLine.c_str(), 9))
                 {
+                    // TODO  Add user line no to the message
                     KMS_EXCEPTION_ASSERT(NULL != lLabel, APPLICATION_ERROR, "Corruted source file", lLine.c_str());
 
                     lState = lLabel->FindOrCreate(lStateCount, &lChanged);
@@ -141,6 +142,7 @@ namespace EBPro
                 }
                 else if (2 == sscanf_s(lLine.c_str(), " %[a-z] %[^\n\r\t]", lLanguage SizeInfo(lLanguage), lText SizeInfo(lText)))
                 {
+                    // TODO  Add user line no to the message
                     KMS_EXCEPTION_ASSERT(NULL != lState, APPLICATION_ERROR, "Corruted source file", lLine.c_str());
 
                     std::wstring lString(lConverter.from_bytes(lText));

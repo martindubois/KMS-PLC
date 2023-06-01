@@ -51,6 +51,7 @@ namespace EBPro
 
     void Project::Import()
     {
+        mAddresses.Import();
         mFunctions.Import();
         mLabels   .Import();
     }

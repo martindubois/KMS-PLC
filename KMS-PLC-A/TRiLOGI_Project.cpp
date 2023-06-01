@@ -170,6 +170,8 @@ namespace TRiLOGI
                 {
                     lChanged |= mDefines.ImportWord(lName);
                 }
+
+                // TODO  Warning message for ignored line
             }
         }
 

@@ -5,6 +5,8 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/EBPro_AddressList.cpp
 
+// TEST COVERAGE 2023-06-01 KMS - Martin Dubois, P. Eng.
+
 #include "Component.h"
 
 // ===== Import/Includes ====================================================
@@ -90,6 +92,7 @@ namespace EBPro
                 {
                     lChanged |= Import(lName, ToAddressType(lType), Convert::ToUInt16(lAddr));
                 }
+                // TODO  Warning on ignored line
             }
 
             std::cout << "Imported" << std::endl;
@@ -103,6 +106,7 @@ namespace EBPro
         }
     }
 
+    // NOT TESTED
     void AddressList::Import(const ::AddressList& aAL)
     {
         assert(NULL != mSoftware);
@@ -192,6 +196,7 @@ namespace EBPro
         }
     }
 
+    // NOT TESTED  The 2 warnings are not tested
     void AddressList::Verify() const
     {
         std::cout << "Verifying addresses ..." << std::endl;
@@ -260,6 +265,7 @@ namespace EBPro
         {
             if (lAddress->Set(aType, aAddr))
             {
+                // NOT TESTED
                 lResult = true;
 
                 lAddress->GetLine(lLine, sizeof(lLine));
@@ -288,6 +294,7 @@ AddressType ToAddressType(const char* aIn)
     if (0 == strcmp("MODBUS_RTU_1X", aIn)) { return AddressType::MODBUS_RTU_1X     ; }
     if (0 == strcmp("MODBUS_RTU_4X", aIn)) { return AddressType::MODBUS_RTU_4X     ; }
 
+    // NOT TESTED
     char lMsg[64 + NAME_LENGTH];
     sprintf_s(lMsg, "\"%s\" is not a valid address type", aIn);
 
