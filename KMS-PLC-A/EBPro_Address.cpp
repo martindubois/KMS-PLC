@@ -5,6 +5,8 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/EBPro_Address.cpp
 
+// TEST COVERAGE 2023-06-01 KMS - Martin Dubois, P. Eng.
+
 #include "Component.h"
 
 // ===== Import/Includes ====================================================
@@ -18,29 +20,29 @@ using namespace KMS;
 // Constants
 // //////////////////////////////////////////////////////////////////////////
 
-static const char* ADDRESS_TYPE_NAMES[] =
+typedef struct
 {
-    "Local HMI",
-    "Local HMI",
-    "Local HMI",
-    "Local HMI",
-    "Local HMI",
-    "MODBUS RTU",
-    "MODBUS RTU",
-    "UNKNOWN",
+    const char* mType;
+    const char* mSubType;
+}
+AddressTypeName;
+
+static const AddressTypeName ADDRESS_TYPE_NAMES[] =
+{
+    { "Local HMI" , "LB"       },
+    { "Local HMI" , "LW"       },
+    { "Local HMI" , "LW_Bit"   },
+    { "Local HMI" , "RW_A"     },
+    { "Local HMI" , "RW_A_Bit" },
+    { "MODBUS RTU", "1x"       },
+    { "MODBUS RTU", "4x"       },
+    { "UNKNOWN"   , ""         },
 };
 
-static const char* ADDRESS_SUB_TYPE_NAMES[] =
-{
-    "LB",
-    "LW",
-    "LW_Bit",
-    "RW_A",
-    "RW_A_Bit",
-    "1x",
-    "4x",
-    "",
-};
+// Static function declarations
+// //////////////////////////////////////////////////////////////////////////
+
+static AddressType ToAddressType(const char* aType, const char* aSubType);
 
 namespace EBPro
 {
@@ -74,29 +76,19 @@ namespace EBPro
             KMS_EXCEPTION_ASSERT(5 == lRet, APPLICATION_ERROR, lMsg, aLine);
             break;
 
-        default: KMS_EXCEPTION(APPLICATION_ERROR, lMsg, aLine);
-        }
-
-        if (0 == strcmp("Local HMI", lType))
-        {
-            if      (0 == strcmp("LB"      , lSubType)) { mType = AddressType::LOCAL_HMI_LB; }
-            else if (0 == strcmp("LW"      , lSubType)) { mType = AddressType::LOCAL_HMI_LW; }
-            else if (0 == strcmp("LW_Bit"  , lSubType)) { mType = AddressType::LOCAL_HMI_LW_BIT; }
-            else if (0 == strcmp("RW_A"    , lSubType)) { mType = AddressType::LOCAL_HMI_RW_A; }
-            else if (0 == strcmp("RW_A_Bit", lSubType)) { mType = AddressType::LOCAL_HMI_RW_A_BIT; }
-        }
-        else if (0 == strcmp("MODBUS RTU", lType))
-        {
-            if      (0 == strcmp("1x", lSubType)) { mType = AddressType::MODBUS_RTU_1X; }
-            else if (0 == strcmp("4x", lSubType)) { mType = AddressType::MODBUS_RTU_4X; }
+        default:
+            // NOT TESTED
+            KMS_EXCEPTION(APPLICATION_ERROR, lMsg, aLine);
         }
 
         mAddress  = lAddress;
         mDataType = lDataType;
         mLineNo   = aLineNo;
         mName     = lName;
+        mType     = ToAddressType(lType, lSubType);
     }
 
+    // NOT TESTED
     Address::Address(const char* aName, AddressType aType, uint16_t aAddr, unsigned int aLineNo)
         : mDataType("Undesignated")
         , mLineNo(aLineNo)
@@ -112,6 +104,18 @@ namespace EBPro
         mAddress = lAddr;
     }
 
+    // NOT TESTED
+    Address::Address(const char* aName, AddressType aType, const char* aAddr, unsigned int aLineNo)
+        : mAddress(aAddr)
+        , mDataType("Undesignated")
+        , mLineNo(aLineNo)
+        , mName(aName)
+        , mType(aType)
+    {
+        assert(NULL != aName);
+        assert(NULL != aAddr);
+    }
+
     const char  * Address::GetAddress() const { return mAddress.c_str(); }
 
     uint16_t Address::GetAddress_UInt16() const
@@ -123,30 +127,59 @@ namespace EBPro
     const char * Address::GetName  () const { return mName   .c_str(); }
     AddressType  Address::GetType  () const { return mType; }
 
+    // NOT TESTED
     void Address::GetLine(char* aOut, unsigned int aOutSize_byte) const
     {
+        auto lType = static_cast<unsigned int>(mType);
+
         sprintf_s(aOut SizeInfoV(aOutSize_byte), "%s,%s,%s,%s,%s,%s", mName.c_str(),
-            ADDRESS_TYPE_NAMES[static_cast<unsigned int>(mType)], ADDRESS_SUB_TYPE_NAMES[static_cast<unsigned int>(mType)],
+            ADDRESS_TYPE_NAMES[lType].mType, ADDRESS_TYPE_NAMES[lType].mSubType,
             mAddress.c_str(), mComment.c_str(), mDataType.c_str());
     }
 
+    // NOT TESTED
     bool Address::Set(AddressType aType, unsigned int aAddr)
+    {
+        char lAddr[NAME_LENGTH];
+
+        sprintf_s(lAddr, "%u", aAddr);
+
+        return Set(aType, lAddr);
+    }
+
+    bool Address::Set(AddressType aType, const char* aAddr)
     {
         char lMsg[128 + NAME_LENGTH];
         sprintf_s(lMsg, "The improted address type of \"%s\" does not match the current type", mName.c_str());
         KMS_EXCEPTION_ASSERT(mType == aType, APPLICATION_ERROR, lMsg, "");
 
-        bool lResult = GetAddress_UInt16() != aAddr;
+        bool lResult = 0 != strcmp(mAddress.c_str(), aAddr);
         if (lResult)
         {
-            char lAddress[32];
-
-            sprintf_s(lAddress, "%u", aAddr);
-
-            mAddress = lAddress;
+            // NOT TESTED
+            mAddress = aAddr;
         }
 
         return lResult;
     }
 
+}
+
+// Static functions
+// //////////////////////////////////////////////////////////////////////////
+
+AddressType ToAddressType(const char* aType, const char* aSubType)
+{
+    unsigned int lResult;
+
+    for (lResult = static_cast<unsigned int>(AddressType::LOCAL_HMI_LB); lResult < static_cast<unsigned int>(AddressType::UNKNOWN); lResult++)
+    {
+        if (   (0 == strcmp(ADDRESS_TYPE_NAMES[lResult].mType   , aType    ))
+            && (0 == strcmp(ADDRESS_TYPE_NAMES[lResult].mSubType, aSubType)))
+        {
+            break;
+        }
+    }
+
+    return static_cast<AddressType>(lResult);
 }

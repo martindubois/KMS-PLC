@@ -90,7 +90,7 @@ namespace EBPro
 
                 if (3 == sscanf_s(lLine.c_str(), "ADDRESS %[^ \n\r\t] %[^ \n\r\t] %[^ \n\r\t]", lName SizeInfo(lName), lType SizeInfo(lType), lAddr SizeInfo(lAddr)))
                 {
-                    lChanged |= Import(lName, ToAddressType(lType), Convert::ToUInt16(lAddr));
+                    lChanged |= Import(lName, ToAddressType(lType), lAddr);
                 }
                 // TODO  Warning on ignored line
             }
@@ -240,7 +240,7 @@ namespace EBPro
         return lIt->second;
     }
 
-    bool AddressList::Import(const char* aName, AddressType aType, uint16_t aAddr)
+    bool AddressList::Import(const char* aName, AddressType aType, const char* aAddr)
     {
         bool lResult = false;
 

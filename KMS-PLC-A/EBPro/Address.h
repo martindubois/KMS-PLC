@@ -25,6 +25,8 @@ namespace EBPro
 
         Address(const char* aName, AddressType aType, uint16_t aAddr, unsigned int aLineNo);
 
+        Address(const char* aName, AddressType aType, const char* aAddr, unsigned int aLineNo);
+
         const char * GetAddress       () const;
         uint16_t     GetAddress_UInt16() const;
         unsigned int GetLineNo        () const;
@@ -34,6 +36,7 @@ namespace EBPro
         void GetLine(char* aOut, unsigned int aOutSize_byte) const;
 
         bool Set(AddressType aType, unsigned int aAddr);
+        bool Set(AddressType aType, const char*  aAddr);
 
     private:
 

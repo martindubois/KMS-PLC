@@ -60,7 +60,7 @@ namespace EBPro
 
         Address* Find_ByName(const char* aName);
 
-        bool Import(const char* aName, AddressType aType, uint16_t aAddr);
+        bool Import(const char* aName, AddressType aType, const char* aAddr);
 
         KMS::Text::File_ASCII mFile_CSV;
 
