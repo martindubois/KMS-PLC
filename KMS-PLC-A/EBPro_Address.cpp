@@ -62,23 +62,42 @@ namespace EBPro
 
         sprintf_s(lMsg, "Line %u  The CSV file is corrupted", aLineNo);
 
-        int lRet = sscanf_s(aLine, "%[^,],%[^,],%[^,],%[^,],%[^,],%s",
-            lName SizeInfo(lName), lType SizeInfo(lType), lSubType SizeInfo(lSubType),
-            lAddress SizeInfo(lAddress), lComment SizeInfo(lComment), lDataType SizeInfo(lDataType));
-        switch (lRet)
+        //                          Name  Type  SubTy Address     DataType
+        int lRet = sscanf_s(aLine, "%[^,],%[^,],%[^,],\"%[^\"]\",,%s",
+            lName     SizeInfo(lName),
+            lType     SizeInfo(lType),
+            lSubType  SizeInfo(lSubType),
+            lAddress  SizeInfo(lAddress),
+            lDataType SizeInfo(lDataType));
+        if (5 != lRet)
         {
-        case 6: mComment = lComment; break;
-        case 4:
-            lRet = sscanf_s(aLine, "%[^,],%[^,],%[^,],%[^,],,%s",
-                lName SizeInfo(lName), lType SizeInfo(lType), lSubType SizeInfo(lSubType),
-                lAddress SizeInfo(lAddress), lDataType SizeInfo(lDataType));
+            //                      Name  Type  SubTy Addre Comme DataType
+            lRet = sscanf_s(aLine, "%[^,],%[^,],%[^,],%[^,],%[^,],%s",
+                lName     SizeInfo(lName),
+                lType     SizeInfo(lType),
+                lSubType  SizeInfo(lSubType),
+                lAddress  SizeInfo(lAddress),
+                lComment  SizeInfo(lComment),
+                lDataType SizeInfo(lDataType));
+            switch (lRet)
+            {
+            case 6: mComment = lComment; break;
+            case 4:
+                //                      Name  Type  SubTy Addre  DataType
+                lRet = sscanf_s(aLine, "%[^,],%[^,],%[^,],%[^,],,%s",
+                    lName     SizeInfo(lName),
+                    lType     SizeInfo(lType),
+                    lSubType  SizeInfo(lSubType),
+                    lAddress  SizeInfo(lAddress),
+                    lDataType SizeInfo(lDataType));
 
-            KMS_EXCEPTION_ASSERT(5 == lRet, APPLICATION_ERROR, lMsg, aLine);
-            break;
+                KMS_EXCEPTION_ASSERT(5 == lRet, APPLICATION_ERROR, lMsg, aLine);
+                break;
 
-        default:
-            // NOT TESTED
-            KMS_EXCEPTION(APPLICATION_ERROR, lMsg, aLine);
+            default:
+                // NOT TESTED
+                KMS_EXCEPTION(APPLICATION_ERROR, lMsg, aLine);
+            }
         }
 
         mAddress  = lAddress;
