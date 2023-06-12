@@ -4,6 +4,7 @@ Copyright (C) 2022-2023 KMS
 Product   KMS-PLC
 File      KMS-PLC/_DocUser/KMS.ReadMe.txt
 
+0.1.5-dev Windows 2023-06-12
 * EBPro::Address - Fix a bug parsing LW_Bit address (KP-22)
 
 0.1.4-dev Windows 2023-06-01

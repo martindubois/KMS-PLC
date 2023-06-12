@@ -280,8 +280,6 @@ namespace TRiLOGI
             mRelays    .Verify(mFile);
             mTimers    .Verify(mFile);
 
-            // TODO
-
             std::cout << "Verified" << std::endl;
         }
     }
