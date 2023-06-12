@@ -66,6 +66,8 @@ namespace EBPro
     {
         assert(NULL != mSoftware);
 
+        auto lChanged = false;
+
         for (const auto& lEntry : mSources.mInternal)
         {
             auto lSource = dynamic_cast<const DI::String*>(lEntry.Get());
@@ -79,8 +81,6 @@ namespace EBPro
 
             lFile.RemoveComments_Script();
             lFile.RemoveEmptyLines();
-
-            auto lChanged = false;
 
             for (const auto& lLine : lFile.mLines)
             {
@@ -96,13 +96,15 @@ namespace EBPro
             }
 
             std::cout << "Imported" << std::endl;
+        }
 
-            if (lChanged && (0 < mToImport.GetLength()))
-            {
-                mFile_CSV.Write(File::Folder::CURRENT, mToImport.Get());
+        if (lChanged && (0 < mToImport.GetLength()))
+        {
+            // NOT TESTED
 
-                mSoftware->ImportAddresses(mToImport.Get(), mExported.Get());
-            }
+            mFile_CSV.Write(File::Folder::CURRENT, mToImport.Get());
+
+            mSoftware->ImportAddresses(mToImport.Get(), mExported.Get());
         }
     }
 
