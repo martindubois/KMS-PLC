@@ -37,6 +37,7 @@
     <ClCompile Include="EBPro_Label.cpp" />
     <ClCompile Include="EBPro_LabelList.cpp" />
     <ClCompile Include="EBPro_LabelState.cpp" />
+    <ClCompile Include="EBPro_List.cpp" />
     <ClCompile Include="EBPro_Project.cpp" />
     <ClCompile Include="EBPro_Software.cpp" />
     <ClCompile Include="Function.cpp" />

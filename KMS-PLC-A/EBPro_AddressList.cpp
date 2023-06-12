@@ -10,7 +10,6 @@
 #include "Component.h"
 
 // ===== Import/Includes ====================================================
-#include <KMS/Cfg/MetaData.h>
 #include <KMS/Console/Color.h>
 #include <KMS/Convert.h>
 
@@ -23,13 +22,6 @@
 
 using namespace KMS;
 
-// Constants
-// //////////////////////////////////////////////////////////////////////////
-
-static const Cfg::MetaData MD_EXPORTED ("Exported = {Path}.csv");
-static const Cfg::MetaData MD_SOURCES  ("Sources += {Path}.in0");
-static const Cfg::MetaData MD_TO_IMPORT("ToImport = {Path}.csv");
-
 // Static function declarations
 // //////////////////////////////////////////////////////////////////////////
 
@@ -41,78 +33,11 @@ namespace EBPro
     // Public
     // //////////////////////////////////////////////////////////////////////
 
-    AddressList::AddressList(Software* aSoftware) : mSoftware(aSoftware)
-    {
-        assert(NULL != aSoftware);
-
-        mSources.SetCreator(DI::String_Expand::Create);
-
-        AddEntry("Exported", &mExported, false, &MD_EXPORTED);
-        AddEntry("Sources" , &mSources , false, &MD_SOURCES);
-        AddEntry("ToImport", &mToImport, false, &MD_TO_IMPORT);
-    }
-
-    AddressList::~AddressList()
-    {
-        for (auto lAddress : mAddresses)
-        {
-            assert(NULL != lAddress);
-
-            delete lAddress;
-        }
-    }
-
-    void AddressList::Import()
-    {
-        assert(NULL != mSoftware);
-
-        auto lChanged = false;
-
-        for (const auto& lEntry : mSources.mInternal)
-        {
-            auto lSource = dynamic_cast<const DI::String*>(lEntry.Get());
-            assert(NULL != lSource);
-
-            std::cout << "Importing " << lSource->Get() << " ..." << std::endl;
-
-            Text::File_ASCII lFile;
-
-            lFile.Read(File::Folder::CURRENT, lSource->Get());
-
-            lFile.RemoveComments_Script();
-            lFile.RemoveEmptyLines();
-
-            for (const auto& lLine : lFile.mLines)
-            {
-                char lName[NAME_LENGTH];
-                char lType[NAME_LENGTH];
-                char lAddr[NAME_LENGTH];
-
-                if (3 == sscanf_s(lLine.c_str(), "ADDRESS %[^ \n\r\t] %[^ \n\r\t] %[^ \n\r\t]", lName SizeInfo(lName), lType SizeInfo(lType), lAddr SizeInfo(lAddr)))
-                {
-                    lChanged |= Import(lName, ToAddressType(lType), lAddr);
-                }
-                // TODO  Warning on ignored line
-            }
-
-            std::cout << "Imported" << std::endl;
-        }
-
-        if (lChanged && (0 < mToImport.GetLength()))
-        {
-            // NOT TESTED
-
-            mFile_CSV.Write(File::Folder::CURRENT, mToImport.Get());
-
-            mSoftware->ImportAddresses(mToImport.Get(), mExported.Get());
-        }
-    }
+    AddressList::AddressList(Software* aSoftware) : List(aSoftware) {}
 
     // NOT TESTED
-    void AddressList::Import(const ::AddressList& aAL)
+    void AddressList::ImportAddresses(const ::AddressList& aAL)
     {
-        assert(NULL != mSoftware);
-
         auto lChanged = false;
 
         for (auto& lA : aAL)
@@ -143,11 +68,9 @@ namespace EBPro
             }
         }
 
-        if (lChanged && (0 < mToImport.GetLength()))
+        if (lChanged)
         {
-            mFile_CSV.Write(File::Folder::CURRENT, mToImport.Get());
-
-            mSoftware->ImportAddresses(mToImport.Get(), mExported.Get());
+            SaveToImport();
         }
     }
 
@@ -155,7 +78,7 @@ namespace EBPro
     {
         if (!mFile_CSV.mLines.empty())
         {
-            std::cout << "Parsing " << mExported.Get() << " ..." << std::endl;
+            std::cout << "Parsing " << GetExported() << " ..." << std::endl;
 
             unsigned int lLineNo = 0;
 
@@ -171,30 +94,6 @@ namespace EBPro
             }
 
             std::cout << "Parsed" << std::endl;
-        }
-    }
-
-    void AddressList::Read()
-    {
-        if (0 < mExported.GetLength())
-        {
-            std::cout << "Reading " << mExported.Get() << " ..." << std::endl;
-
-            mFile_CSV.Read(File::Folder::CURRENT, mExported.Get());
-
-            std::cout << "Read" << std::endl;
-        }
-    }
-
-    void AddressList::ValidateConfig() const
-    {
-        if (0 < mExported.GetLength())
-        {
-            auto lStr = mExported.Get();
-
-            char lMsg[64 + PATH_LENGTH];
-            sprintf_s(lMsg, "\"%s\" does not exist", lStr);
-            KMS_EXCEPTION_ASSERT(File::Folder::CURRENT.DoesFileExist(lStr), APPLICATION_USER_ERROR, lMsg, "");
         }
     }
 
@@ -226,6 +125,63 @@ namespace EBPro
         std::cout << "Verified" << std::endl;
     }
 
+    // ===== List ===========================================================
+
+    AddressList::~AddressList()
+    {
+        for (auto lAddress : mAddresses)
+        {
+            assert(NULL != lAddress);
+
+            delete lAddress;
+        }
+    }
+
+    bool AddressList::ImportSource(const char* aFileName)
+    {
+        Text::File_ASCII lFile;
+
+        lFile.Read(File::Folder::CURRENT, aFileName);
+
+        lFile.RemoveComments_Script();
+        lFile.RemoveEmptyLines();
+
+        bool lResult = false;
+
+        for (const auto& lLine : lFile.mLines)
+        {
+            char lName[NAME_LENGTH];
+            char lType[NAME_LENGTH];
+            char lAddr[NAME_LENGTH];
+
+            if (3 == sscanf_s(lLine.c_str(), "ADDRESS %[^ \n\r\t] %[^ \n\r\t] %[^ \n\r\t]", lName SizeInfo(lName), lType SizeInfo(lType), lAddr SizeInfo(lAddr)))
+            {
+                lResult |= ImportAddress(lName, ToAddressType(lType), lAddr);
+            }
+            else
+            {
+                std::cout << Console::Color::YELLOW << "    WARNING  Line " << lLine.GetUserLineNo() << " ignored - " << lLine.c_str();
+                std::cout << Console::Color::WHITE << std::endl;
+            }
+        }
+
+        return lResult;
+    }
+
+    void AddressList::ReadExported()
+    {
+        mFile_CSV.Read(File::Folder::CURRENT, GetExported());
+    }
+
+    void AddressList::SaveToImport()
+    {
+        const char* lToImport = GetToImport();
+
+        mFile_CSV.Write(File::Folder::CURRENT, lToImport);
+
+        GetSoftware()->ImportAddresses(lToImport, GetExported());
+    }
+
     // Private
     // //////////////////////////////////////////////////////////////////////
 
@@ -242,7 +198,7 @@ namespace EBPro
         return lIt->second;
     }
 
-    bool AddressList::Import(const char* aName, AddressType aType, const char* aAddr)
+    bool AddressList::ImportAddress(const char* aName, AddressType aType, const char* aAddr)
     {
         bool lResult = false;
 

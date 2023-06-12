@@ -8,19 +8,18 @@
 #pragma once
 
 // ===== Import =============================================================
-#include <KMS/DI/Array.h>
-#include <KMS/DI/Dictionary.h>
-#include <KMS/DI/String_Expand.h>
 #include <KMS/File/Binary.h>
+
+// ===== Local ==============================================================
+#include "List.h"
 
 namespace EBPro
 {
 
     class DataPtr;
     class Function;
-    class Software;
 
-    class FunctionList : public KMS::DI::Dictionary
+    class FunctionList : public List
     {
 
     public:
@@ -29,22 +28,19 @@ namespace EBPro
 
         FunctionList(Software* aSoftware);
 
-        ~FunctionList();
-
-        void Import();
-
         void Parse();
 
-        void Read();
-
-        void ValidateConfig() const;
+        // ===== List =======================================================
+        virtual ~FunctionList();
 
         ByName mFunctions_ByName;
 
-        // ===== Configurable attributes ====================================
-        KMS::DI::String_Expand mExported;
-        KMS::DI::Array         mSources;
-        KMS::DI::String_Expand mToImport;
+    protected:
+
+        // ===== List =======================================================
+        virtual bool ImportSource(const char* aFileName);
+        virtual void ReadExported();
+        virtual void SaveToImport();
 
     private:
 
@@ -57,8 +53,6 @@ namespace EBPro
         void Header_Parse(DataPtr* aPtr);
         void Header_Write(FILE   * aOut);
 
-        bool Import(const char* aFileName);
-
         void Replace(Function* aIn);
 
         KMS::File::Binary* mFile;
@@ -67,8 +61,6 @@ namespace EBPro
         std::string mParsed_Name;
         std::string mParsed_Type;
         uint32_t    mParsed_Values[2];
-
-        Software* mSoftware;
 
     };
 

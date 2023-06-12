@@ -10,43 +10,44 @@
 // ===== C++ ================================================================
 #include <vector>
 
-// ===== Import =============================================================
-#include <KMS/DI/Array.h>
-#include <KMS/DI/Dictionary.h>
-#include <KMS/DI/String_Expand.h>
+// ===== Local ==============================================================
+#include "List.h"
 
 namespace EBPro
 {
 
     class Label;
-    class Software;
 
-    class LabelList : public KMS::DI::Dictionary
+    class LabelList : public List
     {
 
     public:
 
         LabelList(Software* aSoftware);
 
-        ~LabelList();
-
         void Export() const;
 
-        void Import();
-
         void Parse();
-
-        void Read();
 
         void ValidateConfig() const;
 
         void Verify() const;
+
+        // ===== List =======================================================
+        virtual ~LabelList();
+        virtual void Read();
 
     // Internal
 
         typedef std::vector<Label*> Internal;
 
         Internal mLabels;
+
+    protected:
+
+        // ===== List =======================================================
+        virtual bool ImportSource(const char* aFileName);
+        virtual void SaveToImport();
 
     private:
 
@@ -60,19 +61,10 @@ namespace EBPro
 
         unsigned int FindLanguageIndex(const char* aId) const;
 
-        void Save_ToImport_LBL() const;
-
         uint8_t mHeader[18];
 
-        Software* mSoftware;
-
         // ===== Configurable attributes ====================================
-
-        KMS::DI::String_Expand mExported;
-        KMS::DI::String_Expand mToImport;
-
         KMS::DI::Array mLanguages;
-        KMS::DI::Array mSources;
 
     };
 

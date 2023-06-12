@@ -11,21 +11,19 @@
 #include <vector>
 
 // ===== Import =============================================================
-#include <KMS/DI/Array.h>
-#include <KMS/DI/Dictionary.h>
-#include <KMS/DI/String_Expand.h>
 #include <KMS/Text/File_ASCII.h>
 
 // ===== Local ==============================================================
 #include "../Address.h"
 
+#include "List.h"
+
 namespace EBPro
 {
 
     class Address;
-    class Software;
 
-    class AddressList : public KMS::DI::Dictionary
+    class AddressList : public List
     {
 
     public:
@@ -36,23 +34,25 @@ namespace EBPro
 
         AddressList(Software* aSoftware);
 
-        ~AddressList();
-
-        void Import();
-
-        void Import(const ::AddressList& aAL);
+        void ImportAddresses(const ::AddressList& aAL);
 
         void Parse();
 
-        void Read();
-
-        void ValidateConfig() const;
-
         void Verify() const;
+
+        // ===== List =======================================================
+        virtual ~AddressList();
 
         Internal mAddresses;
 
         ByName mAddresses_ByName;
+
+    protected:
+
+        // ===== List =======================================================
+        virtual bool ImportSource(const char* aFileName);
+        virtual void ReadExported();
+        virtual void SaveToImport();
 
     private:
 
@@ -60,16 +60,9 @@ namespace EBPro
 
         Address* Find_ByName(const char* aName);
 
-        bool Import(const char* aName, AddressType aType, const char* aAddr);
+        bool ImportAddress(const char* aName, AddressType aType, const char* aAddr);
 
         KMS::Text::File_ASCII mFile_CSV;
-
-        Software* mSoftware;
-
-        // ===== Configurable attributes ====================================
-        KMS::DI::String_Expand mExported;
-        KMS::DI::Array         mSources;
-        KMS::DI::String_Expand mToImport;
 
     };
 

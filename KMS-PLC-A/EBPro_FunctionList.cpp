@@ -7,9 +7,6 @@
 
 #include "Component.h"
 
-// ===== Import/Includes ====================================================
-#include <KMS/Cfg/MetaData.h>
-
 // ===== Local ==============================================================
 #include "../Common/EBPro/Software.h"
 
@@ -20,109 +17,22 @@
 
 using namespace KMS;
 
-// Constants
-// //////////////////////////////////////////////////////////////////////////
-
-static const Cfg::MetaData MD_EXPORTED ("Exported = {Path}.mlb");
-static const Cfg::MetaData MD_SOURCES  ("Sources += {Path}.mlb.in0");
-static const Cfg::MetaData MD_TO_IMPORT("ToImport = {Path}.mlb");
-
 namespace EBPro
 {
 
     // Public
     // //////////////////////////////////////////////////////////////////////
 
-    FunctionList::FunctionList(Software* aSoftware) : mFile(NULL), mFile_Data(NULL), mSoftware(aSoftware)
+    FunctionList::FunctionList(Software* aSoftware) : List(aSoftware), mFile(NULL), mFile_Data(NULL)
     {
-        assert(NULL != aSoftware);
-
         memset(&mParsed_Values, 0, sizeof(mParsed_Values));
-
-        mSources.SetCreator(DI::String_Expand::Create);
-
-        AddEntry("Exported", &mExported, false, &MD_EXPORTED);
-        AddEntry("Sources" , &mSources , false, &MD_SOURCES);
-        AddEntry("ToImport", &mToImport, false, &MD_TO_IMPORT);
-    }
-
-    FunctionList::~FunctionList()
-    {
-        for (auto lPair : mFunctions_ByName)
-        {
-            assert(NULL != lPair.second);
-
-            delete lPair.second;
-        }
-
-        if (NULL != mFile)
-        {
-            delete mFile;
-        }
-    }
-
-    void FunctionList::Import()
-    {
-        assert(NULL != mSoftware);
-
-        if (0 < mSources.GetCount())
-        {
-            std::cout << "Importing sources ..." << std::endl;
-
-            auto lChanged = false;
-
-            for (const auto& lEntry : mSources.mInternal)
-            {
-                const DI::String* lSource = dynamic_cast<const DI::String*>(lEntry.Get());
-                assert(NULL != lSource);
-
-                lChanged |= Import(lSource->Get());
-            }
-
-            if (lChanged)
-            {
-                std::cout << "Imported\n";
-
-                char lPath[PATH_LENGTH];
-
-                File::Folder::CURRENT.GetPath(mToImport.Get(), lPath, sizeof(lPath));
-
-                FILE* lFile;
-
-                auto lRet = fopen_s(&lFile, lPath, "wb");
-
-                char lMsg[64 + PATH_LENGTH];
-                sprintf_s(lMsg, "Cannot open \"%s\" for writting", lPath);
-                KMS_EXCEPTION_ASSERT(0 == lRet, APPLICATION_ERROR, lMsg, lRet);
-
-                Header_Write(lFile);
-
-                for (const auto lPair : mFunctions_ByName)
-                {
-                    assert(NULL != lPair.second);
-
-                    lPair.second->Write(lFile);
-                }
-
-                fprintf(lFile, "\r\n");
-
-                lRet = fclose(lFile);
-                assert(0 == lRet);
-
-                mSoftware->ImportFunctions(mToImport.Get(), mExported.Get());
-            }
-            else
-            {
-                std::cout << "Imported - No change" << std::endl;
-            }
-        }
     }
 
     void FunctionList::Parse()
     {
         if (NULL != mFile_Data)
         {
-            std::cout << "Parsing " << mExported.Get() << " ..." << std::endl;
+            std::cout << "Parsing " << GetExported() << " ..." << std::endl;
 
             DataPtr lPtr(mFile_Data, mFile->GetMappedSize());
 
@@ -140,47 +50,106 @@ namespace EBPro
         }
     }
 
-    void FunctionList::Read()
+    // ===== List ===========================================================
+
+    FunctionList::~FunctionList()
     {
-        if (0 < mExported.GetLength())
+        for (auto lPair : mFunctions_ByName)
         {
-            std::cout << "Reading " << mExported.Get() << " ..." << std::endl;
+            assert(NULL != lPair.second);
 
-            mFile = new File::Binary(File::Folder::CURRENT, mExported);
-            assert(NULL != mFile);
+            delete lPair.second;
+        }
 
-            mFile_Data = reinterpret_cast<const char*>(mFile->Map());
-            assert(NULL != mFile_Data);
-
-            std::cout << "Read" << std::endl;
+        if (NULL != mFile)
+        {
+            delete mFile;
         }
     }
 
-    void FunctionList::ValidateConfig() const
+    // Protected
+    // //////////////////////////////////////////////////////////////////////
+
+    // ===== List ===========================================================
+
+    bool FunctionList::ImportSource(const char* aFileName)
     {
+        Text::File_ASCII lFile;
+
+        lFile.Read(File::Folder::CURRENT, aFileName);
+
+        lFile.RemoveComments_Script();
+
+        unsigned int lLineNo = 0;
+        auto         lResult = false;
+
+        while (lFile.GetLineCount() > lLineNo)
+        {
+            if (0 == strncmp(lFile.GetLine(lLineNo), "FUNCTION", 8))
+            {
+                auto lFunction = new Function();
+
+                lLineNo = lFunction->Read(lFile, lLineNo);
+
+                auto lExisting = FindByName(lFunction->GetName());
+                if (NULL == lExisting)
+                {
+                    Add(lFunction);
+                    lResult = true;
+                }
+                else
+                {
+                    if (*lFunction != *lExisting)
+                    {
+                        Replace(lFunction);
+                        lResult = true;
+                    }
+                }
+            }
+        }
+
+        return lResult;
+    }
+
+    void FunctionList::ReadExported()
+    {
+        mFile = new File::Binary(File::Folder::CURRENT, GetExported());
+        assert(NULL != mFile);
+
+        mFile_Data = reinterpret_cast<const char*>(mFile->Map());
+        assert(NULL != mFile_Data);
+    }
+
+    void FunctionList::SaveToImport()
+    {
+        char        lPath[PATH_LENGTH];
+        const char* lToImport = GetToImport();
+
+        File::Folder::CURRENT.GetPath(lToImport, lPath, sizeof(lPath));
+
+        FILE* lFile;
+
+        auto lRet = fopen_s(&lFile, lPath, "wb");
+
         char lMsg[64 + PATH_LENGTH];
+        sprintf_s(lMsg, "Cannot open \"%s\" for writting", lPath);
+        KMS_EXCEPTION_ASSERT(0 == lRet, APPLICATION_ERROR, lMsg, lRet);
 
-        if (0 < mExported.GetLength())
+        Header_Write(lFile);
+
+        for (const auto lPair : mFunctions_ByName)
         {
-            auto lStr = mExported.Get();
+            assert(NULL != lPair.second);
 
-            sprintf_s(lMsg, "\"%s\" does not exist", lStr);
-            KMS_EXCEPTION_ASSERT(File::Folder::CURRENT.DoesFileExist(lStr), APPLICATION_USER_ERROR, lMsg, "");
+            lPair.second->Write(lFile);
         }
 
-        for (auto& lEntry : mSources.mInternal)
-        {
-            auto lSource = dynamic_cast<const DI::String*>(lEntry.Get());
-            assert(NULL != lSource);
+        fprintf(lFile, "\r\n");
 
-            sprintf_s(lMsg, "\"%s\" does not exist", lSource->Get());
-            KMS_EXCEPTION_ASSERT(File::Folder::CURRENT.DoesFileExist(lSource->Get()), APPLICATION_USER_ERROR, lMsg, "");
-        }
+        lRet = fclose(lFile);
+        assert(0 == lRet);
 
-        if (0 < mSources.GetCount())
-        {
-            KMS_EXCEPTION_ASSERT(0 < mToImport.GetLength(), APPLICATION_USER_ERROR, "Sources are present, ToImport cannot be empty", "");
-        }
+        GetSoftware()->ImportFunctions(lToImport, GetExported());
     }
 
     // Private
@@ -228,45 +197,6 @@ namespace EBPro
         DataPtr::Write(aOut, mParsed_Name);
         DataPtr::Write(aOut, mParsed_Values[0]);
         DataPtr::Write(aOut, mParsed_Values[1]);
-    }
-
-    bool FunctionList::Import(const char* aFileName)
-    {
-        Text::File_ASCII lFile;
-
-        lFile.Read(File::Folder::CURRENT, aFileName);
-
-        lFile.RemoveComments_Script();
-
-        unsigned int lLineNo = 0;
-        auto         lResult = false;
-
-        while (lFile.GetLineCount() > lLineNo)
-        {
-            if (0 == strncmp(lFile.GetLine(lLineNo), "FUNCTION", 8))
-            {
-                auto lFunction = new Function();
-
-                lLineNo = lFunction->Read(lFile, lLineNo);
-
-                auto lExisting = FindByName(lFunction->GetName());
-                if (NULL == lExisting)
-                {
-                    Add(lFunction);
-                    lResult = true;
-                }
-                else
-                {
-                    if (*lFunction != *lExisting)
-                    {
-                        Replace(lFunction);
-                        lResult = true;
-                    }
-                }
-            }
-        }
-
-        return lResult;
     }
 
     void FunctionList::Replace(Function* aIn)

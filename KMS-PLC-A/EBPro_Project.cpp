@@ -58,7 +58,7 @@ namespace EBPro
 
     void Project::Import(const ::AddressList& aAL)
     {
-        mAddresses.Import(aAL);
+        mAddresses.ImportAddresses(aAL);
     }
 
     void Project::Parse()
