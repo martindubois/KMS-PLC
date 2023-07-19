@@ -1,6 +1,6 @@
 
 // Author    KMS - Martin Dubois, P. Eng.
-// Copyright (C) 2022 KMS
+// Copyright (C) 2022-2023 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
 // File      Common/Types.h
@@ -22,4 +22,6 @@ enum class AddressType
     MODBUS_RTU_4X,
 
     UNKNOWN,
+
+    QTY
 };

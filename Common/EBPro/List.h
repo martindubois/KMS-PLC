@@ -44,6 +44,8 @@ namespace EBPro
         virtual void ReadExported();
         virtual void SaveToImport() = 0;
 
+        virtual void ValidateConfig_ToImport() const;
+
     private:
 
         NO_COPY(List);

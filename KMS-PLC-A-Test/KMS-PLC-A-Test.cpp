@@ -9,6 +9,7 @@
 
 // ===== Import/Includes ====================================================
 #include <KMS/Banner.h>
+#include <KMS/DI/Dictionary.h>
 #include <KMS/Test/TestManager.h>
 
 // ===== Local ==============================================================

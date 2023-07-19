@@ -14,6 +14,8 @@
 // ===== Local ==============================================================
 #include "../Common/TRiLOGI/Project.h"
 
+#include "Console.h"
+
 #include "TRiLOGI/Word.h"
 
 using namespace KMS;
@@ -53,7 +55,7 @@ namespace TRiLOGI
 
     void Project::Clean()
     {
-        std::cout << "Cleaning ..." << std::endl;
+        Console::Progress_Begin("Cleaning ...");
 
         unsigned int lCount = 0;
 
@@ -69,13 +71,14 @@ namespace TRiLOGI
         {
             Reparse();
 
-            std::cout << "Cleaned - " << lCount << " elements\n";
+            Console::Stats(lCount, "elements");
+            Console::Progress_End("Clearned");
 
             Instruction_Write();
         }
         else
         {
-            std::cout << "Cleaned - No change" << std::endl;
+            Console::Progress_End("Cleaned (No change)");
         }
     }
 
@@ -93,17 +96,17 @@ namespace TRiLOGI
     {
         if (0 < mExported.GetLength())
         {
-            std::cout << "Exporting " << mExported.Get() << " ..." << std::endl;
+            Console::Progress_Begin("Exporting", mExported.Get());
 
             mFile.Write_ASCII(File::Folder::CURRENT, mExported.Get());
 
-            std::cout << "Exported" << std::endl;
+            Console::Progress_End("Exported");
         }
     }
 
     void Project::Import()
     {
-        std::cout << "Importing sources ..." << std::endl;
+        Console::Progress_Begin("Importing sources");
 
         bool lChanged = false;
 
@@ -170,8 +173,12 @@ namespace TRiLOGI
                 {
                     lChanged |= mDefines.ImportWord(lName);
                 }
-
-                // TODO  Warning message for ignored line
+                else
+                {
+                    Console::Warning_Begin();
+                    std::cout << "Line " << lIt->GetUserLineNo() << "  Ignored line - " << lIt->c_str();
+                    Console::Warning_End();
+                }
             }
         }
 
@@ -182,13 +189,13 @@ namespace TRiLOGI
                 Reparse();
             }
 
-            std::cout << "Imported\n";
+            Console::Progress_End("Imported");
 
             Instruction_Write();
         }
         else
         {
-            std::cout << "Imported - No change" << std::endl;
+            Console::Progress_End("Imported (No change)");
         }
     }
 
@@ -196,7 +203,7 @@ namespace TRiLOGI
     {
         if (0 < mFile.GetLineCount())
         {
-            std::cout << "Parsing " << mFileName.Get() << " ..." << std::endl;
+            Console::Progress_Begin("Parsing", mFileName.Get());
 
             unsigned int lLineNo    = 1;
             auto         lLineCount = mFile.GetLineCount();
@@ -220,7 +227,7 @@ namespace TRiLOGI
         }
         else if (mCreateIfNeeded)
         {
-            std::cout << "Creating " << mFileName.Get() << " ..." << std::endl;
+            Console::Change("Creating", mFileName.Get());
 
             Create();
 
@@ -232,11 +239,11 @@ namespace TRiLOGI
     {
         if ((0 < mFileName.GetLength()) && File::Folder::CURRENT.DoesFileExist(mFileName.Get()))
         {
-            std::cout << "Reading " << mFileName.Get() << " ..." << std::endl;
+            Console::Progress_Begin("Reading", mFileName.Get());
 
             mFile.Read(File::Folder::CURRENT, mFileName.Get());
 
-            std::cout << "Read" << std::endl;
+            Console::Progress_End("Read");
         }
     }
 
@@ -267,7 +274,7 @@ namespace TRiLOGI
     {
         if (0 < mFile.GetLineCount())
         {
-            std::cout << "Verifying " << mFileName.Get() << " ..." << std::endl;
+            Console::Progress_Begin("Verifying", mFileName.Get());
 
             // TODO For the verification, use a version of mFile_PC6 without
             //      comment
@@ -280,7 +287,7 @@ namespace TRiLOGI
             mRelays    .Verify(mFile);
             mTimers    .Verify(mFile);
 
-            std::cout << "Verified" << std::endl;
+            Console::Progress_End("Verified");
         }
     }
 
@@ -339,7 +346,7 @@ namespace TRiLOGI
 
     void Project::Write()
     {
-        std::cout << "Writing ..." << std::endl;
+        Console::Progress_Begin("Writing");
 
         if (File::Folder::CURRENT.DoesFileExist(mFileName.Get()))
         {
@@ -348,7 +355,7 @@ namespace TRiLOGI
 
         mFile.Write(File::Folder::CURRENT, mFileName.Get(), L"\r\n");
 
-        std::cout << "Written" << std::endl;
+        Console::Progress_End("Written");
     }
 
     AddressList* Project::GetSharedAddresses() const
@@ -446,8 +453,11 @@ namespace TRiLOGI
 
 void Instruction_Write()
 {
-    std::cout << "INSTRUCTION\n";
+    Console::Instruction_Begin();
+
     //                     1           2         3         4         5         6         7
     //            123456789012 345678 90123456789012345678901234567890123456789012345678901234567 89
     std::cout << "    Use the \"Write\" command to save the changes                           [ ]" << std::endl;
+
+    Console::Instruction_End();
 }

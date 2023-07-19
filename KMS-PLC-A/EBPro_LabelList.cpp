@@ -12,7 +12,6 @@
 
 // ===== Import/Includes ====================================================
 #include <KMS/Cfg/MetaData.h>
-#include <KMS/Console/Color.h>
 #include <KMS/File/Folder.h> 
 #include <KMS/Text/File_ASCII.h>
 
@@ -21,10 +20,11 @@
 
 #include "../Common/EBPro/LabelList.h"
 
+#include "Console.h"
+#include "Convert.h"
+
 #include "EBPro/LabelState.h"
 #include "EBPro/Label.h"
-
-#include "Convert.h"
 
 using namespace KMS;
 
@@ -54,7 +54,7 @@ namespace EBPro
         {
             auto lPath = std::string(GetExported()) + ".in0";
 
-            std::cout << "Exporting " << lPath << " ..." << std::endl;
+            Console::Progress_Begin("Exporting", lPath.c_str());
 
             FILE* lFile;
 
@@ -74,7 +74,7 @@ namespace EBPro
             auto lRet = fclose(lFile);
             assert(0 == lRet);
 
-            std::cout << "Exported" << std::endl;
+            Console::Progress_End("Exported");
         }
     }
 
@@ -84,7 +84,7 @@ namespace EBPro
         {
             const char* lExported = GetExported();
 
-            std::cout << "Parsing " << lExported << " ..." << std::endl;
+            Console::Progress_Begin("Parsing", lExported);
 
             FILE* lFile;
 
@@ -113,14 +113,14 @@ namespace EBPro
                 mLabels.push_back(lLabel);
             }
 
-            std::cout << "    " << mLabels.size() << " labels" << std::endl;
+            Console::Stats(mLabels.size(), "labels");
 
             KMS_EXCEPTION_ASSERT(lLabelCount == mLabels.size(), APPLICATION_ERROR, "Corrupted exported LBL file", lLabelCount);
 
             auto lRet = fclose(lFile);
             assert(0 == lRet);
 
-            std::cout << "Parsed" << std::endl;
+            Console::Progress_End("Parsed");
         }
     }
 
@@ -148,7 +148,7 @@ namespace EBPro
     
     void LabelList::Verify() const
     {
-        std::cout << "Verifying labels ..." << std::endl;
+        Console::Progress_Begin("Verifying labels");
 
         for (Internal::const_iterator lItA = mLabels.begin(); lItA != mLabels.end(); lItA++)
         {
@@ -156,7 +156,9 @@ namespace EBPro
             {
                 if ((*lItA)->mName == (*lItB)->mName)
                 {
-                    std::cout << Console::Color::YELLOW << "WARNING  The label " << (*lItA)->mName.c_str() << " is present twice" << Console::Color::WHITE << std::endl;
+                    Console::Warning_Begin();
+                    std::cout << "The label " << (*lItA)->mName.c_str() << " is present twice";
+                    Console::Warning_End();
                 }
             }
 
@@ -165,7 +167,7 @@ namespace EBPro
 
         // TODO Verify more
 
-        std::cout << "Verified" << std::endl;
+        Console::Progress_End("Verified");
     }
 
     // ===== List =======================================================
@@ -329,6 +331,8 @@ namespace EBPro
         auto lResult = Find(lName.c_str());
         if (NULL == lResult)
         {
+            Console::Change("New label", aName);
+
             *aChanged = true;
 
             lResult = Create(lName.c_str());

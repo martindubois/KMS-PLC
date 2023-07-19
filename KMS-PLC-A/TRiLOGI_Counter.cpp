@@ -8,6 +8,8 @@
 #include "Component.h"
 
 // ===== Local ==============================================================
+#include "Console.h"
+
 #include "TRiLOGI/Counter.h"
 
 using namespace KMS;
@@ -29,6 +31,8 @@ namespace TRiLOGI
         bool lResult = mInit != aInit;
         if (lResult)
         {
+            Console::Change("Counter changed", GetName());
+
             mInit = aInit;
 
             Update(aFile_PC6);

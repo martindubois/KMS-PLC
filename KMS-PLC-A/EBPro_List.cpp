@@ -17,6 +17,8 @@
 
 #include "../Common/EBPro/List.h"
 
+#include "Console.h"
+
 using namespace KMS;
 
 // Constants
@@ -54,16 +56,16 @@ namespace EBPro
             auto lSource = dynamic_cast<const DI::String*>(lEntry.Get());
             assert(NULL != lSource);
 
-            std::cout << "Importing " << lSource->Get() << " ..." << std::endl;
+            Console::Progress_Begin("Importing", lSource->Get());
 
             lChanged |= ImportSource(lSource->Get());
 
-            std::cout << "Imported" << std::endl;
+            Console::Progress_End("Imported");
         }
 
         if (lChanged)
         {
-            std::cout << "Saving " << mToImport.Get() << " ..." << std::endl;
+            Console::Progress_Begin("Saving", mToImport.Get());
 
             // NOT TESTED
             SaveToImport();
@@ -74,13 +76,13 @@ namespace EBPro
             // we verify if the ToImport is configured.
             if ((0 < mToImport.GetLength()) && (File::Folder::CURRENT.DoesFileExist(mToImport.Get())))
             {
-                std::cout << "Deleting " << mToImport.Get() << " ..." << std::endl;
+                Console::Progress_Begin("Deleting", mToImport.Get());
 
                 File::Folder lCurrent(File::Folder::Id::CURRENT);
 
                 lCurrent.Delete(mToImport.Get());
 
-                std::cout << "Deleted" << std::endl;
+                Console::Progress_End("Deleted");
             }
         }
     }
@@ -89,11 +91,11 @@ namespace EBPro
     {
         if (IsExportedConfigured())
         {
-            std::cout << "Reading " << GetExported() << " ..." << std::endl;
+            Console::Progress_Begin("Reading", GetExported());
 
             ReadExported();
 
-            std::cout << "Read" << std::endl;
+            Console::Progress_End("Read");
         }
     }
 
@@ -120,7 +122,7 @@ namespace EBPro
 
         if (0 < mSources.GetCount())
         {
-            KMS_EXCEPTION_ASSERT(0 < mToImport.GetLength(), APPLICATION_USER_ERROR, "Sources are present, ToImport cannot be empty", "");
+            ValidateConfig_ToImport();
         }
     }
 
@@ -134,5 +136,10 @@ namespace EBPro
     bool List::IsExportedConfigured() const { return 0 < mExported.GetLength(); }
 
     void List::ReadExported() { assert(false); }
+
+    void List::ValidateConfig_ToImport() const
+    {
+        KMS_EXCEPTION_ASSERT(0 < mToImport.GetLength(), APPLICATION_USER_ERROR, "ToImport cannot be empty in this configuration", "");
+    }
 
 }

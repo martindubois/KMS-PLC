@@ -4,6 +4,10 @@ Copyright (C) 2022-2023 KMS
 Product   KMS-PLC
 File      KMS-PLC/_DocUser/KMS.ReadMe.txt
 
+0.1.6-dev Windows 2023-07-19
+* Change listed in blue (KP-26)
+- EBPro::AddressList - Validate ToImport attribute before using it (KP-24)
+
 0.1.5-dev Windows 2023-06-12
 * EBPro::Address - Fix a bug parsing LW_Bit address (KP-22)
 

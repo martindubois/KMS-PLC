@@ -7,13 +7,11 @@
 
 #include "Component.h"
 
-// ===== Import/Includes ====================================================
-#include <KMS/Console/Color.h>
-
 // ===== Local ==============================================================
 #include "EBPro/LabelState.h"
 #include "EBPro/Label.h"
 
+#include "Console.h"
 #include "Convert.h"
 
 using namespace KMS;
@@ -130,7 +128,9 @@ namespace EBPro
     {
         if (0 >= mStates.size())
         {
-            std::cout << Console::Color::YELLOW << "WARNING  The label " << mName.c_str() << " has no state" << Console::Color::WHITE << std::endl;
+            Console::Warning_Begin();
+            std::cout << "The label " << mName.c_str() << " has no state";
+            Console::Warning_End();
             return;
         }
 
@@ -179,6 +179,10 @@ namespace EBPro
         }
         else
         {
+            Console::Change("New label state", mName.c_str());
+
+            *aChanged = true;
+
             while (mStates.size() < aState)
             {
                 mStates.push_back(new LabelState);

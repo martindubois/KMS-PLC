@@ -12,6 +12,8 @@
 
 #include "../Common/EBPro/FunctionList.h"
 
+#include "Console.h"
+
 #include "EBPro/DataPtr.h"
 #include "EBPro/Function.h"
 
@@ -32,7 +34,7 @@ namespace EBPro
     {
         if (NULL != mFile_Data)
         {
-            std::cout << "Parsing " << GetExported() << " ..." << std::endl;
+            Console::Progress_Begin("Parsing ", GetExported());
 
             DataPtr lPtr(mFile_Data, mFile->GetMappedSize());
 
@@ -46,7 +48,7 @@ namespace EBPro
                 Add(lFunction);
             }
 
-            std::cout << "Parsed" << std::endl;
+            Console::Progress_End("Parsed");
         }
     }
 
@@ -94,6 +96,8 @@ namespace EBPro
                 auto lExisting = FindByName(lFunction->GetName());
                 if (NULL == lExisting)
                 {
+                    Console::Change("New function", lFunction->GetName());
+
                     Add(lFunction);
                     lResult = true;
                 }
@@ -101,6 +105,8 @@ namespace EBPro
                 {
                     if (*lFunction != *lExisting)
                     {
+                        Console::Change("Function changed", lFunction->GetName());
+
                         Replace(lFunction);
                         lResult = true;
                     }

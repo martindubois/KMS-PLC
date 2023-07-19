@@ -13,6 +13,7 @@
 #include <KMS/Convert.h>
 
 // ===== Local ==============================================================
+#include "Console.h"
 #include "EBPro/Address.h"
 
 using namespace KMS;
@@ -175,6 +176,8 @@ namespace EBPro
         bool lResult = 0 != strcmp(mAddress.c_str(), aAddr);
         if (lResult)
         {
+            Console::Change("Address changed", GetName());
+
             // NOT TESTED
             mAddress = aAddr;
         }

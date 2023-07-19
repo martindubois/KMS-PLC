@@ -10,11 +10,10 @@
 // ===== C++ ================================================================
 #include <codecvt>
 
-// ===== Import/Includes ====================================================
-#include <KMS/Console/Color.h>
-
 // ===== Local ==============================================================
 #include "../Common/TRiLOGI/ObjectList.h"
+
+#include "Console.h"
 
 #include "TRiLOGI/Object.h"
 
@@ -165,7 +164,7 @@ namespace TRiLOGI
             AddObject(lLine, lLineNo, aFlags);
         }
 
-        std::cout << "    " << GetCount() << " " << GetElementName() << "s" << std::endl;
+        Console::Stats(GetCount(), GetElementName());
 
         return lLineNo;
     }
@@ -190,22 +189,29 @@ namespace TRiLOGI
             case 1:
                 lCount++;
                 lObject->AddFlags(Object::FLAG_NOT_USED);
-                std::cout << Console::Color::YELLOW << "    WARNING  Line " << lObject->GetLineNo();
+
+                Console::Warning_Begin();
+                std::cout << "Line " << lObject->GetLineNo();
                 std::cout << "  The " << mElementName << " named \"" << lObject->GetName();
-                std::cout << "\" (" << lObject->GetIndex() << ") is useless" << Console::Color::WHITE << std::endl;
+                std::cout << "\" (" << lObject->GetIndex() << ") is useless";
+                Console::Warning_End();
                 break;
 
             case 2:
                 if (lObject->TestFlag(Object::FLAG_SINGLE_USE_WARNING))
                 {
-                    std::cout << Console::Color::YELLOW << "    WARNING  Line " << lObject->GetLineNo();
+                    Console::Warning_Begin();
+                    std::cout << "Line " << lObject->GetLineNo();
                     std::cout << "  The " << mElementName << " named \"" << lObject->GetName();
-                    std::cout << "\" (" << lObject->GetIndex() << ") is used only once" << Console::Color::WHITE << std::endl;
+                    std::cout << "\" (" << lObject->GetIndex() << ") is used only once";
+                    Console::Warning_End();
                 }
                 else if (lObject->TestFlag(Object::FLAG_SINGLE_USE_INFO))
                 {
-                    std::cout << "    INFO  The " << mElementName << " named \"" << lObject->GetName();
-                    std::cout << "\" (" << lObject->GetIndex() << ") is used only once" << std::endl;
+                    Console::Info_Begin();
+                    std::cout << "The " << mElementName << " named \"" << lObject->GetName();
+                    std::cout << "\" (" << lObject->GetIndex() << ") is used only once";
+                    Console::Info_End();
                 }
                 break;
             }
@@ -213,7 +219,9 @@ namespace TRiLOGI
 
         if (0 < lCount)
         {
-            std::cout << Console::Color::YELLOW << "    WARNING  " << lCount << " " << mElementName << "s not used" << Console::Color::WHITE << std::endl;
+            Console::Warning_Begin();
+            std::cout << lCount << " " << mElementName << "s not used";
+            Console::Warning_End();
         }
     }
 

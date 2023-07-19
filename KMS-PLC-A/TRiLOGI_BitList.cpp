@@ -7,12 +7,10 @@
 
 #include "Component.h"
 
-// ===== Import/Includes ====================================================
-#include <KMS/Console/Color.h>
-
 // ===== Local ==============================================================
-
 #include "../Common/TRiLOGI/BitList.h"
+
+#include "Console.h"
 
 #include "TRiLOGI/Object.h"
 
@@ -47,8 +45,11 @@ namespace TRiLOGI
     bool BitList::Import(const char* aName)
     {
         auto lObject = FindObject_ByName(aName);
-        if (NULL == lObject)
+        bool lResult = NULL == lObject;
+        if (lResult)
         {
+            Console::Change("New", GetElementName(), aName);
+
             unsigned int lIndex;
             unsigned int lLineNo;
 
@@ -57,10 +58,9 @@ namespace TRiLOGI
             lObject = new Object(aName, lIndex, lLineNo, Object::FLAG_TO_INSERT);
 
             AddObject(lObject);
-            return true;
         }
 
-        return false;
+        return lResult;
     }
 
     bool BitList::Import(const char* aName, unsigned int aIndex)
@@ -71,6 +71,8 @@ namespace TRiLOGI
             lObject = FindObject_ByIndex(aIndex);
             if (NULL == lObject)
             {
+                Console::Change("New", GetElementName(), aName);
+
                 auto lLineNo = FindLineNo(aIndex);
 
                 lObject = new Object(aName, aIndex, lLineNo, Object::FLAG_TO_INSERT);
@@ -79,17 +81,17 @@ namespace TRiLOGI
                 return true;
             }
 
-            std::cout << Console::Color::RED;
-            std::cout << "ERROR  The index " << aIndex << " is already used";
-            std::cout << Console::Color::WHITE << std::endl;
+            Console::Error_Begin();
+            std::cout << "The index " << aIndex << " is already used";
+            Console::Error_End();
             return false;
         }
 
         if (aIndex != lObject->GetIndex())
         {
-            std::cout << Console::Color::RED;
-            std::cout << "ERROR  The name " << aName << " is already used for another index";
-            std::cout << Console::Color::WHITE << std::endl;
+            Console::Error_Begin();
+            std::cout << "The name " << aName << " is already used for another index";
+            Console::Error_End();
         }
 
         return false;

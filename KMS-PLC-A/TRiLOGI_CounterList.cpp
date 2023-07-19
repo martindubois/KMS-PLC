@@ -18,6 +18,8 @@
 
 #include "TRiLOGI/Counter.h"
 
+using namespace KMS;
+
 namespace TRiLOGI
 {
 
@@ -57,6 +59,8 @@ namespace TRiLOGI
         auto lObject = FindObject_ByName(aName);
         if (NULL == lObject)
         {
+            std::cout << Console::Color::GREEN << "New counter - " << aName << Console::Color::WHITE << std::endl;
+
             unsigned int lIndex;
             unsigned int lLineNo;
 

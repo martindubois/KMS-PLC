@@ -10,12 +10,10 @@
 // ===== C++ ================================================================
 #include <codecvt>
 
-// ===== Import/Includes ====================================================
-#include <KMS/Console/Color.h>
-
 // ===== Local ==============================================================
 #include "../Common/TRiLOGI/FunctionList.h"
 
+#include "Console.h"
 #include "Function.h"
 
 #include "TRiLOGI/Function.h"
@@ -122,12 +120,16 @@ namespace TRiLOGI
 
         if (NULL == lFunction)
         {
+            Console::Change("New function", aName);
+
             AddObject(lNew);
         }
         else
         {
             if (*lNew != *lFunction)
             {
+                Console::Change("Function changed", aName);
+
                 Replace(lFunction, lNew);
             }
             else
@@ -206,7 +208,7 @@ namespace TRiLOGI
             KMS_EXCEPTION_ASSERT(lBI.second, APPLICATION_ERROR, lMsg, "");
         }
 
-        std::cout << "    " << GetCount() << " " << "functions" << std::endl;
+        Console::Stats(GetCount(), "functions");
 
         return lLineNo;
     }
@@ -252,7 +254,7 @@ namespace TRiLOGI
             KMS_EXCEPTION_ASSERT(lBI.second, APPLICATION_ERROR, lMsg, "");
         }
 
-        std::cout << "    " << GetCount() << " " << "function names" << std::endl;
+        Console::Stats(GetCount(), "function names");
 
         return lLineNo;
     }
@@ -275,16 +277,21 @@ namespace TRiLOGI
             case 1:
                 lCount++;
                 lFunction->AddFlags(Object::FLAG_NOT_USED);
-                std::cout << Console::Color::YELLOW << "    WARNING  Line " << lFunction->GetLineNo();
+
+                Console::Warning_Begin();
+                std::cout << "Line " << lFunction->GetLineNo();
                 std::cout << "  The function named \"" << lFunction->GetName();
-                std::cout << "\" (" << lFunction->GetIndex() << ") is not used" << Console::Color::WHITE << std::endl;
+                std::cout << "\" (" << lFunction->GetIndex() << ") is not used";
+                Console::Warning_End();
                 break;
             }
         }
 
         if (0 < lCount)
         {
-            std::cout << Console::Color::YELLOW << "    WARNING  " << lCount << " unused functions" << Console::Color::WHITE << std::endl;
+            Console::Warning_Begin();
+            std::cout << lCount << " unused functions";
+            Console::Warning_End();
         }
     }
 

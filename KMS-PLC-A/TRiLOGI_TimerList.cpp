@@ -10,7 +10,11 @@
 // ===== Local ==============================================================
 #include "../Common/TRiLOGI/TimerList.h"
 
+#include "Console.h"
+
 #include "TRiLOGI/Timer.h"
+
+using namespace KMS;
 
 namespace TRiLOGI
 {
@@ -25,6 +29,8 @@ namespace TRiLOGI
         auto lObject = FindObject_ByName(aName);
         if (NULL == lObject)
         {
+            Console::Change("New timer", aName);
+
             unsigned int lIndex;
             unsigned int lLineNo;
 

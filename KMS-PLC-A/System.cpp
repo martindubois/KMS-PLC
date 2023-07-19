@@ -11,13 +11,15 @@
 
 // ===== Import/Includes ====================================================
 #include <KMS/Cfg/Configurator.h>
-#include <KMS/Console/Color.h>
 #include <KMS/Dbg/Log.h>
+#include <KMS/Dbg/Log_Cfg.h>
 #include <KMS/Dbg/Stats.h>
 #include <KMS/Dbg/Stats_Timer.h>
 
 // ===== Local ==============================================================
 #include "../Common/System.h"
+
+#include "Console.h"
 
 #include "EBPro/Address.h"
 
@@ -45,10 +47,11 @@ int System::Main(int aCount, const char** aVector)
     {
         Cfg::Configurator lC;
         System            lS;
+        Dbg::Log_Cfg      lLogCfg(&Dbg::gLog);
 
         lC.AddConfigurable(&lS);
 
-        lC.AddConfigurable(&Dbg::gLog);
+        lC.AddConfigurable(&lLogCfg);
         lC.AddConfigurable(&Dbg::gStats);
 
         lC.ParseFile(File::Folder::CURRENT, CONFIG_FILE);
@@ -115,7 +118,7 @@ void System::Verify()
 
     if ((0 < mEBPro.mAddresses.GetCount()) && mTRiLOGI.IsValid())
     {
-        std::cout << "Verifying shared addresses ..." << std::endl;
+        Console::Progress_Begin("Verifying shared addresses");
 
         for (const auto lA : mEBPro.mAddresses.mAddresses)
         {
@@ -125,22 +128,26 @@ void System::Verify()
             case AddressType::MODBUS_RTU_1X:
                 if (!mTRiLOGI.VerifyAddress_1X(lA->GetAddress_UInt16()))
                 {
-                    std::cout << Console::Color::RED << "    ERROR  The HMI access an invalid PLC address named \"";
-                    std::cout << lA->GetName() << "\" (1x-" << lA->GetAddress() << ")" << Console::Color::WHITE << std::endl;
+                    Console::Error_Begin();
+                    std::cout << "The HMI access an invalid PLC address named \"";
+                    std::cout << lA->GetName() << "\" (1x-" << lA->GetAddress() << ")";
+                    Console::Error_End();
                 }
                 break;
 
             case AddressType::MODBUS_RTU_4X:
                 if (!mTRiLOGI.VerifyAddress_4X(lA->GetAddress_UInt16()))
                 {
-                    std::cout << Console::Color::RED << "    ERROR  The HMI access an invalid PLC address named \"";
-                    std::cout << lA->GetName() << "\" (4x-" << lA->GetAddress() << ")" << Console::Color::WHITE << std::endl;
+                    Console::Error_Begin();
+                    std::cout << "The HMI access an invalid PLC address named \"";
+                    std::cout << lA->GetName() << "\" (4x-" << lA->GetAddress() << ")";
+                    Console::Error_End();
                 }
                 break;
             }
         }
 
-        std::cout << "Verifyed" << std::endl;
+        Console::Progress_End("Verifyed");
     }
 }
 

@@ -7,10 +7,9 @@
 
 #include "Component.h"
 
-// ===== Import/Includes ====================================================
-#include <KMS/Console/Color.h>
-
 // ===== Local ==============================================================
+#include "Console.h"
+
 #include "TRiLOGI/Constant.h"
 
 using namespace KMS;
@@ -32,6 +31,8 @@ namespace TRiLOGI
         bool lResult = (mValue != aValue);
         if (lResult)
         {
+            Console::Change("Constant changed", GetName());
+
             mValue = aValue;
 
             Update(aFile_PC6);
@@ -45,9 +46,12 @@ namespace TRiLOGI
         if (0 >= mValue.size())
         {
             AddFlags(Object::FLAG_NOT_USED);
-            std::cout << Console::Color::YELLOW << "    WARNING  Line " << GetLineNo();
+
+            Console::Warning_Begin();
+            std::cout << "Line " << GetLineNo();
             std::cout << "  The constant named \"" << GetName();
-            std::cout << "\" (" << GetIndex() << ") has no value" << Console::Color::WHITE << std::endl;
+            std::cout << "\" (" << GetIndex() << ") has no value";
+            Console::Warning_End();
         }
     }
 

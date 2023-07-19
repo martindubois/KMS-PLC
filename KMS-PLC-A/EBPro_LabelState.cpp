@@ -7,10 +7,14 @@
 
 #include "Component.h"
 
-// ===== Local ==============================================================
-#include "EBPro/LabelState.h"
+// ===== Import/Includes ====================================================
+#include <KMS/DI/String.h>
 
+// ===== Local ==============================================================
+#include "Console.h"
 #include "Convert.h"
+
+#include "EBPro/LabelState.h"
 
 using namespace KMS;
 
@@ -30,6 +34,8 @@ namespace EBPro
         {
             if (mStrings[aLanguage] != aText)
             {
+                Console::Change("Label changed", aText);
+
                 lResult = true;
 
                 mStrings[aLanguage] = aText;
@@ -37,6 +43,8 @@ namespace EBPro
         }
         else
         {
+            Console::Change("Label new language", aText);
+
             lResult = true;
 
             while (mStrings.size() < aLanguage)

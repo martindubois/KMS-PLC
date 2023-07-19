@@ -10,6 +10,8 @@
 // ===== Local ==============================================================
 #include "../Common/EBPro/Software.h"
 
+#include "Console.h"
+
 using namespace KMS;
 
 // Static function declarations
@@ -151,7 +153,8 @@ namespace EBPro
 
 void Instruction_Begin()
 {
-    std::cout << "INSTRUCTION\n";
+    Console::Instruction_Begin();
+
     std::cout << "    Tool \"EBPro\"\n";
 }
 
@@ -160,7 +163,9 @@ void Instruction_End()
     //            1234567890123456 789 0123456789012345678901234567890123456789012345678901234567  89
     std::cout << "        - Click \"OK\"                                                      [ ]\n";
 
-    std::cout << "Presse ENTER to continue" << std::endl;
+    std::cout << "Presse ENTER to continue";
+
+    Console::Instruction_End();
 
     char lLine[LINE_LENGTH];
     fgets(lLine, sizeof(lLine), stdin);
