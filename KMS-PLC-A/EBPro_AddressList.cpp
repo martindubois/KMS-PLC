@@ -5,7 +5,7 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/EBPro_AddressList.cpp
 
-// TEST COVERAGE 2023-06-01 KMS - Martin Dubois, P. Eng.
+// TEST COVERAGE 2023-07-20 KMS - Martin Dubois, P. Eng.
 
 #include "Component.h"
 
@@ -47,15 +47,13 @@ namespace EBPro
 
     AddressList::AddressList(Software* aSoftware) : List(aSoftware) {}
 
-    // NOT TESTED
     void AddressList::ImportAddresses(const ::AddressList& aAL)
     {
         auto lChanged = false;
 
-        if (!aAL.empty())
+        if ((!aAL.empty()) && IsToImportConfigured())
         {
-            ValidateConfig_ToImport();
-
+            // NOT TESTED
             for (auto& lA : aAL)
             {
                 char lLine[LINE_LENGTH];
@@ -114,7 +112,7 @@ namespace EBPro
         }
     }
 
-    // NOT TESTED  The 2 warnings are not tested
+    // NOT TESTED  The second warnings is not tested
     void AddressList::Verify() const
     {
         Console::Progress_Begin("Verifying addresses");
@@ -125,18 +123,16 @@ namespace EBPro
             {
                 if (0 == strcmp((*lItA)->GetName(), (*lItB)->GetName()))
                 {
-                    Console::Warning_Begin();
-                    std::cout << "Line " << (*lItA)->GetLineNo() << " and " << (*lItB)->GetLineNo();
-                    std::cout << "  2 addresses are named \"" << (*lItA)->GetName() << "\"";
+                    Console::Warning_Begin((*lItA)->GetLineNo(), (*lItB)->GetLineNo());
+                    std::cout << "2 addresses are named \"" << (*lItA)->GetName() << "\"";
                     Console::Warning_End();
                 }
 
                 if (   ((*lItA)->GetType() == (*lItB)->GetType())
                     && (0 == strcmp((*lItA)->GetAddress(), (*lItB)->GetAddress())))
                 {
-                    Console::Warning_Begin();
-                    std::cout << "Line " << (*lItA)->GetLineNo() << " and " << (*lItB)->GetLineNo();
-                    std::cout << "  The addresses named \"" << (*lItA)->GetName() << "\" and \"" << (*lItB)->GetName();
+                    Console::Warning_Begin((*lItA)->GetLineNo(), (*lItB)->GetLineNo());
+                    std::cout << "The addresses named \"" << (*lItA)->GetName() << "\" and \"" << (*lItB)->GetName();
                     std::cout << "\" are the same (" << (*lItA)->GetAddress() << ")";
                     Console::Warning_End();
                 }
@@ -167,7 +163,7 @@ namespace EBPro
         lFile.RemoveComments_Script();
         lFile.RemoveEmptyLines();
 
-        bool lResult = false;
+        auto lResult = false;
 
         for (const auto& lLine : lFile.mLines)
         {
@@ -183,9 +179,7 @@ namespace EBPro
             }
             else
             {
-                Console::Warning_Begin();
-                std::cout << "Line " << lLine.GetUserLineNo() << " ignored - " << lLine.c_str();
-                Console::Warning_End();
+                Console::Warning_IgnoredLine(lLine.GetUserLineNo(), lLine.c_str());
             }
         }
 
@@ -197,6 +191,7 @@ namespace EBPro
         mFile_CSV.Read(File::Folder::CURRENT, GetExported());
     }
 
+    // NOT TESTED
     void AddressList::SaveToImport()
     {
         const char* lToImport = GetToImport();
@@ -214,6 +209,7 @@ namespace EBPro
         auto lIt = mAddresses_ByName.find(aName);
         if (mAddresses_ByName.end() == lIt)
         {
+            // NOT TESTED
             return NULL;
         }
 
@@ -224,13 +220,14 @@ namespace EBPro
 
     bool AddressList::ImportAddress(const char* aName, AddressType aType, const char* aAddr)
     {
-        bool lResult = false;
+        auto lResult = false;
 
         char lLine[LINE_LENGTH];
 
         auto lAddress = Find_ByName(aName);
         if (NULL == lAddress)
         {
+            // NOT TESTED
             Console::Change("New address", aName);
 
             lResult = true;

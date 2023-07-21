@@ -39,6 +39,7 @@ namespace EBPro
         const char* GetToImport() const;
 
         bool IsExportedConfigured() const;
+        bool IsToImportConfigured() const;
 
         virtual bool ImportSource(const char* aFileName) = 0;
         virtual void ReadExported();

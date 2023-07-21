@@ -91,7 +91,7 @@ void System::Import()
     mEBPro  .Import();
     mTRiLOGI.Import();
 
-    AddressList* lAL = mTRiLOGI.GetSharedAddresses();
+    const AddressList* lAL = mTRiLOGI.GetPublicAddresses();
     if ((NULL != lAL) && (0 < lAL->size()))
     {
         // NOT TESTED

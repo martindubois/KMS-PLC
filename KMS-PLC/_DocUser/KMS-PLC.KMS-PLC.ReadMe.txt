@@ -4,6 +4,9 @@ Copyright (C) 2022-2023 KMS
 Product   KMS-PLC
 File      KMS-PLC/_DocUser/KMS.ReadMe.txt
 
+0.1.7-dev Windows 2023-07-21
+* TRiLOGY::Project - HeaderFile, HeaderPrefix and PublicDefs attributes
+
 0.1.6-dev Windows 2023-07-19
 * Change listed in blue (KP-26)
 - EBPro::AddressList - Validate ToImport attribute before using it (KP-24)

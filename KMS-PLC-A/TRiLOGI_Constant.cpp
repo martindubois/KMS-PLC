@@ -47,10 +47,8 @@ namespace TRiLOGI
         {
             AddFlags(Object::FLAG_NOT_USED);
 
-            Console::Warning_Begin();
-            std::cout << "Line " << GetLineNo();
-            std::cout << "  The constant named \"" << GetName();
-            std::cout << "\" (" << GetIndex() << ") has no value";
+            Console::Warning_Begin(GetLineNo());
+            std::cout << "The constant named \"" << GetName() << "\" (" << GetIndex() << ") has no value";
             Console::Warning_End();
         }
     }

@@ -52,7 +52,7 @@ namespace EBPro
     {
         if (IsExportedConfigured())
         {
-            auto lPath = std::string(GetExported()) + ".in0";
+            auto lPath = std::string(GetExported()) + ".txt";
 
             Console::Progress_Begin("Exporting", lPath.c_str());
 

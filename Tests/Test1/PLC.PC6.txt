@@ -3,7 +3,7 @@
 # Copyright (C) 2023 KMS
 # License   http://www.apache.org/licenses/LICENSE-2.0
 # Product   KMS-PLC
-# File      Tests/Test1/PLC.PC6.in0
+# File      Tests/Test1/PLC.PC6.txt
 
 # ===== Public ==============================================================
 
@@ -12,6 +12,8 @@ RELAY rEnable_Hrw
 
 WORD wPulseCount_Add_Hrw
 WORD wPulseCount_Hrw
+
+CONSTANT Test 1
 
 # ===== Private =============================================================
 
@@ -22,3 +24,5 @@ OUTPUT oPulse 0
 
 FUNCTION Enabled_01
 FUNCTION END
+
+Ignored line for test

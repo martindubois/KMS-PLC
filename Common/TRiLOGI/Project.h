@@ -55,25 +55,32 @@ namespace TRiLOGI
 
         void Write();
 
-        AddressList* GetSharedAddresses() const;
+        const AddressList* GetPublicAddresses() const;
 
         // ===== Configurable attributes ====================================
         KMS::DI::Boolean       mCreateIfNeeded;
         KMS::DI::String_Expand mExported;
         KMS::DI::String_Expand mFileName;
-        KMS::DI::String        mSharedAddressRegEx;
+        KMS::DI::String_Expand mHeaderFile;
+        KMS::DI::String_Expand mHeaderPrefix;
+        KMS::DI::Array         mPublicDefs;
         KMS::DI::Array         mSources;
-
 
     private:
 
         NO_COPY(Project);
+
+        void AddPublicAddress(const char* aPrivate, const char* aPublic);
+        void AddPublicAddresses(const char* aRegEx);
 
         bool Apply();
 
         void Create();
 
         unsigned int ParseNothing(unsigned int aLineNo);
+
+        void ParsePublicDef(const char* aFileName);
+        void ParsePublicDefs();
 
         void Reparse();
 
@@ -92,6 +99,7 @@ namespace TRiLOGI
         FunctionList  mFunctions;
         BitList       mInputs;
         BitList       mOutputs;
+        AddressList   mPublicAddresses;
         BitList       mRelays;
         Software      mSoftware;
         TimerList     mTimers;

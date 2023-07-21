@@ -5,7 +5,7 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/EBPro_List.cpp
 
-// TEST COVERAGE 2023-06-12 KMS - Martin Dubois, P. Eng.
+// TEST COVERAGE 2023-07-20 KMS - Martin Dubois, P. Eng.
 
 #include "Component.h"
 
@@ -25,7 +25,7 @@ using namespace KMS;
 // //////////////////////////////////////////////////////////////////////////
 
 static const Cfg::MetaData MD_EXPORTED ("Exported = {Path}");
-static const Cfg::MetaData MD_SOURCES  ("Sources += {Path}.in0");
+static const Cfg::MetaData MD_SOURCES  ("Sources += {Path}.txt");
 static const Cfg::MetaData MD_TO_IMPORT("ToImport = {Path}");
 
 namespace EBPro
@@ -65,16 +65,16 @@ namespace EBPro
 
         if (lChanged)
         {
+            // NOT TESTED
             Console::Progress_Begin("Saving", mToImport.Get());
 
-            // NOT TESTED
             SaveToImport();
         }
         else
         {
             // If no Source are configured, we execute this code. This is why
             // we verify if the ToImport is configured.
-            if ((0 < mToImport.GetLength()) && (File::Folder::CURRENT.DoesFileExist(mToImport.Get())))
+            if (IsToImportConfigured() && File::Folder::CURRENT.DoesFileExist(mToImport.Get()))
             {
                 Console::Progress_Begin("Deleting", mToImport.Get());
 
@@ -134,12 +134,13 @@ namespace EBPro
     const char* List::GetToImport() const { return mToImport.Get(); }
 
     bool List::IsExportedConfigured() const { return 0 < mExported.GetLength(); }
+    bool List::IsToImportConfigured() const { return 0 < mToImport.GetLength(); }
 
     void List::ReadExported() { assert(false); }
 
     void List::ValidateConfig_ToImport() const
     {
-        KMS_EXCEPTION_ASSERT(0 < mToImport.GetLength(), APPLICATION_USER_ERROR, "ToImport cannot be empty in this configuration", "");
+        KMS_EXCEPTION_ASSERT(IsToImportConfigured(), APPLICATION_USER_ERROR, "ToImport cannot be empty in this configuration", "");
     }
 
 }

@@ -270,7 +270,10 @@ namespace TRiLOGI
             auto lFunction = lVT.second;
             assert(NULL != lFunction);
 
-            switch (aFile_PC6.CountOccurrence(lConverter.from_bytes(lFunction->GetName()).c_str()))
+            auto lName = lFunction->GetName();
+            assert(NULL != lName);
+
+            switch (aFile_PC6.CountOccurrence(lConverter.from_bytes(lName).c_str()))
             {
             case 0: assert(false);
 
@@ -278,10 +281,8 @@ namespace TRiLOGI
                 lCount++;
                 lFunction->AddFlags(Object::FLAG_NOT_USED);
 
-                Console::Warning_Begin();
-                std::cout << "Line " << lFunction->GetLineNo();
-                std::cout << "  The function named \"" << lFunction->GetName();
-                std::cout << "\" (" << lFunction->GetIndex() << ") is not used";
+                Console::Warning_Begin(lFunction->GetLineNo());
+                std::cout << "The function named \"" << lName << "\" (" << lFunction->GetIndex() << ") is not used";
                 Console::Warning_End();
                 break;
             }

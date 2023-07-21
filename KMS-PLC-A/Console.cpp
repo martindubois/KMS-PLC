@@ -52,7 +52,13 @@ void ::Console::Error_Begin() { std::cout << KMS::Console::Color::RED << "    ER
 void ::Console::Error_End  () { std::cout << KMS::Console::Color::WHITE << std::endl; }
 
 void ::Console::Info_Begin() { std::cout << "    INFO  "; }
-void ::Console::Info_End  () { std::cout << std::endl; }
+
+void ::Console::Info_Begin(unsigned int aLineNo)
+{
+    std::cout << "    INFO  Line " << aLineNo << "  ";
+}
+
+void ::Console::Info_End() { std::cout << std::endl; }
 
 void ::Console::Instruction_Begin() { std::cout << KMS::Console::Color::BLUE << "INSTRUCTION\n"; }
 void ::Console::Instruction_End  () { std::cout << KMS::Console::Color::WHITE << std::endl; }
@@ -80,4 +86,22 @@ void ::Console::Progress_End(const char* aMsg)
 }
 
 void ::Console::Warning_Begin() { std::cout << KMS::Console::Color::YELLOW << "    WARNING  "; }
-void ::Console::Warning_End  () { std::cout << KMS::Console::Color::WHITE << std::endl; }
+
+void ::Console::Warning_Begin(unsigned int aLineNo)
+{
+    std::cout << KMS::Console::Color::YELLOW << "    WARNING  Line " << aLineNo << "  ";
+}
+
+void ::Console::Warning_Begin(unsigned int aLineNoA, unsigned int aLineNoB)
+{
+    std::cout << KMS::Console::Color::YELLOW << "    WARNING  Line " << aLineNoA << " and " << aLineNoB << "  ";
+}
+
+void ::Console::Warning_End() { std::cout << KMS::Console::Color::WHITE << std::endl; }
+
+void ::Console::Warning_IgnoredLine(unsigned int aLineNo, const char* aLine)
+{
+    Console::Warning_Begin(aLineNo);
+    std::cout << "Ignored - " << aLine;
+    Console::Warning_End();
+}

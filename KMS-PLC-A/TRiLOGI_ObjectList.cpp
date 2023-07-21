@@ -38,7 +38,7 @@ namespace TRiLOGI
     {
         assert(NULL != mFile_PC6);
 
-        bool lResult = false;
+        auto lResult = false;
 
         for (auto lIt = mObjects_ByIndex.rbegin(); lIt != mObjects_ByIndex.rend(); lIt++)
         {
@@ -146,8 +146,8 @@ namespace TRiLOGI
 
     unsigned int ObjectList::Parse(Text::File_UTF16* aFile_PC6, unsigned int aLineNo, unsigned int aFlags)
     {
-        unsigned int lLineCount = aFile_PC6->GetLineCount();
-        unsigned int lLineNo    = aLineNo;
+        auto lLineCount = aFile_PC6->GetLineCount();
+        auto lLineNo    = aLineNo;
 
         for (; lLineNo < lLineCount; lLineNo++)
         {
@@ -179,38 +179,38 @@ namespace TRiLOGI
 
         for (auto& lVT : mObjects_ByIndex)
         {
-            auto lObject = lVT.second;
-            assert(NULL != lObject);
+            auto lObj = lVT.second;
+            assert(NULL != lObj);
 
-            switch (aFile_PC6.CountOccurrence(lConverter.from_bytes(lObject->GetName()).c_str()))
+            auto lIndex  = lObj->GetIndex();
+            auto lLineNo = lObj->GetLineNo();
+            auto lName   = lObj->GetName();
+            assert(NULL != lName);
+
+            switch (aFile_PC6.CountOccurrence(lConverter.from_bytes(lName).c_str()))
             {
             case 0: assert(false);
 
             case 1:
                 lCount++;
-                lObject->AddFlags(Object::FLAG_NOT_USED);
+                lObj->AddFlags(Object::FLAG_NOT_USED);
 
-                Console::Warning_Begin();
-                std::cout << "Line " << lObject->GetLineNo();
-                std::cout << "  The " << mElementName << " named \"" << lObject->GetName();
-                std::cout << "\" (" << lObject->GetIndex() << ") is useless";
+                Console::Warning_Begin(lLineNo);
+                std::cout << "The " << mElementName << " named \"" << lName << "\" (" << lIndex << ") is useless";
                 Console::Warning_End();
                 break;
 
             case 2:
-                if (lObject->TestFlag(Object::FLAG_SINGLE_USE_WARNING))
+                if (lObj->TestFlag(Object::FLAG_SINGLE_USE_WARNING))
                 {
-                    Console::Warning_Begin();
-                    std::cout << "Line " << lObject->GetLineNo();
-                    std::cout << "  The " << mElementName << " named \"" << lObject->GetName();
-                    std::cout << "\" (" << lObject->GetIndex() << ") is used only once";
+                    Console::Warning_Begin(lLineNo);
+                    std::cout << "The " << mElementName << " named \"" << lName << "\" (" << lIndex << ") is used only once";
                     Console::Warning_End();
                 }
-                else if (lObject->TestFlag(Object::FLAG_SINGLE_USE_INFO))
+                else if (lObj->TestFlag(Object::FLAG_SINGLE_USE_INFO))
                 {
-                    Console::Info_Begin();
-                    std::cout << "The " << mElementName << " named \"" << lObject->GetName();
-                    std::cout << "\" (" << lObject->GetIndex() << ") is used only once";
+                    Console::Info_Begin(lLineNo);
+                    std::cout << "The " << mElementName << " named \"" << lName << "\" (" << lIndex << ") is used only once";
                     Console::Info_End();
                 }
                 break;
@@ -276,8 +276,8 @@ namespace TRiLOGI
         sprintf_s(lMsg, "Too many %s", mElementName);
         KMS_EXCEPTION_ASSERT(mMaxQty > mObjects_ByIndex.size(), APPLICATION_ERROR, lMsg, "");
 
-        unsigned int lIndex  = mMaxQty - 1;
-        unsigned int lLineNo = mLineNo_End;
+        auto lIndex  = mMaxQty - 1;
+        auto lLineNo = mLineNo_End;
 
         for (auto lIt = mObjects_ByIndex.rbegin(); lIt != mObjects_ByIndex.rend(); lIt++)
         {
@@ -296,7 +296,7 @@ namespace TRiLOGI
 
     unsigned int ObjectList::FindLineNo(unsigned int aIndex)
     {
-        unsigned int lResult = mLineNo_End;
+        auto lResult = mLineNo_End;
 
         for (auto lIt = mObjects_ByIndex.rbegin(); lIt != mObjects_ByIndex.rend(); lIt++)
         {

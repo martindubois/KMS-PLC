@@ -1,0 +1,20 @@
+
+# Author    KMS - Martin Dubois, P. Eng.
+# Copyright (C) 2023 KMS
+# License   http://www.apache.org/licenses/LICENSE-2.0
+# Product   KMS-PLC
+# File      Tests/Test1/PublicDef.txt
+
+ADDRESSES ^r.*_Hrw$
+
+ADDRESS wPulseCount_Hrw
+
+ADDRESS iAlarm_Left
+ADDRESS iAlarm_Right iAlarm_Right
+
+ADDRESS Test
+
+ADDRESSES DoesNotExist
+ADDRESS DoesNotExist
+
+Ignored line for test

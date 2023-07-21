@@ -3,8 +3,10 @@
 # License   http://www.apache.org/licenses/LICENSE-2.0
 # copyright (C) 2023 KMS
 # Product   KMS-PLC
-# File      Tests/Test0/HMI/Test.csv.in0
+# File      Tests/Test0/HMI/Test.csv.txt
 
 ADDRESS Test LW 0
 
 ADDRESS rToto MODBUS_RTU_4X 1001
+
+Ignored line for test

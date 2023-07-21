@@ -5,7 +5,12 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGI_Project.cpp
 
+// TEST COVERAGE 2023-07-20 KMS - Martin Dubois, P. Eng.
+
 #include "Component.h"
+
+// ===== C++ ================================================================
+#include <fstream>
 
 // ===== Import/Includes ====================================================
 #include <KMS/Cfg/MetaData.h>
@@ -13,6 +18,7 @@
 
 // ===== Local ==============================================================
 #include "../Common/TRiLOGI/Project.h"
+#include "../Common/Version.h"
 
 #include "Console.h"
 
@@ -23,11 +29,13 @@ using namespace KMS;
 // Constants
 // //////////////////////////////////////////////////////////////////////////
 
-static const Cfg::MetaData MD_CREATE_IF_NEEDED     ("CreateIfNeeded = false | true");
-static const Cfg::MetaData MD_EXPORTED             ("Exported = {Path}.PC6.txt");
-static const Cfg::MetaData MD_FILE_NAME            ("FileName = {Path}.PC6");
-static const Cfg::MetaData MD_SHARED_ADDRESS_REG_EX("SharedAddressRegEx = {RegEx}");
-static const Cfg::MetaData MD_SOURCES              ("Sources += {Path}.PC6.in0");
+static const Cfg::MetaData MD_CREATE_IF_NEEDED("CreateIfNeeded = false | true");
+static const Cfg::MetaData MD_EXPORTED        ("Exported = {Path}.PC6.txt");
+static const Cfg::MetaData MD_FILE_NAME       ("FileName = {Path}.PC6");
+static const Cfg::MetaData MD_HEADER_FILE     {"HeaderFile = {Path}.h"};
+static const Cfg::MetaData MD_HEADER_PREFIX   {"HeaderPrefix = {Prefix}"};
+static const Cfg::MetaData MD_PUBLIC_DEFS     ("PublicDefs += {Path}.txt");
+static const Cfg::MetaData MD_SOURCES         ("Sources += {Path}.PC6.txt");
 
 // Static function declarations
 // //////////////////////////////////////////////////////////////////////////
@@ -42,17 +50,21 @@ namespace TRiLOGI
 
     Project::Project() : mInputs("input", 1, 256), mOutputs("output", 1, 256), mRelays("relay", 1025, 512)
     {
-        mSources.SetCreator(DI::String_Expand::Create);
+        mPublicDefs.SetCreator(DI::String_Expand::Create);
+        mSources   .SetCreator(DI::String_Expand::Create);
 
-        AddEntry("CreateIfNeeded"    , &mCreateIfNeeded    , false, &MD_CREATE_IF_NEEDED);
-        AddEntry("Exported"          , &mExported          , false, &MD_EXPORTED);
-        AddEntry("FileName"          , &mFileName          , false, &MD_FILE_NAME);
-        AddEntry("SharedAddressRegEx", &mSharedAddressRegEx, false, &MD_SHARED_ADDRESS_REG_EX);
-        AddEntry("Sources"           , &mSources           , false, &MD_SOURCES);
+        AddEntry("CreateIfNeeded", &mCreateIfNeeded, false, &MD_CREATE_IF_NEEDED);
+        AddEntry("Exported"      , &mExported      , false, &MD_EXPORTED);
+        AddEntry("FileName"      , &mFileName      , false, &MD_FILE_NAME);
+        AddEntry("HeaderFile"    , &mHeaderFile    , false, &MD_HEADER_FILE);
+        AddEntry("HeaderPrefix"  , &mHeaderPrefix  , false, &MD_HEADER_PREFIX);
+        AddEntry("PublicDefs"    , &mPublicDefs    , false, &MD_PUBLIC_DEFS);
+        AddEntry("Sources"       , &mSources       , false, &MD_SOURCES);
     }
 
     bool Project::IsValid() const { return 0 < mFile.GetLineCount(); }
 
+    // NOT TESTED
     void Project::Clean()
     {
         Console::Progress_Begin("Cleaning ...");
@@ -82,6 +94,7 @@ namespace TRiLOGI
         }
     }
 
+    // NOT TESTED
     void Project::Edit()
     {
         KMS_EXCEPTION_ASSERT(0 < mFileName.GetLength(), APPLICATION_USER_ERROR, "No file name configured", "");
@@ -102,17 +115,48 @@ namespace TRiLOGI
 
             Console::Progress_End("Exported");
         }
+
+        if (0 < mHeaderFile.GetLength())
+        {
+            auto lFileName = mHeaderFile.Get();
+            assert(NULL != lFileName);
+
+            std::ofstream lFile(lFileName);
+
+            char lMsg[64 + PATH_LENGTH];
+            sprintf_s(lMsg, "Cannot open \"%s\" for writing", lFileName);
+            KMS_EXCEPTION_ASSERT(lFile.is_open(), APPLICATION_USER_ERROR, lMsg, "");
+
+            lFile << "\n";
+            lFile << "// File  " << lFileName << "\n";
+            lFile << "\n";
+            lFile << "// Generated be KMS-PLC.exe version " << VERSION;
+            lFile << "\n";
+            lFile << "#pragma once\n";
+            lFile << "\n";
+
+            auto lPrefix = mHeaderPrefix.Get();
+            assert(NULL != lPrefix);
+
+            for (const auto& lAddr : mPublicAddresses)
+            {
+                lFile << "#define " << lPrefix << lAddr.GetName() << " (" << lAddr.GetAddress() << ")\n";
+            }
+
+            lFile.close();
+        }
     }
 
+    // NOT TESTED  COUNTER, RELAY With index, TIMER, WORD with offset
     void Project::Import()
     {
         Console::Progress_Begin("Importing sources");
 
-        bool lChanged = false;
+        auto lChanged = false;
 
         for (const auto& lEntry : mSources.mInternal)
         {
-            const DI::String* lSource = dynamic_cast<const DI::String*>(lEntry.Get());
+            auto lSource = dynamic_cast<const DI::String*>(lEntry.Get());
             assert(NULL != lSource);
 
             Text::File_ASCII lFile;
@@ -175,9 +219,7 @@ namespace TRiLOGI
                 }
                 else
                 {
-                    Console::Warning_Begin();
-                    std::cout << "Line " << lIt->GetUserLineNo() << "  Ignored line - " << lIt->c_str();
-                    Console::Warning_End();
+                    Console::Warning_IgnoredLine(lIt->GetUserLineNo(), lIt->c_str());
                 }
             }
         }
@@ -224,6 +266,8 @@ namespace TRiLOGI
             lLineNo = ParseNothing(lLineNo);
 
             lLineNo = mDefines.Parse(&mFile, lLineNo);
+
+            ParsePublicDefs();
         }
         else if (mCreateIfNeeded)
         {
@@ -260,6 +304,20 @@ namespace TRiLOGI
             }
         }
 
+        if (0 < mHeaderPrefix.GetLength())
+        {
+            KMS_EXCEPTION_ASSERT(0 < mHeaderFile.GetLength(), APPLICATION_USER_ERROR, "A header prefix is specified without a header file name", "");
+        }
+
+        for (auto& lEntry : mPublicDefs.mInternal)
+        {
+            const DI::String* lSource = dynamic_cast<const DI::String*>(lEntry.Get());
+            assert(NULL != lSource);
+
+            sprintf_s(lMsg, "\"%s\" does not exist", lSource->Get());
+            KMS_EXCEPTION_ASSERT(File::Folder::CURRENT.DoesFileExist(lSource->Get()), APPLICATION_USER_ERROR, lMsg, "");
+        }
+
         for (auto& lEntry : mSources.mInternal)
         {
             const DI::String* lSource = dynamic_cast<const DI::String*>(lEntry.Get());
@@ -291,9 +349,11 @@ namespace TRiLOGI
         }
     }
 
+    // NOT TESTED
     bool Project::VerifyAddress_1X(uint16_t aAddr) const
     {
-        uint16_t               lAddr = aAddr;
+        auto lAddr = aAddr;
+
         const TRiLOGI::Object* lObject;
 
         if (1025 > lAddr)
@@ -319,9 +379,10 @@ namespace TRiLOGI
         return true;
     }
 
+    // NOT TESTED  Returning false
     bool Project::VerifyAddress_4X(uint16_t aAddr) const
     {
-        uint16_t lAddr = aAddr;
+        auto lAddr = aAddr;
 
         if (1000 > lAddr)
         {
@@ -358,32 +419,81 @@ namespace TRiLOGI
         Console::Progress_End("Written");
     }
 
-    AddressList* Project::GetSharedAddresses() const
+    const AddressList* Project::GetPublicAddresses() const
     {
-        AddressList* lResult = NULL;
-
-        if (0 < mSharedAddressRegEx.GetLength())
-        {
-            lResult = new AddressList;
-
-            std::regex lRegEx(mSharedAddressRegEx.Get());
-
-            mInputs .GetAddresses(lRegEx, lResult);
-            mOutputs.GetAddresses(lRegEx, lResult);
-            mRelays .GetAddresses(lRegEx, lResult);
-
-            mDefines.mWords.GetAddresses(lRegEx, lResult);
-        }
-
-        return lResult;
+        return &mPublicAddresses;
     }
 
     // Private
     // //////////////////////////////////////////////////////////////////////
 
+    void Project::AddPublicAddress(const char* aPrivate, const char* aPublic)
+    {
+        auto lObj = mInputs.FindObject_ByName(aPrivate);
+        if (NULL == lObj)
+        {
+            lObj = mOutputs.FindObject_ByName(aPrivate);
+            if (NULL == lObj)
+            {
+                lObj = mRelays.FindObject_ByName(aPrivate);
+            }
+        }
+
+        if (NULL == lObj)
+        {
+            lObj = mDefines.FindObject_ByName(aPrivate);
+            if (NULL == lObj)
+            {
+                Console::Warning_Begin();
+                std::cout << "No object named " << aPrivate;
+                Console::Warning_End();
+            }
+            else
+            {
+                auto lWord = dynamic_cast<Word*>(lObj);
+                if (NULL == lWord)
+                {
+                    Console::Warning_Begin();
+                    std::cout << "The object " << aPrivate << " is not of an expected type";
+                    Console::Warning_End();
+                }
+                else
+                {
+                    mPublicAddresses.push_back(Address(aPublic, AddressType::MODBUS_RTU_4X, lWord->GetOffset()));
+                }
+            }
+        }
+        else
+        {
+            mPublicAddresses.push_back(Address(aPublic, AddressType::MODBUS_RTU_1X, lObj->GetIndex()));
+        }
+    }
+
+    void Project::AddPublicAddresses(const char* aRegEx)
+    {
+        assert(NULL != aRegEx);
+
+        auto lCount = mPublicAddresses.size();
+
+        std::regex lRegEx(aRegEx);
+
+        mInputs .GetAddresses(lRegEx, &mPublicAddresses);
+        mOutputs.GetAddresses(lRegEx, &mPublicAddresses);
+        mRelays .GetAddresses(lRegEx, &mPublicAddresses);
+
+        mDefines.mWords.GetAddresses(lRegEx, &mPublicAddresses);
+
+        if (mPublicAddresses.size() == lCount)
+        {
+            Console::Warning_Begin();
+            std::cout << "The expression \"" << aRegEx << "\" does not match any name";
+            Console::Warning_End();
+        }
+    }
+
     bool Project::Apply()
     {
-        bool lResult = false;
+        auto lResult = false;
 
         lResult |= mDefines  .Apply();
         lResult |= mFunctions.Apply();
@@ -433,6 +543,56 @@ namespace TRiLOGI
         return lLineNo;
     }
 
+    void Project::ParsePublicDef(const char* aFileName)
+    {
+        Console::Progress_Begin("Parsing", aFileName);
+
+        Text::File_ASCII lFile;
+
+        lFile.Read(File::Folder::CURRENT, aFileName);
+
+        lFile.RemoveEmptyLines();
+        lFile.RemoveComments_Script();
+
+        for (auto lIt = lFile.mLines.begin(); lIt != lFile.mLines.end(); lIt++)
+        {
+            char lName   [NAME_LENGTH];
+            char lPrivate[NAME_LENGTH];
+            char lPublic [NAME_LENGTH];
+            char lRegEx  [NAME_LENGTH];
+
+            if (1 == sscanf_s(lIt->c_str(), "ADDRESSES %s", lRegEx SizeInfo(lRegEx)))
+            {
+                AddPublicAddresses(lRegEx);
+            }
+            else if (2 == sscanf_s(lIt->c_str(), "ADDRESS %[^ \n\r\t] %s", lPrivate SizeInfo(lPrivate), lPublic SizeInfo(lPublic)))
+            {
+                AddPublicAddress(lPrivate, lPublic);
+            }
+            else if (1 == sscanf_s(lIt->c_str(), "ADDRESS %s", lName SizeInfo(lName)))
+            {
+                AddPublicAddress(lName, lName);
+            }
+            else
+            {
+                Console::Warning_IgnoredLine(lIt->GetUserLineNo(), lIt->c_str());
+            }
+        }
+
+        Console::Progress_End("Parsed");
+    }
+
+    void Project::ParsePublicDefs()
+    {
+        for (auto& lEntry : mPublicDefs.mInternal)
+        {
+            auto lSource = dynamic_cast<const DI::String*>(lEntry.Get());
+            assert(NULL != lSource);
+
+            ParsePublicDef(lSource->Get());
+        }
+    }
+
     void Project::Reparse()
     {
         mCounters  .Clear();
@@ -442,6 +602,8 @@ namespace TRiLOGI
         mOutputs   .Clear();
         mRelays    .Clear();
         mTimers    .Clear();
+
+        mPublicAddresses.clear();
 
         Parse();
     }
