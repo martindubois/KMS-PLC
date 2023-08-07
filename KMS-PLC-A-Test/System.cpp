@@ -11,6 +11,7 @@
 #include <KMS/File/Folder.h>
 
 // ===== Local ==============================================================
+#include "../Common/Globals.h"
 #include "../Common/System.h"
 
 using namespace KMS;
@@ -25,17 +26,11 @@ using namespace KMS;
 
 KMS_TEST(System_Main, "System_Main", "Auto", sTest_Main)
 {
+    gConsole.Set_Null();
+
     const char* lVector[2] = { "KMS-PLC-A-Test.exe", "ConfigFiles+=" TEST_0 "\\" KMS_PLC_CFG};
 
-    int lRet;
-
-    KMS_TEST_OUTPUT_BEGIN();
-    {
-        lRet = System::Main(2, lVector);
-    }
-    KMS_TEST_OUTPUT_END();
-
-    KMS_TEST_COMPARE(lRet, 0);
+    KMS_TEST_COMPARE(System::Main(2, lVector), 0);
 
     lVector[1] = "ConfigFiles+=" TEST_1 "\\" KMS_PLC_CFG;
 
@@ -43,19 +38,6 @@ KMS_TEST(System_Main, "System_Main", "Auto", sTest_Main)
 
     lTest1.DeleteFiles("PLC.PC6");
 
-    KMS_TEST_OUTPUT_BEGIN();
-    {
-        lRet = System::Main(2, lVector);
-    }
-    KMS_TEST_OUTPUT_END();
-
-    KMS_TEST_COMPARE(lRet, 0);
-
-    KMS_TEST_OUTPUT_BEGIN();
-    {
-        lRet = System::Main(2, lVector);
-    }
-    KMS_TEST_OUTPUT_END();
-
-    KMS_TEST_COMPARE(lRet, 0);
+    KMS_TEST_COMPARE(System::Main(2, lVector), 0);
+    KMS_TEST_COMPARE(System::Main(2, lVector), 0);
 }

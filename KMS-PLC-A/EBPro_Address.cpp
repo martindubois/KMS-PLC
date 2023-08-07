@@ -13,7 +13,6 @@
 #include <KMS/Convert.h>
 
 // ===== Local ==============================================================
-#include "Console.h"
 #include "EBPro/Address.h"
 
 using namespace KMS;

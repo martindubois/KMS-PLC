@@ -13,7 +13,6 @@
 // ===== Local ==============================================================
 #include "../Common/TRiLOGI/FunctionList.h"
 
-#include "Console.h"
 #include "Function.h"
 
 #include "TRiLOGI/Function.h"
@@ -282,7 +281,7 @@ namespace TRiLOGI
                 lFunction->AddFlags(Object::FLAG_NOT_USED);
 
                 ::Console::Warning_Begin(lFunction->GetLineNo());
-                std::cout << "The function named \"" << lName << "\" (" << lFunction->GetIndex() << ") is not used";
+                gConsole.OutputStream() << "The function named \"" << lName << "\" (" << lFunction->GetIndex() << ") is not used";
                 ::Console::Warning_End();
                 break;
             }
@@ -291,7 +290,7 @@ namespace TRiLOGI
         if (0 < lCount)
         {
             ::Console::Warning_Begin();
-            std::cout << lCount << " unused functions";
+            gConsole.OutputStream() << lCount << " unused functions";
             ::Console::Warning_End();
         }
     }

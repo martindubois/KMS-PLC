@@ -19,8 +19,6 @@
 // ===== Local ==============================================================
 #include "../Common/System.h"
 
-#include "Console.h"
-
 #include "EBPro/Address.h"
 
 using namespace KMS;
@@ -129,8 +127,8 @@ void System::Verify()
                 if (!mTRiLOGI.VerifyAddress_1X(lA->GetAddress_UInt16()))
                 {
                     ::Console::Error_Begin();
-                    std::cout << "The HMI access an invalid PLC address named \"";
-                    std::cout << lA->GetName() << "\" (1x-" << lA->GetAddress() << ")";
+                    gConsole.OutputStream() << "The HMI access an invalid PLC address named \"";
+                    gConsole.OutputStream() << lA->GetName() << "\" (1x-" << lA->GetAddress() << ")";
                     ::Console::Error_End();
                 }
                 break;
@@ -139,8 +137,8 @@ void System::Verify()
                 if (!mTRiLOGI.VerifyAddress_4X(lA->GetAddress_UInt16()))
                 {
                     ::Console::Error_Begin();
-                    std::cout << "The HMI access an invalid PLC address named \"";
-                    std::cout << lA->GetName() << "\" (4x-" << lA->GetAddress() << ")";
+                    gConsole.OutputStream() << "The HMI access an invalid PLC address named \"";
+                    gConsole.OutputStream() << lA->GetName() << "\" (4x-" << lA->GetAddress() << ")";
                     ::Console::Error_End();
                 }
                 break;

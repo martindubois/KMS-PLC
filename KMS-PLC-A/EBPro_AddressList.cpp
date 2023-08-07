@@ -5,7 +5,7 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/EBPro_AddressList.cpp
 
-// TEST COVERAGE 2023-07-20 KMS - Martin Dubois, P. Eng.
+// TEST COVERAGE  2023-08-06  KMS - Martin Dubois, P. Eng.
 
 #include "Component.h"
 
@@ -17,8 +17,6 @@
 #include "../Common/EBPro/Software.h"
 
 #include "../Common/EBPro/AddressList.h"
-
-#include "Console.h"
 
 #include "EBPro/Address.h"
 
@@ -112,7 +110,6 @@ namespace EBPro
         }
     }
 
-    // NOT TESTED  The second warnings is not tested
     void AddressList::Verify() const
     {
         ::Console::Progress_Begin("EBPro", "Verifying addresses");
@@ -124,16 +121,17 @@ namespace EBPro
                 if (0 == strcmp((*lItA)->GetName(), (*lItB)->GetName()))
                 {
                     ::Console::Warning_Begin((*lItA)->GetLineNo(), (*lItB)->GetLineNo());
-                    std::cout << "2 addresses are named \"" << (*lItA)->GetName() << "\"";
+                    gConsole.OutputStream() << "2 addresses are named \"" << (*lItA)->GetName() << "\"";
                     ::Console::Warning_End();
                 }
 
                 if (   ((*lItA)->GetType() == (*lItB)->GetType())
                     && (0 == strcmp((*lItA)->GetAddress(), (*lItB)->GetAddress())))
                 {
+                    // NOT TESTED
                     ::Console::Warning_Begin((*lItA)->GetLineNo(), (*lItB)->GetLineNo());
-                    std::cout << "The addresses named \"" << (*lItA)->GetName() << "\" and \"" << (*lItB)->GetName();
-                    std::cout << "\" are the same (" << (*lItA)->GetAddress() << ")";
+                    gConsole.OutputStream() << "The addresses named \"" << (*lItA)->GetName() << "\" and \"" << (*lItB)->GetName();
+                    gConsole.OutputStream() << "\" are the same (" << (*lItA)->GetAddress() << ")";
                     ::Console::Warning_End();
                 }
             }

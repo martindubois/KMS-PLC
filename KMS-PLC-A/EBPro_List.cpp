@@ -5,7 +5,7 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/EBPro_List.cpp
 
-// TEST COVERAGE 2023-07-20 KMS - Martin Dubois, P. Eng.
+// TEST  COVERAGE 2023-08-06  KMS - Martin Dubois, P. Eng.
 
 #include "Component.h"
 
@@ -16,8 +16,6 @@
 #include "../Common/EBPro/Software.h"
 
 #include "../Common/EBPro/List.h"
-
-#include "Console.h"
 
 using namespace KMS;
 
@@ -76,6 +74,7 @@ namespace EBPro
             // we verify if the ToImport is configured.
             if (IsToImportConfigured() && File::Folder::CURRENT.DoesFileExist(mToImport.Get()))
             {
+                // NOT TESTED
                 ::Console::Progress_Begin("EBPro", "Deleting", mToImport.Get());
 
                 File::Folder lCurrent(File::Folder::Id::CURRENT);
@@ -107,8 +106,11 @@ namespace EBPro
         {
             auto lStr = GetExported();
 
-            sprintf_s(lMsg, "\"%s\" does not exist", lStr);
-            KMS_EXCEPTION_ASSERT(File::Folder::CURRENT.DoesFileExist(lStr), APPLICATION_USER_ERROR, lMsg, "");
+            if (!File::Folder::CURRENT.DoesFileExist(lStr))
+            {
+                sprintf_s(lMsg, "\"%s\" does not exist (NOT TESTED)", lStr);
+                KMS_EXCEPTION(APPLICATION_USER_ERROR, lMsg, "");
+            }
         }
 
         for (auto& lEntry : mSources.mInternal)
@@ -116,8 +118,11 @@ namespace EBPro
             auto lSource = dynamic_cast<const DI::String*>(lEntry.Get());
             assert(NULL != lSource);
 
-            sprintf_s(lMsg, "\"%s\" does not exist", lSource->Get());
-            KMS_EXCEPTION_ASSERT(File::Folder::CURRENT.DoesFileExist(lSource->Get()), APPLICATION_USER_ERROR, lMsg, "");
+            if (!File::Folder::CURRENT.DoesFileExist(lSource->Get()))
+            {
+                sprintf_s(lMsg, "\"%s\" does not exist (NOT TESTED)", lSource->Get());
+                KMS_EXCEPTION(APPLICATION_USER_ERROR, lMsg, "");
+            }
         }
 
         if (0 < mSources.GetCount())

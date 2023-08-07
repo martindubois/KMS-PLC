@@ -10,8 +10,6 @@
 // ===== Local ==============================================================
 #include "../Common/TRiLOGI/TimerList.h"
 
-#include "Console.h"
-
 #include "TRiLOGI/Timer.h"
 
 using namespace KMS;

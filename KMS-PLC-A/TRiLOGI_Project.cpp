@@ -20,8 +20,6 @@
 #include "../Common/TRiLOGI/Project.h"
 #include "../Common/Version.h"
 
-#include "Console.h"
-
 #include "TRiLOGI/Word.h"
 
 using namespace KMS;
@@ -445,7 +443,7 @@ namespace TRiLOGI
             if (NULL == lObj)
             {
                 ::Console::Warning_Begin();
-                std::cout << "No object named " << aPrivate;
+                gConsole.OutputStream() << "No object named " << aPrivate;
                 ::Console::Warning_End();
             }
             else
@@ -454,7 +452,7 @@ namespace TRiLOGI
                 if (NULL == lWord)
                 {
                     ::Console::Warning_Begin();
-                    std::cout << "The object " << aPrivate << " is not of an expected type";
+                    gConsole.OutputStream() << "The object " << aPrivate << " is not of an expected type";
                     ::Console::Warning_End();
                 }
                 else
@@ -486,7 +484,7 @@ namespace TRiLOGI
         if (mPublicAddresses.size() == lCount)
         {
             ::Console::Warning_Begin();
-            std::cout << "The expression \"" << aRegEx << "\" does not match any name";
+            gConsole.OutputStream() << "The expression \"" << aRegEx << "\" does not match any name";
             ::Console::Warning_End();
         }
     }
@@ -617,9 +615,9 @@ void Instruction_Write()
 {
     ::Console::Instruction_Begin();
 
-    //                     1           2         3         4         5         6         7
-    //            123456789012 345678 90123456789012345678901234567890123456789012345678901234567 89
-    std::cout << "    Use the \"Write\" command to save the changes                           [ ]" << std::endl;
+    //                                   1           2         3         4         5         6         7
+    //                          123456789012 345678 90123456789012345678901234567890123456789012345678901234567
+    gConsole.OutputStream() << "    Use the \"Write\" command to save the changes                           [ ]" << std::endl;
 
     ::Console::Instruction_End();
 }

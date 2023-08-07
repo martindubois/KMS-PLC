@@ -11,7 +11,6 @@
 #include "EBPro/LabelState.h"
 #include "EBPro/Label.h"
 
-#include "Console.h"
 #include "Convert.h"
 
 using namespace KMS;
@@ -129,7 +128,7 @@ namespace EBPro
         if (0 >= mStates.size())
         {
             ::Console::Warning_Begin();
-            std::cout << "The label " << mName.c_str() << " has no state";
+            gConsole.OutputStream() << "The label " << mName.c_str() << " has no state";
             ::Console::Warning_End();
             return;
         }

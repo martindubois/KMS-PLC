@@ -20,7 +20,6 @@
 
 #include "../Common/EBPro/LabelList.h"
 
-#include "Console.h"
 #include "Convert.h"
 
 #include "EBPro/LabelState.h"
@@ -157,7 +156,7 @@ namespace EBPro
                 if ((*lItA)->mName == (*lItB)->mName)
                 {
                     ::Console::Warning_Begin();
-                    std::cout << "The label " << (*lItA)->mName.c_str() << " is present twice";
+                    gConsole.OutputStream() << "The label " << (*lItA)->mName.c_str() << " is present twice";
                     ::Console::Warning_End();
                 }
             }

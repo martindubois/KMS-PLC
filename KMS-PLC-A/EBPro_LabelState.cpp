@@ -11,7 +11,6 @@
 #include <KMS/DI/String.h>
 
 // ===== Local ==============================================================
-#include "Console.h"
 #include "Convert.h"
 
 #include "EBPro/LabelState.h"

@@ -8,8 +8,6 @@
 #include "Component.h"
 
 // ===== Local ==============================================================
-#include "Console.h"
-
 #include "TRiLOGI/Constant.h"
 
 using namespace KMS;
@@ -48,7 +46,7 @@ namespace TRiLOGI
             AddFlags(Object::FLAG_NOT_USED);
 
             ::Console::Warning_Begin(GetLineNo());
-            std::cout << "The constant named \"" << GetName() << "\" (" << GetIndex() << ") has no value";
+            gConsole.OutputStream() << "The constant named \"" << GetName() << "\" (" << GetIndex() << ") has no value";
             ::Console::Warning_End();
         }
     }

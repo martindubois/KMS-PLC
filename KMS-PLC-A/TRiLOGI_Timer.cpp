@@ -8,8 +8,6 @@
 #include "Component.h"
 
 // ===== Local ==============================================================
-#include "Console.h"
-
 #include "TRiLOGI/Timer.h"
 
 using namespace KMS;

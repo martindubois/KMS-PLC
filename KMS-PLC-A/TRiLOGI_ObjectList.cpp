@@ -13,8 +13,6 @@
 // ===== Local ==============================================================
 #include "../Common/TRiLOGI/ObjectList.h"
 
-#include "Console.h"
-
 #include "TRiLOGI/Object.h"
 
 using namespace KMS;
@@ -196,7 +194,7 @@ namespace TRiLOGI
                 lObj->AddFlags(Object::FLAG_NOT_USED);
 
                 ::Console::Warning_Begin(lLineNo);
-                std::cout << "The " << mElementName << " named \"" << lName << "\" (" << lIndex << ") is useless";
+                gConsole.OutputStream() << "The " << mElementName << " named \"" << lName << "\" (" << lIndex << ") is useless";
                 ::Console::Warning_End();
                 break;
 
@@ -204,13 +202,13 @@ namespace TRiLOGI
                 if (lObj->TestFlag(Object::FLAG_SINGLE_USE_WARNING))
                 {
                     ::Console::Warning_Begin(lLineNo);
-                    std::cout << "The " << mElementName << " named \"" << lName << "\" (" << lIndex << ") is used only once";
+                    gConsole.OutputStream() << "The " << mElementName << " named \"" << lName << "\" (" << lIndex << ") is used only once";
                     ::Console::Warning_End();
                 }
                 else if (lObj->TestFlag(Object::FLAG_SINGLE_USE_INFO))
                 {
                     ::Console::Info_Begin(lLineNo);
-                    std::cout << "The " << mElementName << " named \"" << lName << "\" (" << lIndex << ") is used only once";
+                    gConsole.OutputStream() << "The " << mElementName << " named \"" << lName << "\" (" << lIndex << ") is used only once";
                     ::Console::Info_End();
                 }
                 break;
@@ -220,7 +218,7 @@ namespace TRiLOGI
         if (0 < lCount)
         {
             ::Console::Warning_Begin();
-            std::cout << lCount << " " << mElementName << "s not used";
+            gConsole.OutputStream() << lCount << " " << mElementName << "s not used";
             ::Console::Warning_End();
         }
     }

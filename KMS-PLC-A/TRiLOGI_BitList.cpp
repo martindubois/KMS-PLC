@@ -10,8 +10,6 @@
 // ===== Local ==============================================================
 #include "../Common/TRiLOGI/BitList.h"
 
-#include "Console.h"
-
 #include "TRiLOGI/Object.h"
 
 using namespace KMS;
@@ -82,7 +80,7 @@ namespace TRiLOGI
             }
 
             ::Console::Error_Begin();
-            std::cout << "The index " << aIndex << " is already used";
+            gConsole.OutputStream() << "The index " << aIndex << " is already used";
             ::Console::Error_End();
             return false;
         }
@@ -90,7 +88,7 @@ namespace TRiLOGI
         if (aIndex != lObject->GetIndex())
         {
             ::Console::Error_Begin();
-            std::cout << "The name " << aName << " is already used for another index";
+            gConsole.OutputStream() << "The name " << aName << " is already used for another index";
             ::Console::Error_End();
         }
 

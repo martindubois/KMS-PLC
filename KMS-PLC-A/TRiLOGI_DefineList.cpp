@@ -10,8 +10,6 @@
 // ===== Local ==============================================================
 #include "../Common/TRiLOGI/DefineList.h"
 
-#include "Console.h"
-
 #include "TRiLOGI/Constant.h"
 #include "TRiLOGI/Word.h"
 
@@ -58,7 +56,7 @@ namespace TRiLOGI
         if (NULL == lConstant)
         {
             ::Console::Error_Begin();
-            std::cout << "The name " << aName << " is already used for a word";
+            gConsole.OutputStream() << "The name " << aName << " is already used for a word";
             ::Console::Error_End();
             return false;
         }
@@ -89,7 +87,7 @@ namespace TRiLOGI
         if (NULL == lWord)
         {
             ::Console::Error_Begin();
-            std::cout << "The name " << aName << " is already used for a constant";
+            gConsole.OutputStream() << "The name " << aName << " is already used for a constant";
             ::Console::Error_End();
         }
 
@@ -105,7 +103,7 @@ namespace TRiLOGI
             if (NULL != lWord)
             {
                 ::Console::Error_Begin();
-                std::cout << "The offset " << aOffset << " is already used";
+                gConsole.OutputStream() << "The offset " << aOffset << " is already used";
                 ::Console::Error_End();
                 return false;
             }
@@ -130,13 +128,13 @@ namespace TRiLOGI
         if (NULL == lWord)
         {
             ::Console::Error_Begin();
-            std::cout << "The name " << aName << " is already used for a constant";
+            gConsole.OutputStream() << "The name " << aName << " is already used for a constant";
             ::Console::Error_End();
         }
         else if (lWord->GetOffset() != aOffset)
         {
             ::Console::Error_Begin();
-            std::cout << "The name " << aName << " is already uses witch another offset";
+            gConsole.OutputStream() << "The name " << aName << " is already uses witch another offset";
             ::Console::Error_End();
         }
 

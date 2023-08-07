@@ -12,8 +12,6 @@
 
 #include "../Common/EBPro/FunctionList.h"
 
-#include "Console.h"
-
 #include "EBPro/DataPtr.h"
 #include "EBPro/Function.h"
 
