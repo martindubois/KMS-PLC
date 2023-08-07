@@ -118,7 +118,7 @@ void System::Verify()
 
     if ((0 < mEBPro.mAddresses.GetCount()) && mTRiLOGI.IsValid())
     {
-        Console::Progress_Begin("Verifying shared addresses");
+        ::Console::Progress_Begin("System", "Verifying shared addresses");
 
         for (const auto lA : mEBPro.mAddresses.mAddresses)
         {
@@ -128,26 +128,26 @@ void System::Verify()
             case AddressType::MODBUS_RTU_1X:
                 if (!mTRiLOGI.VerifyAddress_1X(lA->GetAddress_UInt16()))
                 {
-                    Console::Error_Begin();
+                    ::Console::Error_Begin();
                     std::cout << "The HMI access an invalid PLC address named \"";
                     std::cout << lA->GetName() << "\" (1x-" << lA->GetAddress() << ")";
-                    Console::Error_End();
+                    ::Console::Error_End();
                 }
                 break;
 
             case AddressType::MODBUS_RTU_4X:
                 if (!mTRiLOGI.VerifyAddress_4X(lA->GetAddress_UInt16()))
                 {
-                    Console::Error_Begin();
+                    ::Console::Error_Begin();
                     std::cout << "The HMI access an invalid PLC address named \"";
                     std::cout << lA->GetName() << "\" (4x-" << lA->GetAddress() << ")";
-                    Console::Error_End();
+                    ::Console::Error_End();
                 }
                 break;
             }
         }
 
-        Console::Progress_End("Verifyed");
+        ::Console::Progress_End("Verifyed");
     }
 }
 

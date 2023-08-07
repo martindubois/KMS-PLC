@@ -12,9 +12,10 @@ class Console
 
 public:
 
-    static void Change(const char* aMsg, const char* aName);
     static void Change(const char* aMsg, const char* aElement, const char* aName);
+    static void Change(const char* aMsg, const char* aName);
     static void Change(const char* aMsg, const wchar_t* aName);
+    static void Change(const char* aMsg, const char* aName, const char* aFrom, const char* aTo);
     static void Stats (uint64_t aValue, const char* aUnit);
 
     static void Error_Begin();
@@ -28,8 +29,8 @@ public:
     static void Instruction_Begin();
     static void Instruction_End  ();
 
-    static void Progress_Begin(const char* aMsg);
-    static void Progress_Begin(const char* aMsg, const char* aFileName);
+    static void Progress_Begin(const char* aModule, const char* aMsg);
+    static void Progress_Begin(const char* aModule, const char* aMsg, const char* aFileName);
     static void Progress_End  (const char* aMsg);
 
     static void Warning_Begin();

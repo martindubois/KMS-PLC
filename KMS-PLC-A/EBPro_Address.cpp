@@ -176,7 +176,7 @@ namespace EBPro
         bool lResult = 0 != strcmp(mAddress.c_str(), aAddr);
         if (lResult)
         {
-            Console::Change("Address changed", GetName());
+            ::Console::Change("Address changed", GetName(), mAddress.c_str(), aAddr);
 
             // NOT TESTED
             mAddress = aAddr;

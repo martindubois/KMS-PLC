@@ -31,7 +31,7 @@ namespace TRiLOGI
         bool lResult = (mValue != aValue);
         if (lResult)
         {
-            Console::Change("Constant changed", GetName());
+            ::Console::Change("Constant changed", GetName(), mValue.c_str(), aValue);
 
             mValue = aValue;
 
@@ -47,9 +47,9 @@ namespace TRiLOGI
         {
             AddFlags(Object::FLAG_NOT_USED);
 
-            Console::Warning_Begin(GetLineNo());
+            ::Console::Warning_Begin(GetLineNo());
             std::cout << "The constant named \"" << GetName() << "\" (" << GetIndex() << ") has no value";
-            Console::Warning_End();
+            ::Console::Warning_End();
         }
     }
 

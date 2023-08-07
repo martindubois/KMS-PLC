@@ -67,7 +67,7 @@ namespace TRiLOGI
     // NOT TESTED
     void Project::Clean()
     {
-        Console::Progress_Begin("Cleaning ...");
+        ::Console::Progress_Begin("TRiLOGY", "Cleaning ...");
 
         unsigned int lCount = 0;
 
@@ -83,14 +83,14 @@ namespace TRiLOGI
         {
             Reparse();
 
-            Console::Stats(lCount, "elements");
-            Console::Progress_End("Clearned");
+            ::Console::Stats(lCount, "elements");
+            ::Console::Progress_End("Clearned");
 
             Instruction_Write();
         }
         else
         {
-            Console::Progress_End("Cleaned (No change)");
+            ::Console::Progress_End("Cleaned (No change)");
         }
     }
 
@@ -109,11 +109,11 @@ namespace TRiLOGI
     {
         if (0 < mExported.GetLength())
         {
-            Console::Progress_Begin("Exporting", mExported.Get());
+            ::Console::Progress_Begin("TRiLOGY", "Exporting", mExported.Get());
 
             mFile.Write_ASCII(File::Folder::CURRENT, mExported.Get());
 
-            Console::Progress_End("Exported");
+            ::Console::Progress_End("Exported");
         }
 
         if (0 < mHeaderFile.GetLength())
@@ -150,7 +150,7 @@ namespace TRiLOGI
     // NOT TESTED  COUNTER, RELAY With index, TIMER, WORD with offset
     void Project::Import()
     {
-        Console::Progress_Begin("Importing sources");
+        ::Console::Progress_Begin("TRiLOGY", "Importing sources");
 
         auto lChanged = false;
 
@@ -219,7 +219,7 @@ namespace TRiLOGI
                 }
                 else
                 {
-                    Console::Warning_IgnoredLine(lIt->GetUserLineNo(), lIt->c_str());
+                    ::Console::Warning_IgnoredLine(lIt->GetUserLineNo(), lIt->c_str());
                 }
             }
         }
@@ -231,13 +231,13 @@ namespace TRiLOGI
                 Reparse();
             }
 
-            Console::Progress_End("Imported");
+            ::Console::Progress_End("Imported");
 
             Instruction_Write();
         }
         else
         {
-            Console::Progress_End("Imported (No change)");
+            ::Console::Progress_End("Imported (No change)");
         }
     }
 
@@ -245,7 +245,7 @@ namespace TRiLOGI
     {
         if (0 < mFile.GetLineCount())
         {
-            Console::Progress_Begin("Parsing", mFileName.Get());
+            ::Console::Progress_Begin("TRiLOGY", "Parsing", mFileName.Get());
 
             unsigned int lLineNo    = 1;
             auto         lLineCount = mFile.GetLineCount();
@@ -271,7 +271,7 @@ namespace TRiLOGI
         }
         else if (mCreateIfNeeded)
         {
-            Console::Change("Creating", mFileName.Get());
+            ::Console::Change("Creating", mFileName.Get());
 
             Create();
 
@@ -283,11 +283,11 @@ namespace TRiLOGI
     {
         if ((0 < mFileName.GetLength()) && File::Folder::CURRENT.DoesFileExist(mFileName.Get()))
         {
-            Console::Progress_Begin("Reading", mFileName.Get());
+            ::Console::Progress_Begin("TRiLOGY", "Reading", mFileName.Get());
 
             mFile.Read(File::Folder::CURRENT, mFileName.Get());
 
-            Console::Progress_End("Read");
+            ::Console::Progress_End("Read");
         }
     }
 
@@ -332,7 +332,7 @@ namespace TRiLOGI
     {
         if (0 < mFile.GetLineCount())
         {
-            Console::Progress_Begin("Verifying", mFileName.Get());
+            ::Console::Progress_Begin("TRiLOGY", "Verifying", mFileName.Get());
 
             // TODO For the verification, use a version of mFile_PC6 without
             //      comment
@@ -345,7 +345,7 @@ namespace TRiLOGI
             mRelays    .Verify(mFile);
             mTimers    .Verify(mFile);
 
-            Console::Progress_End("Verified");
+            ::Console::Progress_End("Verified");
         }
     }
 
@@ -407,7 +407,7 @@ namespace TRiLOGI
 
     void Project::Write()
     {
-        Console::Progress_Begin("Writing");
+        ::Console::Progress_Begin("TRiLOGY", "Writing");
 
         if (File::Folder::CURRENT.DoesFileExist(mFileName.Get()))
         {
@@ -416,7 +416,7 @@ namespace TRiLOGI
 
         mFile.Write(File::Folder::CURRENT, mFileName.Get(), L"\r\n");
 
-        Console::Progress_End("Written");
+        ::Console::Progress_End("Written");
     }
 
     const AddressList* Project::GetPublicAddresses() const
@@ -444,18 +444,18 @@ namespace TRiLOGI
             lObj = mDefines.FindObject_ByName(aPrivate);
             if (NULL == lObj)
             {
-                Console::Warning_Begin();
+                ::Console::Warning_Begin();
                 std::cout << "No object named " << aPrivate;
-                Console::Warning_End();
+                ::Console::Warning_End();
             }
             else
             {
                 auto lWord = dynamic_cast<Word*>(lObj);
                 if (NULL == lWord)
                 {
-                    Console::Warning_Begin();
+                    ::Console::Warning_Begin();
                     std::cout << "The object " << aPrivate << " is not of an expected type";
-                    Console::Warning_End();
+                    ::Console::Warning_End();
                 }
                 else
                 {
@@ -485,9 +485,9 @@ namespace TRiLOGI
 
         if (mPublicAddresses.size() == lCount)
         {
-            Console::Warning_Begin();
+            ::Console::Warning_Begin();
             std::cout << "The expression \"" << aRegEx << "\" does not match any name";
-            Console::Warning_End();
+            ::Console::Warning_End();
         }
     }
 
@@ -545,7 +545,7 @@ namespace TRiLOGI
 
     void Project::ParsePublicDef(const char* aFileName)
     {
-        Console::Progress_Begin("Parsing", aFileName);
+        ::Console::Progress_Begin("TRiLOGY", "Parsing", aFileName);
 
         Text::File_ASCII lFile;
 
@@ -575,11 +575,11 @@ namespace TRiLOGI
             }
             else
             {
-                Console::Warning_IgnoredLine(lIt->GetUserLineNo(), lIt->c_str());
+                ::Console::Warning_IgnoredLine(lIt->GetUserLineNo(), lIt->c_str());
             }
         }
 
-        Console::Progress_End("Parsed");
+        ::Console::Progress_End("Parsed");
     }
 
     void Project::ParsePublicDefs()
@@ -615,11 +615,11 @@ namespace TRiLOGI
 
 void Instruction_Write()
 {
-    Console::Instruction_Begin();
+    ::Console::Instruction_Begin();
 
     //                     1           2         3         4         5         6         7
     //            123456789012 345678 90123456789012345678901234567890123456789012345678901234567 89
     std::cout << "    Use the \"Write\" command to save the changes                           [ ]" << std::endl;
 
-    Console::Instruction_End();
+    ::Console::Instruction_End();
 }

@@ -16,14 +16,6 @@
 // Public
 // //////////////////////////////////////////////////////////////////////////
 
-void ::Console::Change(const char* aMsg, const char* aName)
-{
-    assert(NULL != aMsg);
-    assert(NULL != aName);
-
-    std::cout << KMS::Console::Color::BLUE << aMsg << " - " << aName << KMS::Console::Color::WHITE << std::endl;
-}
-
 void ::Console::Change(const char* aMsg, const char* aElement, const char* aName)
 {
     assert(NULL != aMsg);
@@ -33,12 +25,30 @@ void ::Console::Change(const char* aMsg, const char* aElement, const char* aName
     std::cout << KMS::Console::Color::BLUE << aMsg << " " << aElement << " - " << aName << KMS::Console::Color::WHITE << std::endl;
 }
 
+void ::Console::Change(const char* aMsg, const char* aName)
+{
+    assert(NULL != aMsg);
+    assert(NULL != aName);
+
+    std::cout << KMS::Console::Color::BLUE << aMsg << " - " << aName << KMS::Console::Color::WHITE << std::endl;
+}
+
 void ::Console::Change(const char* aMsg, const wchar_t* aName)
 {
     assert(NULL != aMsg);
     assert(NULL != aName);
 
     std::cout << KMS::Console::Color::BLUE << aMsg << " - " << aName << KMS::Console::Color::WHITE << std::endl;
+}
+
+void ::Console::Change(const char* aMsg, const char* aName, const char* aFrom, const char* aTo)
+{
+    assert(NULL != aMsg);
+    assert(NULL != aName);
+
+    std::cout << KMS::Console::Color::BLUE;
+    std::cout << aMsg << " - " << aName << " (\"" << aFrom << "\" -> \"" << aTo << "\")";
+    std::cout << KMS::Console::Color::WHITE << std::endl;
 }
 
 void ::Console::Stats(uint64_t aValue, const char* aUnit)
@@ -63,19 +73,21 @@ void ::Console::Info_End() { std::cout << std::endl; }
 void ::Console::Instruction_Begin() { std::cout << KMS::Console::Color::BLUE << "INSTRUCTION\n"; }
 void ::Console::Instruction_End  () { std::cout << KMS::Console::Color::WHITE << std::endl; }
 
-void ::Console::Progress_Begin(const char* aMsg)
+void ::Console::Progress_Begin(const char* aModule, const char* aMsg)
 {
+    assert(NULL != aModule);
     assert(NULL != aMsg);
 
-    std::cout << aMsg << " ..." << std::endl;
+    std::cout << aModule << " - " << aMsg << " ..." << std::endl;
 }
 
-void ::Console::Progress_Begin(const char* aMsg, const char* aFileName)
+void ::Console::Progress_Begin(const char* aModule, const char* aMsg, const char* aFileName)
 {
+    assert(NULL != aModule);
     assert(NULL != aMsg);
     assert(NULL != aFileName);
 
-    std::cout << aMsg << " " << aFileName << " ..." << std::endl;
+    std::cout << aModule << " - " << aMsg << " " << aFileName << " ..." << std::endl;
 }
 
 void ::Console::Progress_End(const char* aMsg)

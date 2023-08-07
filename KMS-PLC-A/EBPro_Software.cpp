@@ -153,7 +153,7 @@ namespace EBPro
 
 void Instruction_Begin()
 {
-    Console::Instruction_Begin();
+    ::Console::Instruction_Begin();
 
     std::cout << "    Tool \"EBPro\"\n";
 }
@@ -165,7 +165,7 @@ void Instruction_End()
 
     std::cout << "Presse ENTER to continue";
 
-    Console::Instruction_End();
+    ::Console::Instruction_End();
 
     char lLine[LINE_LENGTH];
     fgets(lLine, sizeof(lLine), stdin);

@@ -54,7 +54,7 @@ namespace EBPro
         {
             auto lPath = std::string(GetExported()) + ".txt";
 
-            Console::Progress_Begin("Exporting", lPath.c_str());
+            ::Console::Progress_Begin("EBPro", "Exporting", lPath.c_str());
 
             FILE* lFile;
 
@@ -74,7 +74,7 @@ namespace EBPro
             auto lRet = fclose(lFile);
             assert(0 == lRet);
 
-            Console::Progress_End("Exported");
+            ::Console::Progress_End("Exported");
         }
     }
 
@@ -84,7 +84,7 @@ namespace EBPro
         {
             const char* lExported = GetExported();
 
-            Console::Progress_Begin("Parsing", lExported);
+            ::Console::Progress_Begin("EBPro", "Parsing", lExported);
 
             FILE* lFile;
 
@@ -113,14 +113,14 @@ namespace EBPro
                 mLabels.push_back(lLabel);
             }
 
-            Console::Stats(mLabels.size(), "labels");
+            ::Console::Stats(mLabels.size(), "labels");
 
             KMS_EXCEPTION_ASSERT(lLabelCount == mLabels.size(), APPLICATION_ERROR, "Corrupted exported LBL file", lLabelCount);
 
             auto lRet = fclose(lFile);
             assert(0 == lRet);
 
-            Console::Progress_End("Parsed");
+            ::Console::Progress_End("Parsed");
         }
     }
 
@@ -148,7 +148,7 @@ namespace EBPro
     
     void LabelList::Verify() const
     {
-        Console::Progress_Begin("Verifying labels");
+        ::Console::Progress_Begin("EBPro", "Verifying labels");
 
         for (Internal::const_iterator lItA = mLabels.begin(); lItA != mLabels.end(); lItA++)
         {
@@ -156,9 +156,9 @@ namespace EBPro
             {
                 if ((*lItA)->mName == (*lItB)->mName)
                 {
-                    Console::Warning_Begin();
+                    ::Console::Warning_Begin();
                     std::cout << "The label " << (*lItA)->mName.c_str() << " is present twice";
-                    Console::Warning_End();
+                    ::Console::Warning_End();
                 }
             }
 
@@ -167,7 +167,7 @@ namespace EBPro
 
         // TODO Verify more
 
-        Console::Progress_End("Verified");
+        ::Console::Progress_End("Verified");
     }
 
     // ===== List =======================================================
@@ -331,7 +331,7 @@ namespace EBPro
         auto lResult = Find(lName.c_str());
         if (NULL == lResult)
         {
-            Console::Change("New label", aName);
+            ::Console::Change("New label", aName);
 
             *aChanged = true;
 

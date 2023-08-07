@@ -31,7 +31,7 @@ namespace TRiLOGI
         bool lResult = mInit != aInit;
         if (lResult)
         {
-            Console::Change("Timer changed", GetName());
+            ::Console::Change("Timer changed", GetName());
 
             mInit = aInit;
 

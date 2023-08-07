@@ -38,7 +38,7 @@ namespace TRiLOGI
         auto lObject = FindObject_ByName(aName);
         if (NULL == lObject)
         {
-            Console::Change("New constant", aName);
+            ::Console::Change("New constant", aName);
 
             unsigned int lIndex;
             unsigned int lLineNo;
@@ -57,9 +57,9 @@ namespace TRiLOGI
         auto lConstant = dynamic_cast<Constant*>(lObject);
         if (NULL == lConstant)
         {
-            Console::Error_Begin();
+            ::Console::Error_Begin();
             std::cout << "The name " << aName << " is already used for a word";
-            Console::Error_End();
+            ::Console::Error_End();
             return false;
         }
 
@@ -71,7 +71,7 @@ namespace TRiLOGI
         auto lObject = FindObject_ByName(aName);
         if (NULL == lObject)
         {
-            Console::Change("New word", aName);
+            ::Console::Change("New word", aName);
 
             unsigned int lIndex;
             unsigned int lLineNo;
@@ -88,9 +88,9 @@ namespace TRiLOGI
         auto lWord = dynamic_cast<Word*>(lObject);
         if (NULL == lWord)
         {
-            Console::Error_Begin();
+            ::Console::Error_Begin();
             std::cout << "The name " << aName << " is already used for a constant";
-            Console::Error_End();
+            ::Console::Error_End();
         }
 
         return false;
@@ -104,13 +104,13 @@ namespace TRiLOGI
             auto lWord = mWords.Find_ByOffset(aOffset);
             if (NULL != lWord)
             {
-                Console::Error_Begin();
+                ::Console::Error_Begin();
                 std::cout << "The offset " << aOffset << " is already used";
-                Console::Error_End();
+                ::Console::Error_End();
                 return false;
             }
 
-            Console::Change("New word", aName);
+            ::Console::Change("New word", aName);
 
             unsigned int lIndex;
             unsigned int lLineNo;
@@ -129,15 +129,15 @@ namespace TRiLOGI
         auto lWord = dynamic_cast<Word*>(lObject);
         if (NULL == lWord)
         {
-            Console::Error_Begin();
+            ::Console::Error_Begin();
             std::cout << "The name " << aName << " is already used for a constant";
-            Console::Error_End();
+            ::Console::Error_End();
         }
         else if (lWord->GetOffset() != aOffset)
         {
-            Console::Error_Begin();
+            ::Console::Error_Begin();
             std::cout << "The name " << aName << " is already uses witch another offset";
-            Console::Error_End();
+            ::Console::Error_End();
         }
 
         return false;
@@ -149,8 +149,8 @@ namespace TRiLOGI
 
         auto lResult = ObjectList::Parse(aFile_PC6, aLineNo, 0);
 
-        Console::Stats(mConstants.GetCount(), "constants");
-        Console::Stats(mWords    .GetCount(), "words");
+        ::Console::Stats(mConstants.GetCount(), "constants");
+        ::Console::Stats(mWords    .GetCount(), "words");
 
         return lResult;
     }

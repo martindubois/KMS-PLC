@@ -128,9 +128,9 @@ namespace EBPro
     {
         if (0 >= mStates.size())
         {
-            Console::Warning_Begin();
+            ::Console::Warning_Begin();
             std::cout << "The label " << mName.c_str() << " has no state";
-            Console::Warning_End();
+            ::Console::Warning_End();
             return;
         }
 
@@ -179,7 +179,7 @@ namespace EBPro
         }
         else
         {
-            Console::Change("New label state", mName.c_str());
+            ::Console::Change("New label state", mName.c_str());
 
             *aChanged = true;
 

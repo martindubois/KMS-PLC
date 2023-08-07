@@ -120,7 +120,7 @@ namespace TRiLOGI
 
         if (NULL == lFunction)
         {
-            Console::Change("New function", aName);
+            ::Console::Change("New function", aName);
 
             AddObject(lNew);
         }
@@ -128,7 +128,7 @@ namespace TRiLOGI
         {
             if (*lNew != *lFunction)
             {
-                Console::Change("Function changed", aName);
+                ::Console::Change("Function changed", aName);
 
                 Replace(lFunction, lNew);
             }
@@ -208,7 +208,7 @@ namespace TRiLOGI
             KMS_EXCEPTION_ASSERT(lBI.second, APPLICATION_ERROR, lMsg, "");
         }
 
-        Console::Stats(GetCount(), "functions");
+        ::Console::Stats(GetCount(), "functions");
 
         return lLineNo;
     }
@@ -254,7 +254,7 @@ namespace TRiLOGI
             KMS_EXCEPTION_ASSERT(lBI.second, APPLICATION_ERROR, lMsg, "");
         }
 
-        Console::Stats(GetCount(), "function names");
+        ::Console::Stats(GetCount(), "function names");
 
         return lLineNo;
     }
@@ -281,18 +281,18 @@ namespace TRiLOGI
                 lCount++;
                 lFunction->AddFlags(Object::FLAG_NOT_USED);
 
-                Console::Warning_Begin(lFunction->GetLineNo());
+                ::Console::Warning_Begin(lFunction->GetLineNo());
                 std::cout << "The function named \"" << lName << "\" (" << lFunction->GetIndex() << ") is not used";
-                Console::Warning_End();
+                ::Console::Warning_End();
                 break;
             }
         }
 
         if (0 < lCount)
         {
-            Console::Warning_Begin();
+            ::Console::Warning_Begin();
             std::cout << lCount << " unused functions";
-            Console::Warning_End();
+            ::Console::Warning_End();
         }
     }
 

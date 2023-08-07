@@ -56,17 +56,17 @@ namespace EBPro
             auto lSource = dynamic_cast<const DI::String*>(lEntry.Get());
             assert(NULL != lSource);
 
-            Console::Progress_Begin("Importing", lSource->Get());
+            ::Console::Progress_Begin("EBPro", "Importing", lSource->Get());
 
             lChanged |= ImportSource(lSource->Get());
 
-            Console::Progress_End("Imported");
+            ::Console::Progress_End("Imported");
         }
 
         if (lChanged)
         {
             // NOT TESTED
-            Console::Progress_Begin("Saving", mToImport.Get());
+            ::Console::Progress_Begin("EBPro", "Saving", mToImport.Get());
 
             SaveToImport();
         }
@@ -76,13 +76,13 @@ namespace EBPro
             // we verify if the ToImport is configured.
             if (IsToImportConfigured() && File::Folder::CURRENT.DoesFileExist(mToImport.Get()))
             {
-                Console::Progress_Begin("Deleting", mToImport.Get());
+                ::Console::Progress_Begin("EBPro", "Deleting", mToImport.Get());
 
                 File::Folder lCurrent(File::Folder::Id::CURRENT);
 
                 lCurrent.Delete(mToImport.Get());
 
-                Console::Progress_End("Deleted");
+                ::Console::Progress_End("Deleted");
             }
         }
     }
@@ -91,11 +91,11 @@ namespace EBPro
     {
         if (IsExportedConfigured())
         {
-            Console::Progress_Begin("Reading", GetExported());
+            ::Console::Progress_Begin("EBPro", "Reading", GetExported());
 
             ReadExported();
 
-            Console::Progress_End("Read");
+            ::Console::Progress_End("Read");
         }
     }
 

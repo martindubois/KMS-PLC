@@ -34,7 +34,7 @@ namespace EBPro
     {
         if (NULL != mFile_Data)
         {
-            Console::Progress_Begin("Parsing ", GetExported());
+            ::Console::Progress_Begin("EBPro", "Parsing ", GetExported());
 
             DataPtr lPtr(mFile_Data, mFile->GetMappedSize());
 
@@ -48,7 +48,7 @@ namespace EBPro
                 Add(lFunction);
             }
 
-            Console::Progress_End("Parsed");
+            ::Console::Progress_End("Parsed");
         }
     }
 
@@ -96,7 +96,7 @@ namespace EBPro
                 auto lExisting = FindByName(lFunction->GetName());
                 if (NULL == lExisting)
                 {
-                    Console::Change("New function", lFunction->GetName());
+                    ::Console::Change("New function", lFunction->GetName());
 
                     Add(lFunction);
                     lResult = true;
@@ -105,7 +105,7 @@ namespace EBPro
                 {
                     if (*lFunction != *lExisting)
                     {
-                        Console::Change("Function changed", lFunction->GetName());
+                        ::Console::Change("Function changed", lFunction->GetName());
 
                         Replace(lFunction);
                         lResult = true;

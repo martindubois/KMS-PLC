@@ -48,7 +48,7 @@ namespace TRiLOGI
         bool lResult = NULL == lObject;
         if (lResult)
         {
-            Console::Change("New", GetElementName(), aName);
+            ::Console::Change("New", GetElementName(), aName);
 
             unsigned int lIndex;
             unsigned int lLineNo;
@@ -71,7 +71,7 @@ namespace TRiLOGI
             lObject = FindObject_ByIndex(aIndex);
             if (NULL == lObject)
             {
-                Console::Change("New", GetElementName(), aName);
+                ::Console::Change("New", GetElementName(), aName);
 
                 auto lLineNo = FindLineNo(aIndex);
 
@@ -81,17 +81,17 @@ namespace TRiLOGI
                 return true;
             }
 
-            Console::Error_Begin();
+            ::Console::Error_Begin();
             std::cout << "The index " << aIndex << " is already used";
-            Console::Error_End();
+            ::Console::Error_End();
             return false;
         }
 
         if (aIndex != lObject->GetIndex())
         {
-            Console::Error_Begin();
+            ::Console::Error_Begin();
             std::cout << "The name " << aName << " is already used for another index";
-            Console::Error_End();
+            ::Console::Error_End();
         }
 
         return false;

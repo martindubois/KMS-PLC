@@ -31,7 +31,7 @@ namespace TRiLOGI
         bool lResult = mInit != aInit;
         if (lResult)
         {
-            Console::Change("Counter changed", GetName());
+            ::Console::Change("Counter changed", GetName());
 
             mInit = aInit;
 

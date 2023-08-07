@@ -34,7 +34,7 @@ namespace EBPro
         {
             if (mStrings[aLanguage] != aText)
             {
-                Console::Change("Label changed", aText);
+                ::Console::Change("Label changed", aText);
 
                 lResult = true;
 
@@ -43,7 +43,7 @@ namespace EBPro
         }
         else
         {
-            Console::Change("Label new language", aText);
+            ::Console::Change("Label new language", aText);
 
             lResult = true;
 

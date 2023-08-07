@@ -93,7 +93,7 @@ namespace EBPro
     {
         if (!mFile_CSV.mLines.empty())
         {
-            Console::Progress_Begin("Parsing", GetExported());
+            ::Console::Progress_Begin("EBPro", "Parsing", GetExported());
 
             unsigned int lLineNo = 0;
 
@@ -108,14 +108,14 @@ namespace EBPro
                 lLineNo++;
             }
 
-            Console::Progress_End("Parsed");
+            ::Console::Progress_End("Parsed");
         }
     }
 
     // NOT TESTED  The second warnings is not tested
     void AddressList::Verify() const
     {
-        Console::Progress_Begin("Verifying addresses");
+        ::Console::Progress_Begin("EBPro", "Verifying addresses");
 
         for (auto lItA = mAddresses.begin(); lItA != mAddresses.end(); lItA++)
         {
@@ -123,23 +123,23 @@ namespace EBPro
             {
                 if (0 == strcmp((*lItA)->GetName(), (*lItB)->GetName()))
                 {
-                    Console::Warning_Begin((*lItA)->GetLineNo(), (*lItB)->GetLineNo());
+                    ::Console::Warning_Begin((*lItA)->GetLineNo(), (*lItB)->GetLineNo());
                     std::cout << "2 addresses are named \"" << (*lItA)->GetName() << "\"";
-                    Console::Warning_End();
+                    ::Console::Warning_End();
                 }
 
                 if (   ((*lItA)->GetType() == (*lItB)->GetType())
                     && (0 == strcmp((*lItA)->GetAddress(), (*lItB)->GetAddress())))
                 {
-                    Console::Warning_Begin((*lItA)->GetLineNo(), (*lItB)->GetLineNo());
+                    ::Console::Warning_Begin((*lItA)->GetLineNo(), (*lItB)->GetLineNo());
                     std::cout << "The addresses named \"" << (*lItA)->GetName() << "\" and \"" << (*lItB)->GetName();
                     std::cout << "\" are the same (" << (*lItA)->GetAddress() << ")";
-                    Console::Warning_End();
+                    ::Console::Warning_End();
                 }
             }
         }
 
-        Console::Progress_End("Verified");
+        ::Console::Progress_End("Verified");
     }
 
     // ===== List ===========================================================
@@ -179,7 +179,7 @@ namespace EBPro
             }
             else
             {
-                Console::Warning_IgnoredLine(lLine.GetUserLineNo(), lLine.c_str());
+                ::Console::Warning_IgnoredLine(lLine.GetUserLineNo(), lLine.c_str());
             }
         }
 
@@ -228,7 +228,7 @@ namespace EBPro
         if (NULL == lAddress)
         {
             // NOT TESTED
-            Console::Change("New address", aName);
+            ::Console::Change("New address", aName);
 
             lResult = true;
 
