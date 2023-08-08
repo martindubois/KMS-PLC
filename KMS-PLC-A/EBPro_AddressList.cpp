@@ -120,8 +120,8 @@ namespace EBPro
             {
                 if (0 == strcmp((*lItA)->GetName(), (*lItB)->GetName()))
                 {
-                    ::Console::Warning_Begin((*lItA)->GetLineNo(), (*lItB)->GetLineNo());
-                    gConsole.OutputStream() << "2 addresses are named \"" << (*lItA)->GetName() << "\"";
+                    ::Console::Warning_Begin((*lItA)->GetLineNo(), (*lItB)->GetLineNo())
+                        << "2 addresses are named \"" << (*lItA)->GetName() << "\"";
                     ::Console::Warning_End();
                 }
 
@@ -129,9 +129,9 @@ namespace EBPro
                     && (0 == strcmp((*lItA)->GetAddress(), (*lItB)->GetAddress())))
                 {
                     // NOT TESTED
-                    ::Console::Warning_Begin((*lItA)->GetLineNo(), (*lItB)->GetLineNo());
-                    gConsole.OutputStream() << "The addresses named \"" << (*lItA)->GetName() << "\" and \"" << (*lItB)->GetName();
-                    gConsole.OutputStream() << "\" are the same (" << (*lItA)->GetAddress() << ")";
+                    ::Console::Warning_Begin((*lItA)->GetLineNo(), (*lItB)->GetLineNo())
+                        << "The addresses named \"" << (*lItA)->GetName() << "\" and \"" << (*lItB)->GetName()
+                        << "\" are the same (" << (*lItA)->GetAddress() << ")";
                     ::Console::Warning_End();
                 }
             }

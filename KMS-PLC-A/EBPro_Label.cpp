@@ -96,7 +96,7 @@ namespace EBPro
                 std::wstring lStr;
 
                 lRR = Read_String(aFile, &lStr);
-                KMS_EXCEPTION_ASSERT(ReadResult::OK != ReadResult::END_OF_LABEL, APPLICATION_ERROR, "Corrupted exported LBL file", i);
+                KMS_EXCEPTION_ASSERT(ReadResult::OK != lRR, APPLICATION_ERROR, "Corrupted exported LBL file", i);
 
                 lState->mStrings.push_back(lStr);
             }
@@ -127,8 +127,8 @@ namespace EBPro
     {
         if (0 >= mStates.size())
         {
-            ::Console::Warning_Begin();
-            gConsole.OutputStream() << "The label " << mName.c_str() << " has no state";
+            ::Console::Warning_Begin()
+                << "The label " << mName.c_str() << " has no state";
             ::Console::Warning_End();
             return;
         }

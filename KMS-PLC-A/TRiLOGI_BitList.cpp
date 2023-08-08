@@ -79,16 +79,16 @@ namespace TRiLOGI
                 return true;
             }
 
-            ::Console::Error_Begin();
-            gConsole.OutputStream() << "The index " << aIndex << " is already used";
+            ::Console::Error_Begin()
+                << "The index " << aIndex << " is already used";
             ::Console::Error_End();
             return false;
         }
 
         if (aIndex != lObject->GetIndex())
         {
-            ::Console::Error_Begin();
-            gConsole.OutputStream() << "The name " << aName << " is already used for another index";
+            ::Console::Error_Begin()
+                << "The name " << aName << " is already used for another index";
             ::Console::Error_End();
         }
 

@@ -10,6 +10,9 @@
 // ===== Import/Includes ====================================================
 #include <KMS/Console/Color.h>
 
+// ===== Local ==============================================================
+#include "../Common/Globals.h"
+
 // Public
 // //////////////////////////////////////////////////////////////////////////
 
@@ -55,20 +58,39 @@ void ::Console::Stats(uint64_t aValue, const char* aUnit)
     gConsole.OutputStream() << "    " << aValue << " " << aUnit << std::endl;
 }
 
-void ::Console::Error_Begin() { gConsole.OutputStream() << KMS::Console::Color::RED << "    ERROR  "; }
-void ::Console::Error_End  () { gConsole.OutputStream() << KMS::Console::Color::WHITE << std::endl; }
+std::ostream& ::Console::Error_Begin()
+{
+    gConsole.OutputStream() << KMS::Console::Color::RED << "    ERROR  ";
 
-void ::Console::Info_Begin() { gConsole.OutputStream() << "    INFO  "; }
+    return gConsole.OutputStream();
+}
 
-void ::Console::Info_Begin(unsigned int aLineNo)
+void ::Console::Error_End() { gConsole.OutputStream() << KMS::Console::Color::WHITE << std::endl; }
+
+std::ostream& ::Console::Info_Begin()
+{
+    gConsole.OutputStream() << "    INFO  ";
+
+    return gConsole.OutputStream();
+}
+
+std::ostream& ::Console::Info_Begin(unsigned int aLineNo)
 {
     gConsole.OutputStream() << "    INFO  Line " << aLineNo << "  ";
+
+    return gConsole.OutputStream();
 }
 
 void ::Console::Info_End() { gConsole.OutputStream() << std::endl; }
 
-void ::Console::Instruction_Begin() { gConsole.OutputStream() << KMS::Console::Color::BLUE << "INSTRUCTION\n"; }
-void ::Console::Instruction_End  () { gConsole.OutputStream() << KMS::Console::Color::WHITE << std::endl; }
+std::ostream& ::Console::Instruction_Begin()
+{
+    gConsole.OutputStream() << KMS::Console::Color::BLUE << "INSTRUCTION\n";
+
+    return gConsole.OutputStream();
+}
+
+void ::Console::Instruction_End() { gConsole.OutputStream() << KMS::Console::Color::WHITE << std::endl; }
 
 void ::Console::Progress_Begin(const char* aModule, const char* aMsg)
 {
@@ -94,23 +116,32 @@ void ::Console::Progress_End(const char* aMsg)
     gConsole.OutputStream() << aMsg << std::endl;
 }
 
-void ::Console::Warning_Begin() { gConsole.OutputStream() << KMS::Console::Color::YELLOW << "    WARNING  "; }
-
-void ::Console::Warning_Begin(unsigned int aLineNo)
+std::ostream& ::Console::Warning_Begin()
 {
-    gConsole.OutputStream() << KMS::Console::Color::YELLOW << "    WARNING  Line " << aLineNo << "  ";
+    gConsole.OutputStream() << KMS::Console::Color::YELLOW << "    WARNING  ";
+
+    return gConsole.OutputStream();
 }
 
-void ::Console::Warning_Begin(unsigned int aLineNoA, unsigned int aLineNoB)
+std::ostream& ::Console::Warning_Begin(unsigned int aLineNo)
+{
+    gConsole.OutputStream() << KMS::Console::Color::YELLOW << "    WARNING  Line " << aLineNo << "  ";
+
+    return gConsole.OutputStream();
+}
+
+std::ostream& ::Console::Warning_Begin(unsigned int aLineNoA, unsigned int aLineNoB)
 {
     gConsole.OutputStream() << KMS::Console::Color::YELLOW << "    WARNING  Line " << aLineNoA << " and " << aLineNoB << "  ";
+
+    return gConsole.OutputStream();
 }
 
 void ::Console::Warning_End() { gConsole.OutputStream() << KMS::Console::Color::WHITE << std::endl; }
 
 void ::Console::Warning_IgnoredLine(unsigned int aLineNo, const char* aLine)
 {
-    Console::Warning_Begin(aLineNo);
-    gConsole.OutputStream() << "Ignored - " << aLine;
+    Console::Warning_Begin(aLineNo)
+        << "Ignored - " << aLine;
     Console::Warning_End();
 }

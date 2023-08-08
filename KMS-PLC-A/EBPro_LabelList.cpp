@@ -58,10 +58,12 @@ namespace EBPro
             FILE* lFile;
 
             auto lErr = fopen_s(&lFile, lPath.c_str(), "w,ccs=UTF-8");
-
-            char lMsg[64 + PATH_LENGTH];
-            sprintf_s(lMsg, "Cannot open \"%s\" for writing", lPath.c_str());
-            KMS_EXCEPTION_ASSERT(0 == lErr, APPLICATION_ERROR, lMsg, lErr);
+            if (0 != lErr)
+            {
+                char lMsg[64 + PATH_LENGTH];
+                sprintf_s(lMsg, "Cannot open \"%s\" for writing", lPath.c_str());
+                KMS_EXCEPTION(APPLICATION_ERROR, lMsg, lErr);
+            }
 
             assert(NULL != lFile);
 
@@ -136,9 +138,12 @@ namespace EBPro
                 auto lLanguage = dynamic_cast<const DI::String*>(lEntry.Get());
                 assert(NULL != lLanguage);
 
-                char lMsg[64 + PATH_LENGTH];
-                sprintf_s(lMsg, "\"%s\" is not a valid language id", lLanguage->Get());
-                KMS_EXCEPTION_ASSERT(2 == lLanguage->GetLength(), APPLICATION_USER_ERROR, lMsg, "");
+                if (2 != lLanguage->GetLength())
+                {
+                    char lMsg[64 + PATH_LENGTH];
+                    sprintf_s(lMsg, "\"%s\" is not a valid language id", lLanguage->Get());
+                    KMS_EXCEPTION(APPLICATION_USER_ERROR, lMsg, "");
+                }
             }
         }
 
@@ -155,8 +160,8 @@ namespace EBPro
             {
                 if ((*lItA)->mName == (*lItB)->mName)
                 {
-                    ::Console::Warning_Begin();
-                    gConsole.OutputStream() << "The label " << (*lItA)->mName.c_str() << " is present twice";
+                    ::Console::Warning_Begin()
+                        << "The label " << (*lItA)->mName.c_str() << " is present twice";
                     ::Console::Warning_End();
                 }
             }
@@ -211,8 +216,11 @@ namespace EBPro
             // TODO Support something else than 4 spaces.
             if (0 == strncmp("    STATE", lLine.c_str(), 9))
             {
-                sprintf_s(lMsg, "Line %u  STATE outside of LABEL", lLine.GetUserLineNo());
-                KMS_EXCEPTION_ASSERT(NULL != lLabel, APPLICATION_ERROR, lMsg, lLine.c_str());
+                if (NULL == lLabel)
+                {
+                    sprintf_s(lMsg, "Line %u  STATE outside of LABEL", lLine.GetUserLineNo());
+                    KMS_EXCEPTION(APPLICATION_ERROR, lMsg, lLine.c_str());
+                }
 
                 lState = lLabel->FindOrCreate(lStateCount, &lResult);
                 lStateCount++;
@@ -226,8 +234,11 @@ namespace EBPro
             }
             else if (2 == sscanf_s(lLine.c_str(), " %[a-z] %[^\n\r\t]", lLanguage SizeInfo(lLanguage), lText SizeInfo(lText)))
             {
-                sprintf_s(lMsg, "Line %u  Text outside of STATE", lLine.GetUserLineNo());
-                KMS_EXCEPTION_ASSERT(NULL != lState, APPLICATION_ERROR, lMsg, lLine.c_str());
+                if (NULL == lState)
+                {
+                    sprintf_s(lMsg, "Line %u  Text outside of STATE", lLine.GetUserLineNo());
+                    KMS_EXCEPTION(APPLICATION_ERROR, lMsg, lLine.c_str());
+                }
 
                 std::wstring lString(lConverter.from_bytes(lText));
 
@@ -251,10 +262,12 @@ namespace EBPro
         FILE* lFile;
 
         auto lErr = fopen_s(&lFile, lToImport, "wb");
-
-        char lMsg[64 + PATH_LENGTH];
-        sprintf_s(lMsg, "Cannot open \"%s\" for writing", lToImport);
-        KMS_EXCEPTION_ASSERT(0 == lErr, APPLICATION_ERROR, lMsg, lErr);
+        if (0 != lErr)
+        {
+            char lMsg[64 + PATH_LENGTH];
+            sprintf_s(lMsg, "Cannot open \"%s\" for writing", lToImport);
+            KMS_EXCEPTION(APPLICATION_ERROR, lMsg, lErr);
+        }
 
         assert(NULL != lFile);
 

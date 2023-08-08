@@ -55,8 +55,8 @@ namespace TRiLOGI
         auto lConstant = dynamic_cast<Constant*>(lObject);
         if (NULL == lConstant)
         {
-            ::Console::Error_Begin();
-            gConsole.OutputStream() << "The name " << aName << " is already used for a word";
+            ::Console::Error_Begin()
+                << "The name " << aName << " is already used for a word";
             ::Console::Error_End();
             return false;
         }
@@ -86,8 +86,8 @@ namespace TRiLOGI
         auto lWord = dynamic_cast<Word*>(lObject);
         if (NULL == lWord)
         {
-            ::Console::Error_Begin();
-            gConsole.OutputStream() << "The name " << aName << " is already used for a constant";
+            ::Console::Error_Begin()
+                << "The name " << aName << " is already used for a constant";
             ::Console::Error_End();
         }
 
@@ -102,8 +102,8 @@ namespace TRiLOGI
             auto lWord = mWords.Find_ByOffset(aOffset);
             if (NULL != lWord)
             {
-                ::Console::Error_Begin();
-                gConsole.OutputStream() << "The offset " << aOffset << " is already used";
+                ::Console::Error_Begin()
+                    << "The offset " << aOffset << " is already used";
                 ::Console::Error_End();
                 return false;
             }
@@ -127,14 +127,14 @@ namespace TRiLOGI
         auto lWord = dynamic_cast<Word*>(lObject);
         if (NULL == lWord)
         {
-            ::Console::Error_Begin();
-            gConsole.OutputStream() << "The name " << aName << " is already used for a constant";
+            ::Console::Error_Begin()
+                << "The name " << aName << " is already used for a constant";
             ::Console::Error_End();
         }
         else if (lWord->GetOffset() != aOffset)
         {
-            ::Console::Error_Begin();
-            gConsole.OutputStream() << "The name " << aName << " is already uses witch another offset";
+            ::Console::Error_Begin()
+                << "The name " << aName << " is already uses witch another offset";
             ::Console::Error_End();
         }
 
@@ -174,9 +174,11 @@ namespace TRiLOGI
         char         lText[LINE_LENGTH];
 
         auto lRet = swscanf_s(aLine, L"%u,%S", &lIndex, lText SizeInfo(lText));
-
-        sprintf_s(lMsg, "Line %u  Invalid define line", aLineNo);
-        KMS_EXCEPTION_ASSERT(2 == lRet, APPLICATION_ERROR, lMsg, lRet);
+        if (2 != lRet)
+        {
+            sprintf_s(lMsg, "Line %u  Invalid define line", aLineNo);
+            KMS_EXCEPTION(APPLICATION_ERROR, lMsg, lRet);
+        }
 
         char         lComment[NAME_LENGTH];
         Object     * lDefine;

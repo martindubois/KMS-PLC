@@ -208,6 +208,7 @@
   <ItemGroup>
     <ClCompile Include="KMS-PLC-A-Test.cpp" />
     <ClCompile Include="System.cpp" />
+    <ClCompile Include="TRiLOGI_BitList.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Component.h" />

@@ -1,0 +1,29 @@
+
+# Author    KMS - Martin Dubois, P. Eng.
+# Copyright (C) 2023 KMS
+# License   http://www.apache.org/licenses/LICENSE-2.0
+# Product   KMS-PLC
+# File      Tests/Test06/PLC.PC6.txt
+
+COUNTER Name_A 10
+
+CONSTANT Name_B 20
+
+FUNCTION Name_C
+FUNCTION END
+
+INPUT Name_D 30
+
+OUTPUT Name_E 40
+
+RELAY Name_F 50
+
+RELAY Name_G
+
+TIMER Name_H 60
+
+WORD Name_I 70
+
+WORD Name_J
+
+Ignored line for test

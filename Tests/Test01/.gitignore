@@ -3,6 +3,7 @@
 # Copyright (C) 2023
 # License   http://www.apache.org/licenses/LICENSE-2.0
 # Product   KMS-PLC
-# File      Tests/Test1/.gitignore
+# File      Tests/Test01/.gitignore
 
-PLC.PC6
+/PLC.h
+/PLC.PC6

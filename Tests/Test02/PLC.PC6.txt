@@ -1,11 +1,9 @@
 
 # Author    KMS - Martin Dubois, P. Eng.
-# Copyright (C) 2022 KMS
+# Copyright (C) 2023 KMS
 # License   http://www.apache.org/licenses/LICENSE-2.0
 # Product   KMS-PLC
-# File      Tests/Test9/Import.cmd
+# File      Tests/Test02/PLC.PC6.txt
 
-*.cfg
-*.csv
-*.lbl.in0
-*.PC6
+FUNCTION Test_02
+    // Comment

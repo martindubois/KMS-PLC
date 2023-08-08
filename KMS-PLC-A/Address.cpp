@@ -5,6 +5,8 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/Address.cpp
 
+// TEST COVERAGE  2023-08-06  KMS - Martin Dubois, P. Eng.
+
 #include "Component.h"
 
 // ===== Local ===============================================================
@@ -13,7 +15,8 @@
 // Public
 // ///////////////////////////////////////////////////////////////////////////
 
-Address::Address(const char* aName, AddressType aType, uint16_t aAddr) : mAddr(aAddr), mName(aName), mType(aType)
+Address::Address(const char* aName, AddressType aType, uint16_t aAddr)
+    : mAddr(aAddr), mName(aName), mType(aType)
 {
     assert(NULL != aName);
 }

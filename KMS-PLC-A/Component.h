@@ -16,6 +16,4 @@
 #include <KMS/Exception.h>
 
 // ===== Locals =============================================================
-#include "../Common/Globals.h"
-
 #include "Console.h"

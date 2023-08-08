@@ -8,6 +8,8 @@
 #include "Component.h"
 
 // ===== Local ==============================================================
+#include "../Common/Globals.h"
+
 #include "../Common/EBPro/Software.h"
 
 using namespace KMS;
@@ -15,8 +17,8 @@ using namespace KMS;
 // Static function declarations
 // //////////////////////////////////////////////////////////////////////////
 
-static void Instruction_Begin();
-static void Instruction_End  ();
+static std::ostream& Instruction_Begin();
+static void          Instruction_End  ();
 
 namespace EBPro
 {
@@ -41,31 +43,31 @@ namespace EBPro
         assert(NULL != aImp);
         assert(NULL != aExp);
 
-        Instruction_Begin();
+        Instruction_Begin()
 
-        //                                   1           2          3          4          5          6          7
-        //                          1234567890 12345678 9012345678 90123456 7890123456 78901234 567890 123456789012
-        gConsole.OutputStream() << "    - Tab \"Project\" - Group \"Library\" - Click \"Address\" ==> \"Address Tag\n";
-        //                          1234567890123 4567890123456789012345678901234567890123456789012345678901234567
-        gConsole.OutputStream() << "      Library\" dialog                                                     [ ]\n";
-        //                          1234567890123456 78901234567890 123456 78901 234567890123456789012345678901234567
-        gConsole.OutputStream() << "        - Click \"Import CSV...\" ==> \"Open\" dialog                         [ ]\n";
-        gConsole.OutputStream() << "            - Select \"" << aImp << "\"\n";
-        //                          123456789012345678901234 56789 012345 6789012345678901 23456789012345678901234567
-        gConsole.OutputStream() << "              and click \"Open\" ==> \"EasyBuilder Pro\" dialog               [ ]\n";
-        //                          12345678901234567890 1234 567890 1234567890123456 7890123456789012345678901234567
-        gConsole.OutputStream() << "            - Click \"Yes\" ==> \"EasyBuilder Pro\" dialog                    [ ]\n";
-        //                          12345678901234567890 123 456789012345678901234567890123456789012345678901234567
-        gConsole.OutputStream() << "            - Click \"OK\"                                                  [ ]\n";
-        //                          1234567890123456 78901234567890 123456 78901 234567890123456789012345678901234567
-        gConsole.OutputStream() << "        - Click \"Export CSV...\" ==> \"Open\" dialog                         [ ]\n";
-        gConsole.OutputStream() << "            - Select \"" << aExp << "\"\n";
-        //                          123456789012345678901234 56789 012345 6789012345678901 23456789012345678901234567
-        gConsole.OutputStream() << "              and click \"Open\" ==> \"EasyBuilder Pro\" dialog               [ ]\n";
-        //                          12345678901234567890 123 456789012345678901234567890123456789012345678901234567
-        gConsole.OutputStream() << "            - Click \"OK\"                                                  [ ]\n";
-        //                          1234567890123456 78901 23456789012345678901234567890123456789012345678901234567
-        gConsole.OutputStream() << "        - Click \"Exit\"                                                    [ ]\n";
+            //           1           2          3          4          5          6          7
+            //  1234567890 12345678 9012345678 90123456 7890123456 78901234 567890 123456789012
+            << "    - Tab \"Project\" - Group \"Library\" - Click \"Address\" ==> \"Address Tag\n"
+            //  1234567890123 4567890123456789012345678901234567890123456789012345678901234567
+            << "      Library\" dialog                                                     [ ]\n"
+            //  1234567890123456 78901234567890 123456 78901 234567890123456789012345678901234567
+            << "        - Click \"Import CSV...\" ==> \"Open\" dialog                         [ ]\n"
+            << "            - Select \"" << aImp << "\"\n"
+            //  123456789012345678901234 56789 012345 6789012345678901 23456789012345678901234567
+            << "              and click \"Open\" ==> \"EasyBuilder Pro\" dialog               [ ]\n"
+            //  12345678901234567890 1234 567890 1234567890123456 7890123456789012345678901234567
+            << "            - Click \"Yes\" ==> \"EasyBuilder Pro\" dialog                    [ ]\n"
+            //  12345678901234567890 123 456789012345678901234567890123456789012345678901234567
+            << "            - Click \"OK\"                                                  [ ]\n"
+            //  1234567890123456 78901234567890 123456 78901 234567890123456789012345678901234567
+            << "        - Click \"Export CSV...\" ==> \"Open\" dialog                         [ ]\n"
+            << "            - Select \"" << aExp << "\"\n"
+            //  123456789012345678901234 56789 012345 6789012345678901 23456789012345678901234567
+            << "              and click \"Open\" ==> \"EasyBuilder Pro\" dialog               [ ]\n"
+            //  12345678901234567890 123 456789012345678901234567890123456789012345678901234567
+            << "            - Click \"OK\"                                                  [ ]\n"
+            //  1234567890123456 78901 23456789012345678901234567890123456789012345678901234567
+            << "        - Click \"Exit\"                                                    [ ]\n";
 
         Instruction_End();
     }
@@ -75,27 +77,27 @@ namespace EBPro
         assert(NULL != aImp);
         assert(NULL != aExp);
 
-        Instruction_Begin();
+        Instruction_Begin()
 
-        //                                   1           2          3          4          5           6         7
-        //                          1234567890 12345678 9012345678 90123456 7890123456 789012 345678 90123456789012 3
-        gConsole.OutputStream() << "    - Tab \"Project\" - Group \"Library\" - Click \"Macro\" --> \"Macro Manager\"\n";
-        //                          12345678901234567890123456789012345678901234567890123456789012345678901234567
-        gConsole.OutputStream() << "      dialog                                                              [ ]\n";
-        //                          1234567890123456 78901234567 890 12 34567890123456789012345 6789012345678901234567
-        gConsole.OutputStream() << "        - Click \"Library...\" --> \"Macro Function Library\" dialog           [ ]\n";
-        //                          12345678901234567890 1234567890 12 345 67890 123456789012345 6789012345678901234567
-        gConsole.OutputStream() << "            - Click \"Import...\" --> \"Open\" dialog                           [ ]\n";
-        gConsole.OutputStream() << "                - Select \"" << aImp << "\"\n";
-        //                          1234567890123456789012345678 90123 45678901234567890123456789012345678901234567
-        gConsole.OutputStream() << "                  and click \"Open\"                                        [ ]\n";
-        //                          12345678901234567890 1234567890 123456 78901 234567890123456789012345678901234567
-        gConsole.OutputStream() << "            - Click \"Export...\" --> \"Open\" dialog                         [ ]\n";
-        gConsole.OutputStream() << "                - Select \"" << aExp << "\"\n";
-        //                          1234567890123456789012345678 90123 45678901234567890123456789012345678901234567
-        gConsole.OutputStream() << "                  and click \"Open\"                                        [ ]\n";
-        //                          12345678901234567890 12345 6789012345678901234567890123456789012345678901234567
-        gConsole.OutputStream() << "            - Click \"Exit\"                                                [ ]\n";
+            //           1           2          3          4          5           6         7
+            //  1234567890 12345678 9012345678 90123456 7890123456 789012 345678 90123456789012 3
+            << "    - Tab \"Project\" - Group \"Library\" - Click \"Macro\" --> \"Macro Manager\"\n"
+            //  12345678901234567890123456789012345678901234567890123456789012345678901234567
+            << "      dialog                                                              [ ]\n"
+            //  1234567890123456 78901234567 890 12 34567890123456789012345 6789012345678901234567
+            << "        - Click \"Library...\" --> \"Macro Function Library\" dialog           [ ]\n"
+            //  12345678901234567890 1234567890 12 345 67890 123456789012345 6789012345678901234567
+            << "            - Click \"Import...\" --> \"Open\" dialog                           [ ]\n"
+            << "                - Select \"" << aImp << "\"\n"
+            // 1234567890123456789012345678 90123 45678901234567890123456789012345678901234567
+            << "                  and click \"Open\"                                        [ ]\n"
+            //  12345678901234567890 1234567890 123456 78901 234567890123456789012345678901234567
+            << "            - Click \"Export...\" --> \"Open\" dialog                         [ ]\n"
+            << "                - Select \"" << aExp << "\"\n"
+            //  1234567890123456789012345678 90123 45678901234567890123456789012345678901234567
+            << "                  and click \"Open\"                                        [ ]\n"
+            //  12345678901234567890 12345 6789012345678901234567890123456789012345678901234567
+            << "            - Click \"Exit\"                                                [ ]\n";
 
         Instruction_End();
     }
@@ -105,23 +107,23 @@ namespace EBPro
         assert(NULL != aImp);
         assert(NULL != aExp);
 
-        Instruction_Begin();
+        Instruction_Begin()
 
-        //                                   1           2          3          4          5           6         7
-        //                          1234567890 12345678 9012345678 90123456 7890123456 789012 345678 901234567890123456 7
-        gConsole.OutputStream() << "    - Tab \"Project\" - Group \"Library\" - Click \"Label\" ==> \"Label Tag Library\"\n";
-        //                          12345678901234567890123456789012345678901234567890123456789012345678901234567
-        gConsole.OutputStream() << "      dialog                                                              [ ]\n";
-        //                          1234567890123456 7890123456789012345 678901 23456 7890123456789012345678901234567
-        gConsole.OutputStream() << "        - Click \"Load Label File...\" ==> \"Open\" dialog                    [ ]\n";
-        gConsole.OutputStream() << "            - Select \"" << aImp << "\"\n";
-        //                          123456789012345678901234 56789 012345678901234567890123456789012345678901234567
-        gConsole.OutputStream() << "              and click \"Open\"                                            [ ]\n";
-        //                          1234567890123456 7890123456789012345 678901 23456 7890123456789012345678901234567
-        gConsole.OutputStream() << "        - Click \"Save Label File...\" ==> \"Open\" dialog                    [ ]\n";
-        gConsole.OutputStream() << "            - Select \"" << aExp << "\"\n";
-        //                          123456789012345678901234 56789 012345678901234567890123456789012345678901234567
-        gConsole.OutputStream() << "              and click \"Open\"                                            [ ]\n";
+            //           1           2          3          4          5           6         7
+            //  1234567890 12345678 9012345678 90123456 7890123456 789012 345678 901234567890123456 7
+            << "    - Tab \"Project\" - Group \"Library\" - Click \"Label\" ==> \"Label Tag Library\"\n"
+            //  12345678901234567890123456789012345678901234567890123456789012345678901234567
+            << "      dialog                                                              [ ]\n"
+            //  1234567890123456 7890123456789012345 678901 23456 7890123456789012345678901234567
+            << "        - Click \"Load Label File...\" ==> \"Open\" dialog                    [ ]\n"
+            << "            - Select \"" << aImp << "\"\n"
+            //  123456789012345678901234 56789 012345678901234567890123456789012345678901234567
+            << "              and click \"Open\"                                            [ ]\n"
+            //  1234567890123456 7890123456789012345 678901 23456 7890123456789012345678901234567
+            << "        - Click \"Save Label File...\" ==> \"Open\" dialog                    [ ]\n"
+            << "            - Select \"" << aExp << "\"\n"
+            //  123456789012345678901234 56789 012345678901234567890123456789012345678901234567
+            << "              and click \"Open\"                                            [ ]\n";
 
         Instruction_End();
     }
@@ -149,11 +151,12 @@ namespace EBPro
 // Static function declarations
 // //////////////////////////////////////////////////////////////////////////
 
-void Instruction_Begin()
+std::ostream& Instruction_Begin()
 {
-    ::Console::Instruction_Begin();
+    ::Console::Instruction_Begin()
+        << "    Tool \"EBPro\"\n";
 
-    gConsole.OutputStream() << "    Tool \"EBPro\"\n";
+    return gConsole.OutputStream();
 }
 
 void Instruction_End()

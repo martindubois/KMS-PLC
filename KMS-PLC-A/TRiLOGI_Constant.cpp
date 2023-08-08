@@ -45,8 +45,8 @@ namespace TRiLOGI
         {
             AddFlags(Object::FLAG_NOT_USED);
 
-            ::Console::Warning_Begin(GetLineNo());
-            gConsole.OutputStream() << "The constant named \"" << GetName() << "\" (" << GetIndex() << ") has no value";
+            ::Console::Warning_Begin(GetLineNo())
+                << "The constant named \"" << GetName() << "\" (" << GetIndex() << ") has no value";
             ::Console::Warning_End();
         }
     }

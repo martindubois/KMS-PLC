@@ -18,25 +18,24 @@ public:
     static void Change(const char* aMsg, const char* aName, const char* aFrom, const char* aTo);
     static void Stats (uint64_t aValue, const char* aUnit);
 
-    static void Error_Begin();
-    static void Error_Begin(unsigned int aLineNo);
-    static void Error_End  ();
+    static std::ostream& Error_Begin();
+    static void          Error_End  ();
 
-    static void Info_Begin();
-    static void Info_Begin(unsigned int aLineNo);
-    static void Info_End  ();
+    static std::ostream& Info_Begin();
+    static std::ostream& Info_Begin(unsigned int aLineNo);
+    static void          Info_End  ();
 
-    static void Instruction_Begin();
-    static void Instruction_End  ();
+    static std::ostream& Instruction_Begin();
+    static void          Instruction_End  ();
 
     static void Progress_Begin(const char* aModule, const char* aMsg);
     static void Progress_Begin(const char* aModule, const char* aMsg, const char* aFileName);
     static void Progress_End  (const char* aMsg);
 
-    static void Warning_Begin();
-    static void Warning_Begin(unsigned int aLineNo);
-    static void Warning_Begin(unsigned int aLineNoA, unsigned int aLineNoB);
-    static void Warning_End  ();
+    static std::ostream& Warning_Begin();
+    static std::ostream& Warning_Begin(unsigned int aLineNo);
+    static std::ostream& Warning_Begin(unsigned int aLineNoA, unsigned int aLineNoB);
+    static void          Warning_End  ();
 
     static void Warning_IgnoredLine(unsigned int aLineNo, const char* aLine);
 

@@ -23,13 +23,6 @@ namespace TRiLOGI
     // Public
     // //////////////////////////////////////////////////////////////////////
 
-    ObjectList::ObjectList(const char* aElementName, unsigned int aMaxQty)
-        : mElementName(aElementName), mFile_PC6(NULL), mLineNo_End(0), mMaxQty(aMaxQty)
-    {
-        assert(NULL != aElementName);
-        assert(0 < aMaxQty);
-    }
-
     ObjectList::~ObjectList() { Clear(); }
 
     bool ObjectList::Apply()
@@ -193,22 +186,22 @@ namespace TRiLOGI
                 lCount++;
                 lObj->AddFlags(Object::FLAG_NOT_USED);
 
-                ::Console::Warning_Begin(lLineNo);
-                gConsole.OutputStream() << "The " << mElementName << " named \"" << lName << "\" (" << lIndex << ") is useless";
+                ::Console::Warning_Begin(lLineNo)
+                    << "The " << mElementName << " named \"" << lName << "\" (" << lIndex << ") is useless";
                 ::Console::Warning_End();
                 break;
 
             case 2:
                 if (lObj->TestFlag(Object::FLAG_SINGLE_USE_WARNING))
                 {
-                    ::Console::Warning_Begin(lLineNo);
-                    gConsole.OutputStream() << "The " << mElementName << " named \"" << lName << "\" (" << lIndex << ") is used only once";
+                    ::Console::Warning_Begin(lLineNo)
+                        << "The " << mElementName << " named \"" << lName << "\" (" << lIndex << ") is used only once";
                     ::Console::Warning_End();
                 }
                 else if (lObj->TestFlag(Object::FLAG_SINGLE_USE_INFO))
                 {
-                    ::Console::Info_Begin(lLineNo);
-                    gConsole.OutputStream() << "The " << mElementName << " named \"" << lName << "\" (" << lIndex << ") is used only once";
+                    ::Console::Info_Begin(lLineNo)
+                        << "The " << mElementName << " named \"" << lName << "\" (" << lIndex << ") is used only once";
                     ::Console::Info_End();
                 }
                 break;
@@ -217,14 +210,21 @@ namespace TRiLOGI
 
         if (0 < lCount)
         {
-            ::Console::Warning_Begin();
-            gConsole.OutputStream() << lCount << " " << mElementName << "s not used";
+            ::Console::Warning_Begin()
+                << lCount << " " << mElementName << "s not used";
             ::Console::Warning_End();
         }
     }
 
     // Protected
     // //////////////////////////////////////////////////////////////////////
+
+    ObjectList::ObjectList(const char* aElementName, unsigned int aMaxQty)
+        : mElementName(aElementName), mFile_PC6(NULL), mLineNo_End(0), mMaxQty(aMaxQty)
+    {
+        assert(NULL != aElementName);
+        assert(0 < aMaxQty);
+    }
 
     const char* ObjectList::GetElementName() const { return mElementName; }
 
@@ -238,13 +238,19 @@ namespace TRiLOGI
 
         auto lBI = mObjects_ByIndex.insert(ObjectList::ByIndex::value_type(aObject->GetIndex(), aObject));
 
-        sprintf_s(lMsg, "An object with index %u already exist", aObject->GetIndex());
-        KMS_EXCEPTION_ASSERT(lBI.second, APPLICATION_ERROR, lMsg, "");
+        if (!lBI.second)
+        {
+            sprintf_s(lMsg, "An object with index %u already exist", aObject->GetIndex());
+            KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
+        }
 
         auto lBN = mObjects_ByName.insert(ObjectList::ByName::value_type(aObject->GetName(), aObject));
 
-        sprintf_s(lMsg, "An object named \"%s\" already exist", aObject->GetName());
-        KMS_EXCEPTION_ASSERT(lBN.second, APPLICATION_ERROR, lMsg, "");
+        if (!lBN.second)
+        {
+            sprintf_s(lMsg, "An object named \"%s\" already exist", aObject->GetName());
+            KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
+        }
     }
 
     void ObjectList::AddObject(const wchar_t* aLine, unsigned int aLineNo, unsigned int aFlags)
@@ -256,9 +262,12 @@ namespace TRiLOGI
 
         auto lRet = swscanf_s(aLine, L"%u,%S", &lIndex, lName SizeInfo(lName));
 
-        char lMsg[64];
-        sprintf_s(lMsg, "Line %u  Invalid bit line", aLineNo);
-        KMS_EXCEPTION_ASSERT(2 == lRet, APPLICATION_ERROR, lMsg, lRet);
+        if (2 != lRet)
+        {
+            char lMsg[64];
+            sprintf_s(lMsg, "Line %u  Invalid bit line", aLineNo);
+            KMS_EXCEPTION(APPLICATION_ERROR, lMsg, lRet);
+        }
 
         auto lObject = new Object(lName, lIndex, aLineNo, aFlags);
 
@@ -270,9 +279,12 @@ namespace TRiLOGI
         assert(NULL != aIndex);
         assert(NULL != aLineNo);
         
-        char lMsg[64 + NAME_LENGTH];
-        sprintf_s(lMsg, "Too many %s", mElementName);
-        KMS_EXCEPTION_ASSERT(mMaxQty > mObjects_ByIndex.size(), APPLICATION_ERROR, lMsg, "");
+        if (mMaxQty <= mObjects_ByIndex.size())
+        {
+            char lMsg[64 + NAME_LENGTH];
+            sprintf_s(lMsg, "Too many %s", mElementName);
+            KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
+        }
 
         auto lIndex  = mMaxQty - 1;
         auto lLineNo = mLineNo_End;

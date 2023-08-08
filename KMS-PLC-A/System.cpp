@@ -5,7 +5,7 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/System.cpp
 
-// TEST COVERAGE 2023-05-29 KMS - Martin Dubois, P. Eng.
+// TEST COVERAGE  2023-08-07  KMS - Martin Dubois, P. Eng.
 
 #include "Component.h"
 
@@ -67,11 +67,10 @@ int System::Main(int aCount, const char** aVector)
 
 System::System()
 {
-    AddEntry("EBPro"     , &mEBPro     , false);
-    AddEntry("TRiLOGI"   , &mTRiLOGI   , false);
+    AddEntry("EBPro"  , &mEBPro  , false);
+    AddEntry("TRiLOGI", &mTRiLOGI, false);
 }
 
-// NOT TESTED
 void System::Clean() { mTRiLOGI.Clean(); }
 
 // NOT TESTED
@@ -92,7 +91,6 @@ void System::Import()
     const AddressList* lAL = mTRiLOGI.GetPublicAddresses();
     if ((NULL != lAL) && (0 < lAL->size()))
     {
-        // NOT TESTED
         mEBPro.Import(*lAL);
     }
 }
@@ -120,15 +118,15 @@ void System::Verify()
 
         for (const auto lA : mEBPro.mAddresses.mAddresses)
         {
-            // NOT TESTED
             switch (lA->GetType())
             {
             case AddressType::MODBUS_RTU_1X:
                 if (!mTRiLOGI.VerifyAddress_1X(lA->GetAddress_UInt16()))
                 {
-                    ::Console::Error_Begin();
-                    gConsole.OutputStream() << "The HMI access an invalid PLC address named \"";
-                    gConsole.OutputStream() << lA->GetName() << "\" (1x-" << lA->GetAddress() << ")";
+                    // NOT TESTED
+                    ::Console::Error_Begin()
+                        << "The HMI access an invalid PLC address named \""
+                        << lA->GetName() << "\" (1x-" << lA->GetAddress() << ")";
                     ::Console::Error_End();
                 }
                 break;
@@ -136,9 +134,10 @@ void System::Verify()
             case AddressType::MODBUS_RTU_4X:
                 if (!mTRiLOGI.VerifyAddress_4X(lA->GetAddress_UInt16()))
                 {
-                    ::Console::Error_Begin();
-                    gConsole.OutputStream() << "The HMI access an invalid PLC address named \"";
-                    gConsole.OutputStream() << lA->GetName() << "\" (4x-" << lA->GetAddress() << ")";
+                    // NOT TESTED
+                    ::Console::Error_Begin()
+                        << "The HMI access an invalid PLC address named \""
+                        << lA->GetName() << "\" (4x-" << lA->GetAddress() << ")";
                     ::Console::Error_End();
                 }
                 break;
@@ -149,7 +148,6 @@ void System::Verify()
     }
 }
 
-// NOT TESTED
 void System::Write() { mTRiLOGI.Write(); }
 
 // ===== CLI::Tool ==========================================================

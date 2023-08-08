@@ -42,10 +42,11 @@ namespace TRiLOGI
         char         lName[NAME_LENGTH];
 
         auto lRet = swscanf_s(aLine, L"%u,%S %u", &lIndex, lName SizeInfo(lName), &lInit);
-
-        char lMsg[64];
-        sprintf_s(lMsg, "Line %u  Invalid timer line", aLineNo);
-        KMS_EXCEPTION_ASSERT(3 == lRet, APPLICATION_ERROR, lMsg, lRet);
+        if (3 != lRet)
+        {
+            char lMsg[64];
+            sprintf_s(lMsg, "Line %u  Invalid timer line", aLineNo);
+        }
 
         auto lCounter = new Counter(lName, lIndex, aLineNo, lInit, aFlags);
 
@@ -59,7 +60,7 @@ namespace TRiLOGI
         auto lObject = FindObject_ByName(aName);
         if (NULL == lObject)
         {
-            gConsole.OutputStream() << KMS::Console::Color::GREEN << "New counter - " << aName << KMS::Console::Color::WHITE << std::endl;
+            ::Console::Change("New counter - ", aName);
 
             unsigned int lIndex;
             unsigned int lLineNo;

@@ -62,7 +62,6 @@ namespace TRiLOGI
 
     bool Project::IsValid() const { return 0 < mFile.GetLineCount(); }
 
-    // NOT TESTED
     void Project::Clean()
     {
         ::Console::Progress_Begin("TRiLOGY", "Cleaning ...");
@@ -88,6 +87,7 @@ namespace TRiLOGI
         }
         else
         {
+            // NOT TESTED
             ::Console::Progress_End("Cleaned (No change)");
         }
     }
@@ -120,10 +120,12 @@ namespace TRiLOGI
             assert(NULL != lFileName);
 
             std::ofstream lFile(lFileName);
-
-            char lMsg[64 + PATH_LENGTH];
-            sprintf_s(lMsg, "Cannot open \"%s\" for writing", lFileName);
-            KMS_EXCEPTION_ASSERT(lFile.is_open(), APPLICATION_USER_ERROR, lMsg, "");
+            if (!lFile.is_open())
+            {
+                char lMsg[64 + PATH_LENGTH];
+                sprintf_s(lMsg, "Cannot open \"%s\" for writing (NOT TESTED)", lFileName);
+                KMS_EXCEPTION(APPLICATION_USER_ERROR, lMsg, "");
+            }
 
             lFile << "\n";
             lFile << "// File  " << lFileName << "\n";
@@ -297,8 +299,11 @@ namespace TRiLOGI
         {
             if (!mCreateIfNeeded)
             {
-                sprintf_s(lMsg, "\"%s\" does not exist", mFileName.Get());
-                KMS_EXCEPTION_ASSERT(File::Folder::CURRENT.DoesFileExist(mFileName.Get()), APPLICATION_USER_ERROR, lMsg, "");
+                if (!File::Folder::CURRENT.DoesFileExist(mFileName.Get()))
+                {
+                    sprintf_s(lMsg, "\"%s\" does not exist", mFileName.Get());
+                    KMS_EXCEPTION(APPLICATION_USER_ERROR, lMsg, "");
+                }
             }
         }
 
@@ -312,8 +317,11 @@ namespace TRiLOGI
             const DI::String* lSource = dynamic_cast<const DI::String*>(lEntry.Get());
             assert(NULL != lSource);
 
-            sprintf_s(lMsg, "\"%s\" does not exist", lSource->Get());
-            KMS_EXCEPTION_ASSERT(File::Folder::CURRENT.DoesFileExist(lSource->Get()), APPLICATION_USER_ERROR, lMsg, "");
+            if (!File::Folder::CURRENT.DoesFileExist(lSource->Get()))
+            {
+                sprintf_s(lMsg, "\"%s\" does not exist", lSource->Get());
+                KMS_EXCEPTION(APPLICATION_USER_ERROR, lMsg, "");
+            }
         }
 
         for (auto& lEntry : mSources.mInternal)
@@ -321,8 +329,11 @@ namespace TRiLOGI
             const DI::String* lSource = dynamic_cast<const DI::String*>(lEntry.Get());
             assert(NULL != lSource);
 
-            sprintf_s(lMsg, "\"%s\" does not exist", lSource->Get());
-            KMS_EXCEPTION_ASSERT(File::Folder::CURRENT.DoesFileExist(lSource->Get()), APPLICATION_USER_ERROR, lMsg, "");
+            if (!File::Folder::CURRENT.DoesFileExist(lSource->Get()))
+            {
+                sprintf_s(lMsg, "\"%s\" does not exist", lSource->Get());
+                KMS_EXCEPTION(APPLICATION_USER_ERROR, lMsg, "");
+            }
         }
     }
 
@@ -442,8 +453,8 @@ namespace TRiLOGI
             lObj = mDefines.FindObject_ByName(aPrivate);
             if (NULL == lObj)
             {
-                ::Console::Warning_Begin();
-                gConsole.OutputStream() << "No object named " << aPrivate;
+                ::Console::Warning_Begin()
+                    << "No object named " << aPrivate;
                 ::Console::Warning_End();
             }
             else
@@ -451,8 +462,8 @@ namespace TRiLOGI
                 auto lWord = dynamic_cast<Word*>(lObj);
                 if (NULL == lWord)
                 {
-                    ::Console::Warning_Begin();
-                    gConsole.OutputStream() << "The object " << aPrivate << " is not of an expected type";
+                    ::Console::Warning_Begin()
+                        << "The object " << aPrivate << " is not of an expected type";
                     ::Console::Warning_End();
                 }
                 else
@@ -483,8 +494,8 @@ namespace TRiLOGI
 
         if (mPublicAddresses.size() == lCount)
         {
-            ::Console::Warning_Begin();
-            gConsole.OutputStream() << "The expression \"" << aRegEx << "\" does not match any name";
+            ::Console::Warning_Begin()
+                << "The expression \"" << aRegEx << "\" does not match any name";
             ::Console::Warning_End();
         }
     }
@@ -613,11 +624,11 @@ namespace TRiLOGI
 
 void Instruction_Write()
 {
-    ::Console::Instruction_Begin();
+    ::Console::Instruction_Begin()
 
-    //                                   1           2         3         4         5         6         7
-    //                          123456789012 345678 90123456789012345678901234567890123456789012345678901234567
-    gConsole.OutputStream() << "    Use the \"Write\" command to save the changes                           [ ]" << std::endl;
+        //           1           2         3         4         5         6         7
+        //  123456789012 345678 90123456789012345678901234567890123456789012345678901234567
+        << "    Use the \"Write\" command to save the changes                           [ ]" << std::endl;
 
     ::Console::Instruction_End();
 }

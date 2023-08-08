@@ -169,17 +169,22 @@ namespace TRiLOGI
                     lFunction->SetLineNo_Code(lBegin, lLineNo);
 
                     auto lBI = mObjects_ByIndex.insert(ByIndex::value_type(lIndex, lFunction));
-
-                    sprintf_s(lMsg, "Line %u  A function already exist at index %u", lLineNo, lIndex);
-                    KMS_EXCEPTION_ASSERT(lBI.second, APPLICATION_ERROR, lMsg, "");
+                    if (!lBI.second)
+                    {
+                        sprintf_s(lMsg, "Line %u  A function already exist at index %u", lLineNo, lIndex);
+                        KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
+                    }
 
                     lFunction = NULL;
                 }
             }
             else if (2 == swscanf_s(lLine, L"Fn#%u,%u", &lIndex, &lLength))
             {
-                sprintf_s(lMsg, "Line %u  A function is malformed", lLineNo);
-                KMS_EXCEPTION_ASSERT(NULL == lFunction, APPLICATION_ERROR, lMsg, "");
+                if (NULL != lFunction)
+                {
+                    sprintf_s(lMsg, "Line %u  A function is malformed", lLineNo);
+                    KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
+                }
 
                 lBegin    = lLineNo;
                 lFunction = new Function(lIndex, lLength);
@@ -202,9 +207,11 @@ namespace TRiLOGI
             lFunction->SetLineNo_Code(lBegin, lLineNo);
 
             auto lBI = mObjects_ByIndex.insert(ByIndex::value_type(lIndex, lFunction));
-
-            sprintf_s(lMsg, "Line %u  A function already exist at index %u", aLineNo, lIndex);
-            KMS_EXCEPTION_ASSERT(lBI.second, APPLICATION_ERROR, lMsg, "");
+            if (!lBI.second)
+            {
+                sprintf_s(lMsg, "Line %u  A function already exist at index %u", aLineNo, lIndex);
+                KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
+            }
         }
 
         ::Console::Stats(GetCount(), "functions");
@@ -230,9 +237,11 @@ namespace TRiLOGI
             char         lName[NAME_LENGTH];
 
             auto lRet = swscanf_s(lLine, L"%u,%S", &lIndex, lName SizeInfo(lName));
-
-            sprintf_s(lMsg, "Line %u  Corrupted PC6 file", aLineNo);
-            KMS_EXCEPTION_ASSERT(2 == lRet, APPLICATION_ERROR, lMsg, lRet);
+            if (2 != lRet)
+            {
+                sprintf_s(lMsg, "Line %u  Corrupted PC6 file", aLineNo);
+                KMS_EXCEPTION(APPLICATION_ERROR, lMsg, lRet);
+            }
 
             auto lFunction = Find_ByIndex(lIndex);
             if (NULL == lFunction)
@@ -240,17 +249,21 @@ namespace TRiLOGI
                 lFunction = new Function(lIndex, 0);
 
                 auto lBI = mObjects_ByIndex.insert(ByIndex::value_type(lIndex, lFunction));
-
-                sprintf_s(lMsg, "Line %u  A function already exist at index %u", aLineNo, lIndex);
-                KMS_EXCEPTION_ASSERT(lBI.second, APPLICATION_ERROR, lMsg, "");
+                if (!lBI.second)
+                {
+                    sprintf_s(lMsg, "Line %u  A function already exist at index %u", aLineNo, lIndex);
+                    KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
+                }
             }
 
             lFunction->SetName(lName, lLineNo);
 
             auto lBI = mObjects_ByName.insert(ByName::value_type(lName, lFunction));
-
-            sprintf_s(lMsg, "Line %u  A function named \"%s\" already exist", lLineNo, lName);
-            KMS_EXCEPTION_ASSERT(lBI.second, APPLICATION_ERROR, lMsg, "");
+            if (!lBI.second)
+            {
+                sprintf_s(lMsg, "Line %u  A function named \"%s\" already exist", lLineNo, lName);
+                KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
+            }
         }
 
         ::Console::Stats(GetCount(), "function names");
@@ -280,8 +293,8 @@ namespace TRiLOGI
                 lCount++;
                 lFunction->AddFlags(Object::FLAG_NOT_USED);
 
-                ::Console::Warning_Begin(lFunction->GetLineNo());
-                gConsole.OutputStream() << "The function named \"" << lName << "\" (" << lFunction->GetIndex() << ") is not used";
+                ::Console::Warning_Begin(lFunction->GetLineNo())
+                    << "The function named \"" << lName << "\" (" << lFunction->GetIndex() << ") is not used";
                 ::Console::Warning_End();
                 break;
             }
@@ -289,8 +302,8 @@ namespace TRiLOGI
 
         if (0 < lCount)
         {
-            ::Console::Warning_Begin();
-            gConsole.OutputStream() << lCount << " unused functions";
+            ::Console::Warning_Begin()
+                << lCount << " unused functions";
             ::Console::Warning_End();
         }
     }
