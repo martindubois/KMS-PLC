@@ -4,6 +4,7 @@
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
 // File      Common/TRiLOGI/ConstantList.h
+// Status    TEST
 
 #pragma once
 
@@ -15,7 +16,6 @@ namespace TRiLOGI
 {
 
     class Constant;
-    class Object;
 
     class ConstantList
     {

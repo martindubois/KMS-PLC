@@ -4,6 +4,7 @@
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
 // File      Common/TRiLOGI/CounterList.h
+// Status    TEST
 
 #pragma once
 
@@ -12,8 +13,6 @@
 
 namespace TRiLOGI
 {
-
-    class Counter;
 
     class CounterList : public ObjectList
     {

@@ -4,6 +4,7 @@
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
 // File      Common/TRiLOGI/TimerList.h
+// Status    TEST
 
 #pragma once
 
@@ -12,8 +13,6 @@
 
 namespace TRiLOGI
 {
-
-    class Timer;
 
     class TimerList : public ObjectList
     {
