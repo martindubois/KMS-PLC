@@ -34,6 +34,7 @@ static const Cfg::MetaData MD_HEADER_FILE     {"HeaderFile = {Path}.h"};
 static const Cfg::MetaData MD_HEADER_PREFIX   {"HeaderPrefix = {Prefix}"};
 static const Cfg::MetaData MD_PUBLIC_DEFS     ("PublicDefs += {Path}.txt");
 static const Cfg::MetaData MD_SOURCES         ("Sources += {Path}.PC6.txt");
+static const Cfg::MetaData MD_TOOL_CONFIG     {"HeaderFile = {Path}.cfg"};
 
 // Static function declarations
 // //////////////////////////////////////////////////////////////////////////
@@ -58,6 +59,7 @@ namespace TRiLOGI
         AddEntry("HeaderPrefix"  , &mHeaderPrefix  , false, &MD_HEADER_PREFIX);
         AddEntry("PublicDefs"    , &mPublicDefs    , false, &MD_PUBLIC_DEFS);
         AddEntry("Sources"       , &mSources       , false, &MD_SOURCES);
+        AddEntry("ToolConfig"    , &mToolConfig    , false, &MD_TOOL_CONFIG);
     }
 
     bool Project::IsValid() const { return 0 < mFile.GetLineCount(); }
@@ -107,42 +109,20 @@ namespace TRiLOGI
         if (0 < mExported.GetLength())
         {
             ::Console::Progress_Begin("TRiLOGY", "Exporting", mExported.Get());
-
-            mFile.Write_ASCII(File::Folder::CURRENT, mExported.Get());
-
+            {
+                mFile.Write_ASCII(File::Folder::CURRENT, mExported.Get());
+            }
             ::Console::Progress_End("Exported");
         }
 
         if (0 < mHeaderFile.GetLength())
         {
-            auto lFileName = mHeaderFile.Get();
-            assert(nullptr != lFileName);
+            Export_HeaderFile();
+        }
 
-            std::ofstream lFile(lFileName);
-            if (!lFile.is_open())
-            {
-                char lMsg[64 + PATH_LENGTH];
-                sprintf_s(lMsg, "Cannot open \"%s\" for writing (NOT TESTED)", lFileName);
-                KMS_EXCEPTION(APPLICATION_USER_ERROR, lMsg, "");
-            }
-
-            lFile << "\n";
-            lFile << "// File  " << lFileName << "\n";
-            lFile << "\n";
-            lFile << "// Generated be KMS-PLC.exe version " << VERSION;
-            lFile << "\n";
-            lFile << "#pragma once\n";
-            lFile << "\n";
-
-            auto lPrefix = mHeaderPrefix.Get();
-            assert(nullptr != lPrefix);
-
-            for (const auto& lAddr : mPublicAddresses)
-            {
-                lFile << "#define " << lPrefix << lAddr.GetName() << " (" << lAddr.GetAddress() << ")\n";
-            }
-
-            lFile.close();
+        if (0 < mToolConfig.GetLength())
+        {
+            Export_ToolConfig();
         }
     }
 
@@ -282,9 +262,9 @@ namespace TRiLOGI
         if ((0 < mFileName.GetLength()) && File::Folder::CURRENT.DoesFileExist(mFileName.Get()))
         {
             ::Console::Progress_Begin("TRiLOGY", "Reading", mFileName.Get());
-
-            mFile.Read(File::Folder::CURRENT, mFileName.Get());
-
+            {
+                mFile.Read(File::Folder::CURRENT, mFileName.Get());
+            }
             ::Console::Progress_End("Read");
         }
     }
@@ -340,18 +320,18 @@ namespace TRiLOGI
         if (0 < mFile.GetLineCount())
         {
             ::Console::Progress_Begin("TRiLOGY", "Verifying", mFileName.Get());
+            {
+                // TODO For the verification, use a version of mFile_PC6 without
+                //      comment
 
-            // TODO For the verification, use a version of mFile_PC6 without
-            //      comment
-
-            mCounters  .Verify(mFile);
-            mDefines   .Verify(mFile);
-            mFunctions .Verify(mFile);
-            mInputs    .Verify(mFile);
-            mOutputs   .Verify(mFile);
-            mRelays    .Verify(mFile);
-            mTimers    .Verify(mFile);
-
+                mCounters  .Verify(mFile);
+                mDefines   .Verify(mFile);
+                mFunctions .Verify(mFile);
+                mInputs    .Verify(mFile);
+                mOutputs   .Verify(mFile);
+                mRelays    .Verify(mFile);
+                mTimers    .Verify(mFile);
+            }
             ::Console::Progress_End("Verified");
         }
     }
@@ -415,14 +395,14 @@ namespace TRiLOGI
     void Project::Write()
     {
         ::Console::Progress_Begin("TRiLOGY", "Writing");
-
-        if (File::Folder::CURRENT.DoesFileExist(mFileName.Get()))
         {
-            File::Folder::CURRENT.Backup(mFileName.Get(), File::Folder::FLAG_BACKUP_RENAME);
+            if (File::Folder::CURRENT.DoesFileExist(mFileName.Get()))
+            {
+                File::Folder::CURRENT.Backup(mFileName.Get(), File::Folder::FLAG_BACKUP_RENAME);
+            }
+
+            mFile.Write(File::Folder::CURRENT, mFileName.Get(), L"\r\n");
         }
-
-        mFile.Write(File::Folder::CURRENT, mFileName.Get(), L"\r\n");
-
         ::Console::Progress_End("Written");
     }
 
@@ -532,6 +512,80 @@ namespace TRiLOGI
         mFile.AddLine(L"~END_BREAKPOINTS~");
     }
 
+    void Project::Export_HeaderFile()
+    {
+        auto lFileName = mHeaderFile.Get();
+        assert(nullptr != lFileName);
+
+        ::Console::Progress_Begin("TRiLOGY", "Export", lFileName);
+        {
+            std::ofstream lFile(lFileName);
+            if (!lFile.is_open())
+            {
+                char lMsg[64 + PATH_LENGTH];
+                sprintf_s(lMsg, "Cannot open \"%s\" for writing", lFileName);
+                KMS_EXCEPTION(APPLICATION_USER_ERROR, lMsg, "");
+            }
+
+            lFile << "\n";
+            lFile << "// File  " << lFileName << "\n";
+            lFile << "\n";
+            lFile << "// Generated by KMS-PLC.exe version " << VERSION;
+            lFile << "\n";
+            lFile << "#pragma once\n";
+            lFile << "\n";
+
+            auto lPrefix = mHeaderPrefix.Get();
+            assert(nullptr != lPrefix);
+
+            for (const auto& lAddr : mPublicAddresses)
+            {
+                lFile << "#define " << lPrefix << lAddr.GetName() << " (" << lAddr.GetAddress() << ")\n";
+            }
+
+            lFile.close();
+        }
+        ::Console::Progress_End("Exported");
+    }
+
+    void Project::Export_ToolConfig()
+    {
+        auto lFileName = mToolConfig.Get();
+        assert(nullptr != lFileName);
+
+        ::Console::Progress_Begin("TRiLOGY", "Export", lFileName);
+        {
+            std::ofstream lFile(lFileName);
+            if (!lFile.is_open())
+            {
+                char lMsg[64 + PATH_LENGTH];
+                sprintf_s(lMsg, "Cannot open \"%s\" for writing", lFileName);
+                KMS_EXCEPTION(APPLICATION_USER_ERROR, lMsg, "");
+            }
+
+            lFile << "\n";
+            lFile << "# File  " << lFileName << "\n";
+            lFile << "\n";
+            lFile << "# Generated by KMS-PLC.exe version " << VERSION;
+            lFile << "\n";
+
+            for (const auto& lAddr : mPublicAddresses)
+            {
+                auto lA = lAddr.GetAddress();
+                auto lN = lAddr.GetName();
+
+                switch (lAddr.GetType())
+                {
+                case AddressType::MODBUS_RTU_1X: lFile << "Coils."            << lN << " = " << lA << "\n"; break;
+                case AddressType::MODBUS_RTU_4X: lFile << "HoldingRegisters." << lN << " = " << lA << "\n"; break;
+                }
+            }
+
+            lFile.close();
+        }
+        ::Console::Progress_End("Exported");
+    }
+
     unsigned int Project::ParseNothing(unsigned int aLineNo)
     {
         assert(0 < aLineNo);
@@ -555,39 +609,39 @@ namespace TRiLOGI
     void Project::ParsePublicDef(const char* aFileName)
     {
         ::Console::Progress_Begin("TRiLOGY", "Parsing", aFileName);
-
-        Text::File_ASCII lFile;
-
-        lFile.Read(File::Folder::CURRENT, aFileName);
-
-        lFile.RemoveEmptyLines();
-        lFile.RemoveComments_Script();
-
-        for (auto lIt = lFile.mLines.begin(); lIt != lFile.mLines.end(); lIt++)
         {
-            char lName   [NAME_LENGTH];
-            char lPrivate[NAME_LENGTH];
-            char lPublic [NAME_LENGTH];
-            char lRegEx  [NAME_LENGTH];
+            Text::File_ASCII lFile;
 
-            if (1 == sscanf_s(lIt->c_str(), "ADDRESSES %s", lRegEx SizeInfo(lRegEx)))
+            lFile.Read(File::Folder::CURRENT, aFileName);
+
+            lFile.RemoveEmptyLines();
+            lFile.RemoveComments_Script();
+
+            for (auto lIt = lFile.mLines.begin(); lIt != lFile.mLines.end(); lIt++)
             {
-                AddPublicAddresses(lRegEx);
-            }
-            else if (2 == sscanf_s(lIt->c_str(), "ADDRESS %[^ \n\r\t] %s", lPrivate SizeInfo(lPrivate), lPublic SizeInfo(lPublic)))
-            {
-                AddPublicAddress(lPrivate, lPublic);
-            }
-            else if (1 == sscanf_s(lIt->c_str(), "ADDRESS %s", lName SizeInfo(lName)))
-            {
-                AddPublicAddress(lName, lName);
-            }
-            else
-            {
-                ::Console::Warning_IgnoredLine(lIt->GetUserLineNo(), lIt->c_str());
+                char lName   [NAME_LENGTH];
+                char lPrivate[NAME_LENGTH];
+                char lPublic [NAME_LENGTH];
+                char lRegEx  [NAME_LENGTH];
+
+                if (1 == sscanf_s(lIt->c_str(), "ADDRESSES %s", lRegEx SizeInfo(lRegEx)))
+                {
+                    AddPublicAddresses(lRegEx);
+                }
+                else if (2 == sscanf_s(lIt->c_str(), "ADDRESS %[^ \n\r\t] %s", lPrivate SizeInfo(lPrivate), lPublic SizeInfo(lPublic)))
+                {
+                    AddPublicAddress(lPrivate, lPublic);
+                }
+                else if (1 == sscanf_s(lIt->c_str(), "ADDRESS %s", lName SizeInfo(lName)))
+                {
+                    AddPublicAddress(lName, lName);
+                }
+                else
+                {
+                    ::Console::Warning_IgnoredLine(lIt->GetUserLineNo(), lIt->c_str());
+                }
             }
         }
-
         ::Console::Progress_End("Parsed");
     }
 

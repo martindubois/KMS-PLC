@@ -5,5 +5,6 @@
 # Product   KMS-PLC
 # File      Tests/Test06/.gitignore
 
+/PLC.cfg
 /PLC.h
 /PLC.PC6

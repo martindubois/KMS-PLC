@@ -66,6 +66,7 @@ namespace TRiLOGI
         KMS::DI::String_Expand mHeaderPrefix;
         KMS::DI::Array         mPublicDefs;
         KMS::DI::Array         mSources;
+        KMS::DI::String_Expand mToolConfig;
 
     private:
 
@@ -77,6 +78,9 @@ namespace TRiLOGI
         bool Apply();
 
         void Create();
+
+        void Export_HeaderFile();
+        void Export_ToolConfig();
 
         unsigned int ParseNothing(unsigned int aLineNo);
 
