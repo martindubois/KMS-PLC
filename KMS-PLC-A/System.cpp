@@ -34,7 +34,7 @@ using namespace KMS;
 int System::Main(int aCount, const char** aVector)
 {
     assert(1 <= aCount);
-    assert(NULL != aVector);
+    assert(nullptr != aVector);
 
     int lResult = __LINE__;
 
@@ -89,7 +89,7 @@ void System::Import()
     mTRiLOGI.Import();
 
     const AddressList* lAL = mTRiLOGI.GetPublicAddresses();
-    if ((NULL != lAL) && (0 < lAL->size()))
+    if ((nullptr != lAL) && (0 < lAL->size()))
     {
         mEBPro.Import(*lAL);
     }
@@ -152,7 +152,7 @@ void System::Write() { mTRiLOGI.Write(); }
 
 void System::DisplayHelp(FILE* aOut) const
 {
-    assert(NULL != aOut);
+    assert(nullptr != aOut);
 
     fprintf(aOut,
         "Clean\n"
@@ -167,7 +167,7 @@ void System::DisplayHelp(FILE* aOut) const
 
 void System::ExecuteCommand(const char* aC)
 {
-    assert(NULL != aC);
+    assert(nullptr != aC);
 
     if      (0 == strcmp("Clean"    , aC)) { Clean    (); }
     else if (0 == strcmp("Edit emtp", aC)) { Edit_emtp(); }

@@ -52,7 +52,7 @@ namespace EBPro
 
     Address::Address(const char* aLine, unsigned int aLineNo) : mType(AddressType::UNKNOWN)
     {
-        assert(NULL != aLine);
+        assert(nullptr != aLine);
 
         char lAddress [NAME_LENGTH];
         char lComment [LINE_LENGTH];
@@ -116,7 +116,7 @@ namespace EBPro
         , mName(aName)
         , mType(aType)
     {
-        assert(NULL != aName);
+        assert(nullptr != aName);
         assert(AddressType::QTY > aType);
 
         char lAddr[32];
@@ -134,9 +134,9 @@ namespace EBPro
         , mName(aName)
         , mType(aType)
     {
-        assert(NULL != aName);
+        assert(nullptr != aName);
         assert(AddressType::QTY > aType);
-        assert(NULL != aAddr);
+        assert(nullptr != aAddr);
     }
 
     const char* Address::GetAddress() const { return mAddress.c_str(); }
@@ -150,7 +150,7 @@ namespace EBPro
     // NOT TESTED
     void Address::GetLine(char* aOut, unsigned int aOutSize_byte) const
     {
-        assert(NULL != aOut);
+        assert(nullptr != aOut);
 
         auto lType = static_cast<unsigned int>(mType);
 
@@ -172,7 +172,7 @@ namespace EBPro
     bool Address::Set(AddressType aType, const char* aAddr)
     {
         assert(AddressType::QTY > aType);
-        assert(NULL != aAddr);
+        assert(nullptr != aAddr);
 
         if (mType != aType)
         {
@@ -199,8 +199,8 @@ namespace EBPro
 
 AddressType ToAddressType(const char* aType, const char* aSubType)
 {
-    assert(NULL != aType);
-    assert(NULL != aSubType);
+    assert(nullptr != aType);
+    assert(nullptr != aSubType);
 
     unsigned int lResult;
 

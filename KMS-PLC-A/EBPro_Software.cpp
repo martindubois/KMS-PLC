@@ -26,11 +26,11 @@ namespace EBPro
     // Public
     // //////////////////////////////////////////////////////////////////////
 
-    Software::Software() : mProcess(NULL) {}
+    Software::Software() : mProcess(nullptr) {}
 
     Software::~Software()
     {
-        if (NULL != mProcess)
+        if (nullptr != mProcess)
         {
             mProcess->Detach();
 
@@ -40,8 +40,8 @@ namespace EBPro
 
     void Software::ImportAddresses(const char* aImp, const char* aExp)
     {
-        assert(NULL != aImp);
-        assert(NULL != aExp);
+        assert(nullptr != aImp);
+        assert(nullptr != aExp);
 
         Instruction_Begin()
 
@@ -74,8 +74,8 @@ namespace EBPro
 
     void Software::ImportFunctions(const char* aImp, const char* aExp)
     {
-        assert(NULL != aImp);
-        assert(NULL != aExp);
+        assert(nullptr != aImp);
+        assert(nullptr != aExp);
 
         Instruction_Begin()
 
@@ -104,8 +104,8 @@ namespace EBPro
 
     void Software::ImportLabels(const char* aImp, const char* aExp)
     {
-        assert(NULL != aImp);
-        assert(NULL != aExp);
+        assert(nullptr != aImp);
+        assert(nullptr != aExp);
 
         Instruction_Begin()
 
@@ -130,7 +130,7 @@ namespace EBPro
 
     void Software::Open(const char* aFile)
     {
-        if (NULL != mProcess)
+        if (nullptr != mProcess)
         {
             if (mProcess->IsRunning())
             {

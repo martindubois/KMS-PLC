@@ -40,16 +40,16 @@ bool Function::operator != (const Function& aB) const
 
 void Function::AddLine(const char* aLine)
 {
-    assert(NULL != aLine);
+    assert(nullptr != aLine);
 
     mLines.push_back(aLine);
 }
 
 void Function::Parse(Text::File_ASCII* aFile, Text::File_ASCII::Internal::iterator* aIt, const char* aEndMark)
 {
-    assert(NULL != aFile);
-    assert(NULL != aIt);
-    assert(NULL != aEndMark);
+    assert(nullptr != aFile);
+    assert(nullptr != aIt);
+    assert(nullptr != aEndMark);
 
     auto lEndMarkLen = strlen(aEndMark);
 

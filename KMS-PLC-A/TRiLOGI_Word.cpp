@@ -30,7 +30,7 @@ namespace TRiLOGI
 
     void Word::GetLine(wchar_t* aOut, unsigned int aOutSize_byte) const
     {
-        assert(NULL != aOut);
+        assert(nullptr != aOut);
 
         unsigned int lOutLen = aOutSize_byte / sizeof(wchar_t);
 

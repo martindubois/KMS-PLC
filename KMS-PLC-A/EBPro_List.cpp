@@ -34,7 +34,7 @@ namespace EBPro
 
     List::List(Software* aSoftware) : mSoftware(aSoftware)
     {
-        assert(NULL != aSoftware);
+        assert(nullptr != aSoftware);
 
         mSources.SetCreator(DI::String_Expand::Create);
 
@@ -52,7 +52,7 @@ namespace EBPro
         for (const auto& lEntry : mSources.mInternal)
         {
             auto lSource = dynamic_cast<const DI::String*>(lEntry.Get());
-            assert(NULL != lSource);
+            assert(nullptr != lSource);
 
             ::Console::Progress_Begin("EBPro", "Importing", lSource->Get());
 
@@ -114,7 +114,7 @@ namespace EBPro
         for (auto& lEntry : mSources.mInternal)
         {
             auto lSource = dynamic_cast<const DI::String*>(lEntry.Get());
-            assert(NULL != lSource);
+            assert(nullptr != lSource);
 
             if (!File::Folder::CURRENT.DoesFileExist(lSource->Get()))
             {
@@ -133,7 +133,7 @@ namespace EBPro
     // //////////////////////////////////////////////////////////////////////
 
     const char* List::GetExported() const { return mExported.Get(); }
-    Software  * List::GetSoftware()       { assert(NULL != mSoftware); return mSoftware; }
+    Software  * List::GetSoftware()       { assert(nullptr != mSoftware); return mSoftware; }
     const char* List::GetToImport() const { return mToImport.Get(); }
 
     bool List::IsExportedConfigured() const { return 0 < mExported.GetLength(); }

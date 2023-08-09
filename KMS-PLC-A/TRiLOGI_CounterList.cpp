@@ -37,7 +37,7 @@ namespace TRiLOGI
 
     void CounterList::AddObject(const wchar_t* aLine, unsigned int aLineNo, unsigned int aFlags)
     {
-        assert(NULL != aLine);
+        assert(nullptr != aLine);
 
         unsigned int lIndex;
         unsigned int lInit;
@@ -58,12 +58,12 @@ namespace TRiLOGI
 
     bool CounterList::Import(const char* aName, unsigned int aInit)
     {
-        assert(NULL != aName);
+        assert(nullptr != aName);
 
         Counter* lCounter;
 
         auto lObject = FindObject_ByName(aName);
-        if (NULL == lObject)
+        if (nullptr == lObject)
         {
             ::Console::Change("New counter - ", aName);
 
@@ -79,7 +79,7 @@ namespace TRiLOGI
         }
 
         lCounter = dynamic_cast<Counter*>(lObject);
-        assert(NULL != lCounter);
+        assert(nullptr != lCounter);
 
         return lCounter->SetInit(aInit, GetFile_PC6());
     }

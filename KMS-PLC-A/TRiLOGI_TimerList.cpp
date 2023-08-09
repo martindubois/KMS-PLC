@@ -26,10 +26,10 @@ namespace TRiLOGI
 
     bool TimerList::Import(const char* aName, unsigned int aInit)
     {
-        assert(NULL != aName);
+        assert(nullptr != aName);
 
         auto lObject = FindObject_ByName(aName);
-        if (NULL == lObject)
+        if (nullptr == lObject)
         {
             ::Console::Change("New timer", aName);
 
@@ -46,7 +46,7 @@ namespace TRiLOGI
         }
 
         auto lTimer = dynamic_cast<Timer*>(lObject);
-        assert(NULL != lTimer);
+        assert(nullptr != lTimer);
 
         return lTimer->SetInit(aInit, GetFile_PC6());
     }
@@ -58,7 +58,7 @@ namespace TRiLOGI
 
     void TimerList::AddObject(const wchar_t* aLine, unsigned int aLineNo, unsigned int aFlags)
     {
-        assert(NULL != aLine);
+        assert(nullptr != aLine);
 
         unsigned int lIndex;
         unsigned int lInit;

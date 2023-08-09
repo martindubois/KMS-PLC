@@ -38,7 +38,7 @@ KMS_TEST(TRiLOGI_BitList_Base, "TRiLOGY_BitList_Base", "Auto", sTest_Base)
     // SetFile
 
     // FindObject_ByIndex
-    KMS_TEST_ASSERT(NULL == lBL_C.FindObject_ByIndex(0));
+    KMS_TEST_ASSERT(nullptr == lBL_C.FindObject_ByIndex(0));
 
     // FindObject_ByName
 

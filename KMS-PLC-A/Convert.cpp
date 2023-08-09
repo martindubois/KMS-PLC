@@ -15,8 +15,8 @@
 
 void ToExportableString(const wchar_t* aIn, wchar_t* aOut)
 {
-    assert(NULL != aIn);
-    assert(NULL != aOut);
+    assert(nullptr != aIn);
+    assert(nullptr != aOut);
 
     size_t lLength = wcslen(aIn);
     size_t lOut = 0;
@@ -54,8 +54,8 @@ void ToExportableString(const wchar_t* aIn, wchar_t* aOut)
 
 void ToImportableString(const wchar_t* aIn, wchar_t* aOut)
 {
-    assert(NULL != aIn);
-    assert(NULL != aOut);
+    assert(nullptr != aIn);
+    assert(nullptr != aOut);
 
     size_t lLength = wcslen(aIn);
     size_t lOut = 0;

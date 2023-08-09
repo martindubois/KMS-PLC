@@ -28,12 +28,12 @@ namespace TRiLOGI
 
     void BitList::GetAddresses(const std::regex& aRegEx, AddressList* aOut) const
     {
-        assert(NULL != aOut);
+        assert(nullptr != aOut);
 
         for (auto lVT : mObjects_ByIndex)
         {
             auto lBit = lVT.second;
-            assert(NULL != lBit);
+            assert(nullptr != lBit);
 
             if ((!lBit->TestFlag(Object::FLAG_NOT_USED)) && std::regex_match(lBit->GetName(), aRegEx))
             {
@@ -44,11 +44,11 @@ namespace TRiLOGI
 
     bool BitList::Import(const char* aName)
     {
-        assert(NULL != aName);
+        assert(nullptr != aName);
 
         auto lObject = FindObject_ByName(aName);
 
-        bool lResult = NULL == lObject;
+        bool lResult = nullptr == lObject;
         if (lResult)
         {
             ::Console::Change("New", GetElementName(), aName);
@@ -68,13 +68,13 @@ namespace TRiLOGI
 
     bool BitList::Import(const char* aName, unsigned int aIndex)
     {
-        assert(NULL != aName);
+        assert(nullptr != aName);
 
         auto lObject = FindObject_ByName(aName);
-        if (NULL == lObject)
+        if (nullptr == lObject)
         {
             lObject = FindObject_ByIndex(aIndex);
-            if (NULL == lObject)
+            if (nullptr == lObject)
             {
                 ::Console::Change("New", GetElementName(), aName);
 

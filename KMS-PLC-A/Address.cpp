@@ -18,7 +18,7 @@
 Address::Address(const char* aName, AddressType aType, uint16_t aAddr)
     : mAddr(aAddr), mName(aName), mType(aType)
 {
-    assert(NULL != aName);
+    assert(nullptr != aName);
 }
 
 unsigned int Address::GetAddress() const { return mAddr; }

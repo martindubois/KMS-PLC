@@ -22,7 +22,7 @@ namespace TRiLOGI
 
     void ConstantList::AddConstant(Constant* aConstant)
     {
-        assert(NULL != aConstant);
+        assert(nullptr != aConstant);
 
         auto lBN = mConstants_ByName.insert(ByName::value_type(aConstant->GetName(), aConstant));
         if (!lBN.second)
@@ -41,7 +41,7 @@ namespace TRiLOGI
     {
         for (auto& lVT : mConstants_ByName)
         {
-            assert(NULL != lVT.second);
+            assert(nullptr != lVT.second);
 
             lVT.second->Verify();
         }

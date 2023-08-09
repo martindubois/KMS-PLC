@@ -25,7 +25,7 @@ namespace EBPro
 
     bool LabelState::Set(unsigned int aLanguage, const wchar_t* aText)
     {
-        assert(NULL != aText);
+        assert(nullptr != aText);
 
         bool lResult = false;
 
@@ -59,7 +59,7 @@ namespace EBPro
 
     void LabelState::Export(FILE* aFile, const DI::Array& aLanguages) const
     {
-        assert(NULL != aFile);
+        assert(nullptr != aFile);
 
         fwprintf(aFile, L"    STATE\n");
 
@@ -70,10 +70,10 @@ namespace EBPro
             if (0 < lStr.size())
             {
                 const DI::Object* lObj = aLanguages.GetEntry_R(lIndex);
-                if (NULL != lObj)
+                if (nullptr != lObj)
                 {
                     const DI::String* lLanguage = dynamic_cast<const DI::String*>(lObj);
-                    assert(NULL != lLanguage);
+                    assert(nullptr != lLanguage);
 
                     wchar_t lExportable[2048];
 

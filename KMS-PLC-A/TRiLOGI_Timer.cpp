@@ -45,7 +45,7 @@ namespace TRiLOGI
 
     void Timer::GetLine(wchar_t* aOut, unsigned int aOutSize_byte) const
     {
-        assert(NULL != aOut);
+        assert(nullptr != aOut);
 
         swprintf_s(aOut SizeInfoV(aOutSize_byte / sizeof(wchar_t)), L"%u,%S %u", GetIndex(), GetName(), mInit);
     }

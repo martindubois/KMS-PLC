@@ -29,7 +29,7 @@ namespace TRiLOGI
 
     bool ObjectList::Apply()
     {
-        assert(NULL != mFile_PC6);
+        assert(nullptr != mFile_PC6);
 
         auto lResult = false;
 
@@ -52,11 +52,11 @@ namespace TRiLOGI
 
     void ObjectList::Clear()
     {
-        mFile_PC6 = NULL;
+        mFile_PC6 = nullptr;
 
         for (const auto& lVT : mObjects_ByIndex)
         {
-            assert(NULL != lVT.second);
+            assert(nullptr != lVT.second);
 
             delete lVT.second;
         }
@@ -69,7 +69,7 @@ namespace TRiLOGI
 
     void ObjectList::SetFile(Text::File_UTF16* aFile_PC6, unsigned int aLineNo_End)
     {
-        assert(NULL != aFile_PC6);
+        assert(nullptr != aFile_PC6);
         assert(0 < aLineNo_End);
 
         mFile_PC6   = aFile_PC6;
@@ -81,10 +81,10 @@ namespace TRiLOGI
         auto lIt = mObjects_ByIndex.find(aIndex);
         if (mObjects_ByIndex.end() == lIt)
         {
-            return NULL;
+            return nullptr;
         }
 
-        assert(NULL != lIt->second);
+        assert(nullptr != lIt->second);
 
         return lIt->second;
     }
@@ -94,10 +94,10 @@ namespace TRiLOGI
         auto lIt = mObjects_ByIndex.find(aIndex);
         if (mObjects_ByIndex.end() == lIt)
         {
-            return NULL;
+            return nullptr;
         }
 
-        assert(NULL != lIt->second);
+        assert(nullptr != lIt->second);
 
         return lIt->second;
     }
@@ -107,24 +107,24 @@ namespace TRiLOGI
         auto lIt = mObjects_ByName.find(aName);
         if (mObjects_ByName.end() == lIt)
         {
-            return NULL;
+            return nullptr;
         }
 
-        assert(NULL != lIt->second);
+        assert(nullptr != lIt->second);
 
         return lIt->second;
     }
 
     unsigned int ObjectList::Clean()
     {
-        assert(NULL != mFile_PC6);
+        assert(nullptr != mFile_PC6);
 
         unsigned int lResult = 0;
 
         for (auto lIt = mObjects_ByIndex.rbegin(); lIt != mObjects_ByIndex.rend(); lIt++)
         {
             auto lObject = lIt->second;
-            assert(NULL != lObject);
+            assert(nullptr != lObject);
 
             if (lObject->TestFlag(Object::FLAG_NOT_USED))
             {
@@ -145,7 +145,7 @@ namespace TRiLOGI
         for (; lLineNo < lLineCount; lLineNo++)
         {
             auto lLine = aFile_PC6->GetLine(lLineNo);
-            assert(NULL != lLine);
+            assert(nullptr != lLine);
 
             if (L'~' == lLine[0])
             {
@@ -164,7 +164,7 @@ namespace TRiLOGI
 
     void ObjectList::Verify(const Text::File_UTF16& aFile_PC6)
     {
-        assert(NULL != mElementName);
+        assert(nullptr != mElementName);
 
         std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> lConverter;
 
@@ -173,12 +173,12 @@ namespace TRiLOGI
         for (auto& lVT : mObjects_ByIndex)
         {
             auto lObj = lVT.second;
-            assert(NULL != lObj);
+            assert(nullptr != lObj);
 
             auto lIndex  = lObj->GetIndex();
             auto lLineNo = lObj->GetLineNo();
             auto lName   = lObj->GetName();
-            assert(NULL != lName);
+            assert(nullptr != lName);
 
             switch (aFile_PC6.CountOccurrence(lConverter.from_bytes(lName).c_str()))
             {
@@ -223,9 +223,9 @@ namespace TRiLOGI
     // //////////////////////////////////////////////////////////////////////
 
     ObjectList::ObjectList(const char* aElementName, unsigned int aMaxQty)
-        : mElementName(aElementName), mFile_PC6(NULL), mLineNo_End(0), mMaxQty(aMaxQty)
+        : mElementName(aElementName), mFile_PC6(nullptr), mLineNo_End(0), mMaxQty(aMaxQty)
     {
-        assert(NULL != aElementName);
+        assert(nullptr != aElementName);
         assert(0 < aMaxQty);
     }
 
@@ -235,7 +235,7 @@ namespace TRiLOGI
 
     void ObjectList::AddObject(Object* aObject)
     {
-        assert(NULL != aObject);
+        assert(nullptr != aObject);
 
         char lMsg[64 + NAME_LENGTH];
 
@@ -258,7 +258,7 @@ namespace TRiLOGI
 
     void ObjectList::AddObject(const wchar_t* aLine, unsigned int aLineNo, unsigned int aFlags)
     {
-        assert(NULL != aLine);
+        assert(nullptr != aLine);
 
         unsigned int lIndex;
         char         lName[NAME_LENGTH];
@@ -279,8 +279,8 @@ namespace TRiLOGI
 
     void ObjectList::FindIndexAndLineNo(unsigned int* aIndex, unsigned int* aLineNo)
     {
-        assert(NULL != aIndex);
-        assert(NULL != aLineNo);
+        assert(nullptr != aIndex);
+        assert(nullptr != aLineNo);
         
         if (mMaxQty <= mObjects_ByIndex.size())
         {
@@ -328,8 +328,8 @@ namespace TRiLOGI
     // NOT TESTED
     void ObjectList::Replace(Object* aOld, Object* aNew)
     {
-        assert(NULL != aOld);
-        assert(NULL != aNew);
+        assert(nullptr != aOld);
+        assert(nullptr != aNew);
         
         auto lByIndex = mObjects_ByIndex.find(aOld->GetIndex());
         auto lByName  = mObjects_ByName .find(aOld->GetName ());

@@ -20,7 +20,7 @@ namespace EBPro
 
     void DataPtr::Write(FILE* aOut, const std::string& aIn)
     {
-        assert(NULL != aOut);
+        assert(nullptr != aOut);
 
         Write(aOut, static_cast<uint32_t>(aIn.size()));
 
@@ -29,14 +29,14 @@ namespace EBPro
 
     void DataPtr::Write(FILE* aOut, uint32_t aIn)
     {
-        assert(NULL != aOut);
+        assert(nullptr != aOut);
         
         fprintf(aOut, "%u ", aIn);
     }
 
     DataPtr::DataPtr(const char* aData, unsigned int aSize_byte) : mData(aData), mOffset_byte(0), mSize_byte(aSize_byte - 2)
     {
-        assert(NULL != aData);
+        assert(nullptr != aData);
         assert(2 <= aSize_byte);
     }
 
@@ -44,9 +44,9 @@ namespace EBPro
 
     void DataPtr::Read(std::string* aOut)
     {
-        assert(NULL != aOut);
+        assert(nullptr != aOut);
 
-        assert(NULL != mData);
+        assert(nullptr != mData);
 
         uint32_t lSize_byte;
 
@@ -69,9 +69,9 @@ namespace EBPro
 
     void DataPtr::Read(uint32_t* aOut)
     {
-        assert(NULL != aOut);
+        assert(nullptr != aOut);
 
-        assert(NULL != mData);
+        assert(nullptr != mData);
 
         const char* lStart = mData + mOffset_byte;
 

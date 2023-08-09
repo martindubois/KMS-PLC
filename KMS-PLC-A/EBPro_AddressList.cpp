@@ -57,7 +57,7 @@ namespace EBPro
                 char lLine[LINE_LENGTH];
 
                 auto lAddress = Find_ByName(lA.GetName());
-                if (NULL == lAddress)
+                if (nullptr == lAddress)
                 {
                     lChanged = true;
 
@@ -145,7 +145,7 @@ namespace EBPro
     {
         for (auto lAddress : mAddresses)
         {
-            assert(NULL != lAddress);
+            assert(nullptr != lAddress);
 
             delete lAddress;
         }
@@ -203,16 +203,16 @@ namespace EBPro
 
     Address* AddressList::Find_ByName(const char* aName)
     {
-        assert(NULL != aName);
+        assert(nullptr != aName);
 
         auto lIt = mAddresses_ByName.find(aName);
         if (mAddresses_ByName.end() == lIt)
         {
             // NOT TESTED
-            return NULL;
+            return nullptr;
         }
 
-        assert(NULL != lIt->second);
+        assert(nullptr != lIt->second);
 
         return lIt->second;
     }
@@ -224,7 +224,7 @@ namespace EBPro
         char lLine[LINE_LENGTH];
 
         auto lAddress = Find_ByName(aName);
-        if (NULL == lAddress)
+        if (nullptr == lAddress)
         {
             ::Console::Change("New address (NOT TESTED)", aName);
 

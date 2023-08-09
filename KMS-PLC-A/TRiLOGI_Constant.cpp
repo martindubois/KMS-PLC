@@ -23,12 +23,12 @@ namespace TRiLOGI
     Constant::Constant(const char* aName, unsigned int aIndex, unsigned int aLineNo, const char* aValue, const char* aComment, unsigned int aFlags)
         : Object(aName, aIndex, aLineNo, aFlags), mComment(aComment), mValue(aValue)
     {
-        assert(NULL != aValue);
+        assert(nullptr != aValue);
     }
 
     bool Constant::SetValue(const char* aValue, Text::File_UTF16* aFile_PC6)
     {
-        assert(NULL != aValue);
+        assert(nullptr != aValue);
 
         bool lResult = (mValue != aValue);
         if (lResult)
@@ -61,7 +61,7 @@ namespace TRiLOGI
 
     void Constant::GetLine(wchar_t* aOut, unsigned int aOutSize_byte) const
     {
-        assert(NULL != aOut);
+        assert(nullptr != aOut);
 
         unsigned int lOutLen = aOutSize_byte / sizeof(wchar_t);
 

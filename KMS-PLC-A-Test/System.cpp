@@ -113,7 +113,7 @@ KMS_TEST(System_Case, "System_Case", "Auto", sTest_Case)
 
         lFolder.GetPath(KMS_PLC_CFG, lConfigFile, sizeof(lConfigFile));
 
-        if ((NULL != CASE_N[i].mToDelete) && lFolder.DoesFileExist(CASE_N[i].mToDelete))
+        if ((nullptr != CASE_N[i].mToDelete) && lFolder.DoesFileExist(CASE_N[i].mToDelete))
         {
             lFolder.Delete(CASE_N[i].mToDelete);
         }

@@ -40,7 +40,7 @@ namespace EBPro
 
     LabelList::LabelList(Software* aSoftware) : List(aSoftware)
     {
-        assert(NULL != aSoftware);
+        assert(nullptr != aSoftware);
 
         mLanguages.SetCreator(DI::String::Create);
 
@@ -65,7 +65,7 @@ namespace EBPro
                 KMS_EXCEPTION(APPLICATION_ERROR, lMsg, lErr);
             }
 
-            assert(NULL != lFile);
+            assert(nullptr != lFile);
 
             for (auto lLabel : mLabels)
             {
@@ -95,7 +95,7 @@ namespace EBPro
             sprintf_s(lMsg, "Cannot open \"%s\" for reading", lExported);
             KMS_EXCEPTION_ASSERT(0 == lErr, APPLICATION_ERROR, lMsg, lErr);
 
-            assert(NULL != lFile);
+            assert(nullptr != lFile);
 
             uint16_t lLabelCount;
 
@@ -136,7 +136,7 @@ namespace EBPro
             for (auto& lEntry : mLanguages.mInternal)
             {
                 auto lLanguage = dynamic_cast<const DI::String*>(lEntry.Get());
-                assert(NULL != lLanguage);
+                assert(nullptr != lLanguage);
 
                 if (2 != lLanguage->GetLength())
                 {
@@ -180,7 +180,7 @@ namespace EBPro
     {
         for (auto lLabel : mLabels)
         {
-            assert(NULL != lLabel);
+            assert(nullptr != lLabel);
 
             delete lLabel;
         }
@@ -200,10 +200,10 @@ namespace EBPro
         lFile.RemoveComments_Script();
         lFile.RemoveEmptyLines();
 
-        Label      * lLabel = NULL;
+        Label      * lLabel = nullptr;
         char         lMsg[64];
         bool         lResult = false;
-        LabelState * lState = NULL;
+        LabelState * lState = nullptr;
         unsigned int lStateCount;
 
         std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> lConverter;
@@ -216,7 +216,7 @@ namespace EBPro
             // TODO Support something else than 4 spaces.
             if (0 == strncmp("    STATE", lLine.c_str(), 9))
             {
-                if (NULL == lLabel)
+                if (nullptr == lLabel)
                 {
                     sprintf_s(lMsg, "Line %u  STATE outside of LABEL", lLine.GetUserLineNo());
                     KMS_EXCEPTION(APPLICATION_ERROR, lMsg, lLine.c_str());
@@ -230,11 +230,11 @@ namespace EBPro
                 lLabel = FindOrCreate(lText, &lResult);
                 lStateCount = 0;
 
-                assert(NULL != lLabel);
+                assert(nullptr != lLabel);
             }
             else if (2 == sscanf_s(lLine.c_str(), " %[a-z] %[^\n\r\t]", lLanguage SizeInfo(lLanguage), lText SizeInfo(lText)))
             {
-                if (NULL == lState)
+                if (nullptr == lState)
                 {
                     sprintf_s(lMsg, "Line %u  Text outside of STATE", lLine.GetUserLineNo());
                     KMS_EXCEPTION(APPLICATION_ERROR, lMsg, lLine.c_str());
@@ -269,7 +269,7 @@ namespace EBPro
             KMS_EXCEPTION(APPLICATION_ERROR, lMsg, lErr);
         }
 
-        assert(NULL != lFile);
+        assert(nullptr != lFile);
 
         auto lLabelCount = static_cast<uint16_t>(mLabels.size());
 
@@ -320,7 +320,7 @@ namespace EBPro
     {
         for (auto lLabel : mLabels)
         {
-            assert(NULL != lLabel);
+            assert(nullptr != lLabel);
 
             if (lLabel->mName == aName)
             {
@@ -328,20 +328,20 @@ namespace EBPro
             }
         }
 
-        return NULL;
+        return nullptr;
     }
 
     Label* LabelList::FindOrCreate(const char* aName, bool* aChanged)
     {
-        assert(NULL != aName);
-        assert(NULL != aChanged);
+        assert(nullptr != aName);
+        assert(nullptr != aChanged);
 
         std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> lConverter;
 
         std::wstring lName(lConverter.from_bytes(aName));
 
         auto lResult = Find(lName.c_str());
-        if (NULL == lResult)
+        if (nullptr == lResult)
         {
             ::Console::Change("New label", aName);
 
@@ -360,7 +360,7 @@ namespace EBPro
         for (auto& lEntry : mLanguages.mInternal)
         {
             auto lId = dynamic_cast<const DI::String*>(lEntry.Get());
-            assert(NULL != lId);
+            assert(nullptr != lId);
 
             if (*lId == aId)
             {

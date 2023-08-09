@@ -34,10 +34,10 @@ namespace TRiLOGI
 
     bool DefineList::ImportConstant(const char* aName, const char* aValue)
     {
-        assert(NULL != aName);
+        assert(nullptr != aName);
 
         auto lObject = FindObject_ByName(aName);
-        if (NULL == lObject)
+        if (nullptr == lObject)
         {
             ::Console::Change("New constant", aName);
 
@@ -56,7 +56,7 @@ namespace TRiLOGI
         }
 
         auto lConstant = dynamic_cast<Constant*>(lObject);
-        if (NULL == lConstant)
+        if (nullptr == lConstant)
         {
             ::Console::Error_Begin()
                 << "The name " << aName << " is already used for a word (NOT TESTED)";
@@ -69,10 +69,10 @@ namespace TRiLOGI
 
     bool DefineList::ImportWord(const char* aName)
     {
-        assert(NULL != aName);
+        assert(nullptr != aName);
 
         auto lObject = FindObject_ByName(aName);
-        if (NULL == lObject)
+        if (nullptr == lObject)
         {
             ::Console::Change("New word", aName);
 
@@ -89,7 +89,7 @@ namespace TRiLOGI
         }
 
         auto lWord = dynamic_cast<Word*>(lObject);
-        if (NULL == lWord)
+        if (nullptr == lWord)
         {
             ::Console::Error_Begin()
                 << "The name " << aName << " is already used for a constant (NOT TESTED)";
@@ -101,13 +101,13 @@ namespace TRiLOGI
 
     bool DefineList::ImportWord(const char* aName, unsigned int aOffset)
     {
-        assert(NULL != aName);
+        assert(nullptr != aName);
 
         auto lObject = FindObject_ByName(aName);
-        if (NULL == lObject)
+        if (nullptr == lObject)
         {
             auto lWord = mWords.Find_ByOffset(aOffset);
-            if (NULL != lWord)
+            if (nullptr != lWord)
             {
                 ::Console::Error_Begin()
                     << "The offset " << aOffset << " is already used";
@@ -132,7 +132,7 @@ namespace TRiLOGI
         }
 
         auto lWord = dynamic_cast<Word*>(lObject);
-        if (NULL == lWord)
+        if (nullptr == lWord)
         {
             ::Console::Error_Begin()
                 << "The name " << aName << " is already used for a constant (NOT TESTED)";
@@ -172,7 +172,7 @@ namespace TRiLOGI
 
     void DefineList::AddObject(const wchar_t* aLine, unsigned int aLineNo, unsigned int aFlags)
     {
-        assert(NULL != aLine);
+        assert(nullptr != aLine);
 
         unsigned int lIndex;
         char         lMsg[64];

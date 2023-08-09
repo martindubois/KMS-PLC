@@ -18,33 +18,33 @@
 
 void ::Console::Change(const char* aMsg, const char* aElement, const char* aName)
 {
-    assert(NULL != aMsg);
-    assert(NULL != aElement);
-    assert(NULL != aName);
+    assert(nullptr != aMsg);
+    assert(nullptr != aElement);
+    assert(nullptr != aName);
 
     gConsole.OutputStream() << KMS::Console::Color::BLUE << aMsg << " " << aElement << " - " << aName << KMS::Console::Color::WHITE << std::endl;
 }
 
 void ::Console::Change(const char* aMsg, const char* aName)
 {
-    assert(NULL != aMsg);
-    assert(NULL != aName);
+    assert(nullptr != aMsg);
+    assert(nullptr != aName);
 
     gConsole.OutputStream() << KMS::Console::Color::BLUE << aMsg << " - " << aName << KMS::Console::Color::WHITE << std::endl;
 }
 
 void ::Console::Change(const char* aMsg, const wchar_t* aName)
 {
-    assert(NULL != aMsg);
-    assert(NULL != aName);
+    assert(nullptr != aMsg);
+    assert(nullptr != aName);
 
     gConsole.OutputStream() << KMS::Console::Color::BLUE << aMsg << " - " << aName << KMS::Console::Color::WHITE << std::endl;
 }
 
 void ::Console::Change(const char* aMsg, const char* aName, const char* aFrom, const char* aTo)
 {
-    assert(NULL != aMsg);
-    assert(NULL != aName);
+    assert(nullptr != aMsg);
+    assert(nullptr != aName);
 
     gConsole.OutputStream() << KMS::Console::Color::BLUE;
     gConsole.OutputStream() << aMsg << " - " << aName << " (\"" << aFrom << "\" -> \"" << aTo << "\")";
@@ -53,7 +53,7 @@ void ::Console::Change(const char* aMsg, const char* aName, const char* aFrom, c
 
 void ::Console::Stats(uint64_t aValue, const char* aUnit)
 {
-    assert(NULL != aUnit);
+    assert(nullptr != aUnit);
 
     gConsole.OutputStream() << "    " << aValue << " " << aUnit << std::endl;
 }
@@ -94,24 +94,24 @@ void ::Console::Instruction_End() { gConsole.OutputStream() << KMS::Console::Col
 
 void ::Console::Progress_Begin(const char* aModule, const char* aMsg)
 {
-    assert(NULL != aModule);
-    assert(NULL != aMsg);
+    assert(nullptr != aModule);
+    assert(nullptr != aMsg);
 
     gConsole.OutputStream() << aModule << " - " << aMsg << " ..." << std::endl;
 }
 
 void ::Console::Progress_Begin(const char* aModule, const char* aMsg, const char* aFileName)
 {
-    assert(NULL != aModule);
-    assert(NULL != aMsg);
-    assert(NULL != aFileName);
+    assert(nullptr != aModule);
+    assert(nullptr != aMsg);
+    assert(nullptr != aFileName);
 
     gConsole.OutputStream() << aModule << " - " << aMsg << " " << aFileName << " ..." << std::endl;
 }
 
 void ::Console::Progress_End(const char* aMsg)
 {
-    assert(NULL != aMsg);
+    assert(nullptr != aMsg);
 
     gConsole.OutputStream() << aMsg << std::endl;
 }

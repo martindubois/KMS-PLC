@@ -81,7 +81,7 @@ namespace TRiLOGI
 
     bool FunctionList::Import(const char* aName, Text::File_ASCII* aFile, Text::File_ASCII::Internal::iterator* aIt)
     {
-        assert(NULL != aName);
+        assert(nullptr != aName);
 
         unsigned int lCodeBegin;
         unsigned int lCodeEnd;
@@ -90,7 +90,7 @@ namespace TRiLOGI
         unsigned int lLineNo;
 
         auto lFunction = Find_ByName(aName);
-        if (NULL == lFunction)
+        if (nullptr == lFunction)
         {
             lCodeBegin = mLineNo_End_Code;
             lCodeEnd   = mLineNo_End_Code;
@@ -122,7 +122,7 @@ namespace TRiLOGI
 
         bool lResult = true;
 
-        if (NULL == lFunction)
+        if (nullptr == lFunction)
         {
             ::Console::Change("New function", aName);
 
@@ -148,11 +148,11 @@ namespace TRiLOGI
 
     unsigned int FunctionList::Parse_Code(Text::File_UTF16* aFile_PC6, unsigned int aLineNo)
     {
-        assert(NULL != aFile_PC6);
+        assert(nullptr != aFile_PC6);
         assert(0 < aLineNo);
 
         unsigned int lBegin;
-        Function   * lFunction  = NULL;
+        Function   * lFunction  = nullptr;
         auto         lLineCount = aFile_PC6->GetLineCount();
         unsigned int lIndex;
         auto         lLineNo    = aLineNo;
@@ -163,13 +163,13 @@ namespace TRiLOGI
             unsigned int lLength;
 
             auto lLine = aFile_PC6->GetLine(lLineNo);
-            assert(NULL != lLine);
+            assert(nullptr != lLine);
 
             if (0 == wcscmp(L"~END_CUSTFN~", lLine)) { mLineNo_End_Code = lLineNo; lLineNo++; break; }
 
             if (0 == wcscmp(L"\xc8", lLine))
             {
-                if (NULL != lFunction)
+                if (nullptr != lFunction)
                 {
                     lFunction->SetLineNo_Code(lBegin, lLineNo);
 
@@ -180,12 +180,12 @@ namespace TRiLOGI
                         KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
                     }
 
-                    lFunction = NULL;
+                    lFunction = nullptr;
                 }
             }
             else if (2 == swscanf_s(lLine, L"Fn#%u,%u", &lIndex, &lLength))
             {
-                if (NULL != lFunction)
+                if (nullptr != lFunction)
                 {
                     sprintf_s(lMsg, "Line %u  A function is malformed (NOT TESTED)", lLineNo);
                     KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
@@ -196,7 +196,7 @@ namespace TRiLOGI
             }
             else
             {
-                if (NULL != lFunction)
+                if (nullptr != lFunction)
                 {
                     char lLine8[LINE_LENGTH];
 
@@ -207,7 +207,7 @@ namespace TRiLOGI
             }
         }
 
-        if (NULL != lFunction)
+        if (nullptr != lFunction)
         {
             lFunction->SetLineNo_Code(lBegin, lLineNo);
 
@@ -226,7 +226,7 @@ namespace TRiLOGI
 
     unsigned int FunctionList::Parse_Name(Text::File_UTF16* aFile_PC6, unsigned int aLineNo)
     {
-        assert(NULL != aFile_PC6);
+        assert(nullptr != aFile_PC6);
         assert(0 < aLineNo);
 
         auto lLineCount = aFile_PC6->GetLineCount();
@@ -249,7 +249,7 @@ namespace TRiLOGI
             }
 
             auto lFunction = Find_ByIndex(lIndex);
-            if (NULL == lFunction)
+            if (nullptr == lFunction)
             {
                 // NOT TESTED
                 lFunction = new Function(lIndex, 0);
@@ -286,10 +286,10 @@ namespace TRiLOGI
         for (auto& lVT : mObjects_ByIndex)
         {
             auto lFunction = lVT.second;
-            assert(NULL != lFunction);
+            assert(nullptr != lFunction);
 
             auto lName = lFunction->GetName();
-            assert(NULL != lName);
+            assert(nullptr != lName);
 
             switch (aFile_PC6.CountOccurrence(lConverter.from_bytes(lName).c_str()))
             {

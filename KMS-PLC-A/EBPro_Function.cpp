@@ -34,8 +34,8 @@ static const TypeInfo TYPES[] =
     { "bool"          ,  4, EBPro::DataType::TYPE_BOOL          , 1 },
     { "int"           ,  3, EBPro::DataType::TYPE_INT           , 6 },
 
-    { NULL, 0, EBPro::DataType::TYPE_NONE, 2 },
-    { NULL, 0, EBPro::DataType::TYPE_VOID, 0 },
+    { nullptr, 0, EBPro::DataType::TYPE_NONE, 2 },
+    { nullptr, 0, EBPro::DataType::TYPE_VOID, 0 },
 };
 
 #define TYPE_QTY (sizeof(TYPES) / sizeof(TYPES[0]))
@@ -68,7 +68,7 @@ namespace EBPro
 
     void Function::Read(DataPtr* aPtr)
     {
-        assert(NULL != aPtr);
+        assert(nullptr != aPtr);
 
         aPtr->Verify(104);
         aPtr->Read(&mName);
@@ -140,7 +140,7 @@ namespace EBPro
 
     void Function::ParseDefinition(const char* aLine)
     {
-        assert(NULL != aLine);
+        assert(nullptr != aLine);
 
         const char* lPtr = aLine;
 
@@ -181,13 +181,13 @@ namespace EBPro
 
 bool ParseDataType(const char** aPtr, EBPro::DataType* aOut)
 {
-    assert(NULL != aPtr);
-    assert(NULL != *aPtr);
-    assert(NULL != aOut);
+    assert(nullptr != aPtr);
+    assert(nullptr != *aPtr);
+    assert(nullptr != aOut);
 
     for (unsigned int i = 0; i < TYPE_QTY; i++)
     {
-        if (NULL == TYPES[i].mCode)
+        if (nullptr == TYPES[i].mCode)
         {
             break;
         }
@@ -206,9 +206,9 @@ bool ParseDataType(const char** aPtr, EBPro::DataType* aOut)
 
 void ParseName(const char** aPtr, std::string* aOut)
 {
-    assert(NULL != aPtr);
-    assert(NULL != *aPtr);
-    assert(NULL != aOut);
+    assert(nullptr != aPtr);
+    assert(nullptr != *aPtr);
+    assert(nullptr != aOut);
 
     char lName[NAME_LENGTH];
 

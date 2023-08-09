@@ -53,7 +53,7 @@ namespace EBPro
     {
         for (auto lState : mStates)
         {
-            assert(NULL != lState);
+            assert(nullptr != lState);
 
             delete lState;
         }
@@ -61,7 +61,7 @@ namespace EBPro
 
     void Label::Export(FILE* aFile, const DI::Array& aLanguages) const
     {
-        assert(NULL != aFile);
+        assert(nullptr != aFile);
 
         fwprintf(aFile, L"LABEL %s\n", mName.c_str());
 
@@ -73,7 +73,7 @@ namespace EBPro
 
     void Label::Read(FILE* aFile)
     {
-        assert(NULL != aFile);
+        assert(nullptr != aFile);
 
         auto lRR = Read_String(aFile, &mName);
         KMS_EXCEPTION_ASSERT(ReadResult::OK == lRR, APPLICATION_ERROR, "Corrupted exported LBL file", "");
@@ -138,7 +138,7 @@ namespace EBPro
 
     void Label::Write(FILE* aFile) const
     {
-        assert(NULL != aFile);
+        assert(nullptr != aFile);
 
         assert(0xffff >= mStates.size());
 
@@ -201,8 +201,8 @@ namespace EBPro
 
 void Read_Data(FILE* aFile, void* aOut, unsigned int aOutSize_byte)
 {
-    assert(NULL != aFile);
-    assert(NULL != aOut);
+    assert(nullptr != aFile);
+    assert(nullptr != aOut);
     assert(0 < aOutSize_byte);
 
     auto lSize_byte = fread_s(aOut SizeInfoV(aOutSize_byte + 1), 1, aOutSize_byte, aFile);
@@ -211,7 +211,7 @@ void Read_Data(FILE* aFile, void* aOut, unsigned int aOutSize_byte)
 
 ReadResult Read_String(FILE* aFile, std::wstring* aOut)
 {
-    assert(NULL != aFile);
+    assert(nullptr != aFile);
 
     uint8_t lHeader[4];
 
@@ -268,8 +268,8 @@ ReadResult Read_String(FILE* aFile, std::wstring* aOut)
 
 void Write_Data(FILE* aFile, const void* aIn, unsigned int aInSize_byte)
 {
-    assert(NULL != aFile);
-    assert(NULL != aIn);
+    assert(nullptr != aFile);
+    assert(nullptr != aIn);
     assert(0 < aInSize_byte);
 
     auto lSize_byte = fwrite(aIn, 1, aInSize_byte, aFile);

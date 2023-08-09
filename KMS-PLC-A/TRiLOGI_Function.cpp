@@ -51,7 +51,7 @@ namespace TRiLOGI
     // NOT TESTED
     void Function::Apply(Text::File_UTF16* aFile)
     {
-        assert(NULL != aFile);
+        assert(nullptr != aFile);
 
         assert(mLineNo_Code_Begin < mLineNo_Code_End);
 
@@ -84,7 +84,7 @@ namespace TRiLOGI
 
     void Function::Insert(Text::File_UTF16* aFile)
     {
-        assert(NULL != aFile);
+        assert(nullptr != aFile);
 
         unsigned int lLineNo = mLineNo_Code_Begin;
 
@@ -111,7 +111,7 @@ namespace TRiLOGI
 
     void Function::Parse(Text::File_ASCII* aFile, Text::File_ASCII::Internal::iterator* aIt)
     {
-        assert(NULL != aIt);
+        assert(nullptr != aIt);
 
         (*aIt)++;
 

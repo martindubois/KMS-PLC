@@ -23,14 +23,14 @@ namespace EBPro
     // Public
     // //////////////////////////////////////////////////////////////////////
 
-    FunctionList::FunctionList(Software* aSoftware) : List(aSoftware), mFile(NULL), mFile_Data(NULL)
+    FunctionList::FunctionList(Software* aSoftware) : List(aSoftware), mFile(nullptr), mFile_Data(nullptr)
     {
         memset(&mParsed_Values, 0, sizeof(mParsed_Values));
     }
 
     void FunctionList::Parse()
     {
-        if (NULL != mFile_Data)
+        if (nullptr != mFile_Data)
         {
             ::Console::Progress_Begin("EBPro", "Parsing ", GetExported());
 
@@ -56,12 +56,12 @@ namespace EBPro
     {
         for (auto lPair : mFunctions_ByName)
         {
-            assert(NULL != lPair.second);
+            assert(nullptr != lPair.second);
 
             delete lPair.second;
         }
 
-        if (NULL != mFile)
+        if (nullptr != mFile)
         {
             delete mFile;
         }
@@ -92,7 +92,7 @@ namespace EBPro
                 lLineNo = lFunction->Read(lFile, lLineNo);
 
                 auto lExisting = FindByName(lFunction->GetName());
-                if (NULL == lExisting)
+                if (nullptr == lExisting)
                 {
                     ::Console::Change("New function", lFunction->GetName());
 
@@ -118,10 +118,10 @@ namespace EBPro
     void FunctionList::ReadExported()
     {
         mFile = new File::Binary(File::Folder::CURRENT, GetExported());
-        assert(NULL != mFile);
+        assert(nullptr != mFile);
 
         mFile_Data = reinterpret_cast<const char*>(mFile->Map());
-        assert(NULL != mFile_Data);
+        assert(nullptr != mFile_Data);
     }
 
     void FunctionList::SaveToImport()
@@ -145,7 +145,7 @@ namespace EBPro
 
         for (const auto lPair : mFunctions_ByName)
         {
-            assert(NULL != lPair.second);
+            assert(nullptr != lPair.second);
 
             lPair.second->Write(lFile);
         }
@@ -163,29 +163,29 @@ namespace EBPro
 
     void FunctionList::Add(Function* aIn)
     {
-        assert(NULL != aIn);
+        assert(nullptr != aIn);
 
         mFunctions_ByName.insert(ByName::value_type(aIn->GetName(), aIn));
     }
 
     Function* FunctionList::FindByName(const char* aName)
     {
-        assert(NULL != aName);
+        assert(nullptr != aName);
 
         auto lIt = mFunctions_ByName.find(aName);
         if (mFunctions_ByName.end() == lIt)
         {
-            return NULL;
+            return nullptr;
         }
 
-        assert(NULL != lIt->second);
+        assert(nullptr != lIt->second);
 
         return lIt->second;
     }
 
     void FunctionList::Header_Parse(DataPtr* aPtr)
     {
-        assert(NULL != aPtr);
+        assert(nullptr != aPtr);
 
         aPtr->Read(&mParsed_Type);
         aPtr->Verify(14);
@@ -207,11 +207,11 @@ namespace EBPro
 
     void FunctionList::Replace(Function* aIn)
     {
-        assert(NULL != aIn);
+        assert(nullptr != aIn);
 
         auto lIt = mFunctions_ByName.find(aIn->GetName());
         assert(mFunctions_ByName.end() != lIt);
-        assert(NULL != lIt->second);
+        assert(nullptr != lIt->second);
 
         delete lIt->second;
 

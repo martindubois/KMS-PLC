@@ -58,7 +58,7 @@ namespace TRiLOGI
     // This method only throw exception as a result of a corrupted PC6 file
     void WordList::AddWord(Word* aWord)
     {
-        assert(NULL != aWord);
+        assert(nullptr != aWord);
 
         char lMsg[64 + NAME_LENGTH];
 
@@ -81,12 +81,12 @@ namespace TRiLOGI
 
     void WordList::GetAddresses(const std::regex& aRegEx, AddressList* aOut) const
     {
-        assert(NULL != aOut);
+        assert(nullptr != aOut);
 
         for (auto lVT : mWords_ByOffset)
         {
             auto lWord = lVT.second;
-            assert(NULL != lWord);
+            assert(nullptr != lWord);
 
             if ((!lWord->TestFlag(Object::FLAG_NOT_USED)) && std::regex_match(lWord->GetName(), aRegEx))
             {
@@ -102,10 +102,10 @@ namespace TRiLOGI
         auto lIt = mWords_ByOffset.find(aOffset);
         if (mWords_ByOffset.end() == lIt)
         {
-            return NULL;
+            return nullptr;
         }
 
-        assert(NULL != lIt->second);
+        assert(nullptr != lIt->second);
 
         return lIt->second;
     }

@@ -29,7 +29,7 @@ namespace TRiLOGI
     Object::Object(const char* aName, unsigned int aIndex, unsigned int aLineNo, unsigned int aFlags)
         : mFlags(aFlags), mIndex(aIndex), mLineNo(aLineNo), mName(aName)
     {
-        assert(NULL != aName);
+        assert(nullptr != aName);
     }
 
     Object::~Object() {}
@@ -44,7 +44,7 @@ namespace TRiLOGI
 
     void Object::SetName(const char* aName, unsigned int aLineNo)
     {
-        assert(NULL != aName);
+        assert(nullptr != aName);
 
         mLineNo = aLineNo;
         mName   = aName;
@@ -59,7 +59,7 @@ namespace TRiLOGI
 
     void Object::GetLine(wchar_t* aOut, unsigned int aOutSize_byte) const
     {
-        assert(NULL != aOut);
+        assert(nullptr != aOut);
 
         swprintf_s(aOut SizeInfoV(aOutSize_byte / sizeof(wchar_t)), L"%u,%S", GetIndex(), GetName());
     }
@@ -72,7 +72,7 @@ namespace TRiLOGI
     // NOT TESTED
     void Object::Update(Text::File_UTF16* aFile_PC6)
     {
-        assert(NULL != aFile_PC6);
+        assert(nullptr != aFile_PC6);
 
         wchar_t lLine[LINE_LENGTH];
 

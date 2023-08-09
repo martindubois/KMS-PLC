@@ -116,7 +116,7 @@ namespace TRiLOGI
         if (0 < mHeaderFile.GetLength())
         {
             auto lFileName = mHeaderFile.Get();
-            assert(NULL != lFileName);
+            assert(nullptr != lFileName);
 
             std::ofstream lFile(lFileName);
             if (!lFile.is_open())
@@ -135,7 +135,7 @@ namespace TRiLOGI
             lFile << "\n";
 
             auto lPrefix = mHeaderPrefix.Get();
-            assert(NULL != lPrefix);
+            assert(nullptr != lPrefix);
 
             for (const auto& lAddr : mPublicAddresses)
             {
@@ -155,7 +155,7 @@ namespace TRiLOGI
         for (const auto& lEntry : mSources.mInternal)
         {
             auto lSource = dynamic_cast<const DI::String*>(lEntry.Get());
-            assert(NULL != lSource);
+            assert(nullptr != lSource);
 
             Text::File_ASCII lFile;
 
@@ -313,7 +313,7 @@ namespace TRiLOGI
         for (auto& lEntry : mPublicDefs.mInternal)
         {
             const DI::String* lSource = dynamic_cast<const DI::String*>(lEntry.Get());
-            assert(NULL != lSource);
+            assert(nullptr != lSource);
 
             if (!File::Folder::CURRENT.DoesFileExist(lSource->Get()))
             {
@@ -325,7 +325,7 @@ namespace TRiLOGI
         for (auto& lEntry : mSources.mInternal)
         {
             const DI::String* lSource = dynamic_cast<const DI::String*>(lEntry.Get());
-            assert(NULL != lSource);
+            assert(nullptr != lSource);
 
             if (!File::Folder::CURRENT.DoesFileExist(lSource->Get()))
             {
@@ -373,7 +373,7 @@ namespace TRiLOGI
             lObject = mRelays.FindObject_ByIndex(lAddr);
         }
 
-        if (NULL == lObject)
+        if (nullptr == lObject)
         {
             return false;
         }
@@ -399,7 +399,7 @@ namespace TRiLOGI
         lAddr -= 1000;
 
         const Word* lWord = mDefines.mWords.Find_ByOffset(lAddr);
-        if (NULL == lWord)
+        if (nullptr == lWord)
         {
             return false;
         }
@@ -436,22 +436,22 @@ namespace TRiLOGI
 
     void Project::AddPublicAddress(const char* aPrivate, const char* aPublic)
     {
-        assert(NULL != aPrivate);
+        assert(nullptr != aPrivate);
 
         auto lObj = mInputs.FindObject_ByName(aPrivate);
-        if (NULL == lObj)
+        if (nullptr == lObj)
         {
             lObj = mOutputs.FindObject_ByName(aPrivate);
-            if (NULL == lObj)
+            if (nullptr == lObj)
             {
                 lObj = mRelays.FindObject_ByName(aPrivate);
             }
         }
 
-        if (NULL == lObj)
+        if (nullptr == lObj)
         {
             lObj = mDefines.FindObject_ByName(aPrivate);
-            if (NULL == lObj)
+            if (nullptr == lObj)
             {
                 ::Console::Warning_Begin()
                     << "No object named " << aPrivate;
@@ -460,7 +460,7 @@ namespace TRiLOGI
             else
             {
                 auto lWord = dynamic_cast<Word*>(lObj);
-                if (NULL == lWord)
+                if (nullptr == lWord)
                 {
                     ::Console::Warning_Begin()
                         << "The object " << aPrivate << " is not of an expected type";
@@ -480,7 +480,7 @@ namespace TRiLOGI
 
     void Project::AddPublicAddresses(const char* aRegEx)
     {
-        assert(NULL != aRegEx);
+        assert(nullptr != aRegEx);
 
         auto lCount = mPublicAddresses.size();
 
@@ -596,7 +596,7 @@ namespace TRiLOGI
         for (auto& lEntry : mPublicDefs.mInternal)
         {
             auto lSource = dynamic_cast<const DI::String*>(lEntry.Get());
-            assert(NULL != lSource);
+            assert(nullptr != lSource);
 
             ParsePublicDef(lSource->Get());
         }
