@@ -5,6 +5,8 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGI_WordList.cpp
 
+// TEST COVERAGE  2023-08-08  KMS - Martin Dubois, P. Eng.
+
 #include "Component.h"
 
 // ===== Local ==============================================================
@@ -27,9 +29,12 @@ namespace TRiLOGI
 
     Object* WordList::AddWord(const char* aName, unsigned int aIndex, unsigned int aLineNo, const char* aComment, unsigned int aFlags)
     {
-        char lMsg[64];
-        sprintf_s(lMsg, "Line %u  Too many word", aLineNo);
-        KMS_EXCEPTION_ASSERT(OFFSET_MAX > mWords_ByOffset.size(), APPLICATION_ERROR, lMsg, aName);
+        if (OFFSET_MAX <= mWords_ByOffset.size())
+        {
+            char lMsg[64];
+            sprintf_s(lMsg, "Line %u  Too many word (NOT TESTED)", aLineNo);
+            KMS_EXCEPTION(APPLICATION_ERROR, lMsg, aName);
+        }
 
         unsigned int lOffset = OFFSET_MAX;
 
@@ -50,6 +55,7 @@ namespace TRiLOGI
         return lResult;
     }
 
+    // This method only throw exception as a result of a corrupted PC6 file
     void WordList::AddWord(Word* aWord)
     {
         assert(NULL != aWord);
@@ -57,14 +63,18 @@ namespace TRiLOGI
         char lMsg[64 + NAME_LENGTH];
 
         auto lBN = mWords_ByName.insert(ByName::value_type(aWord->GetName(), aWord));
-
-        sprintf_s(lMsg, "A word named \"%s\" already exist", aWord->GetName());
-        KMS_EXCEPTION_ASSERT(lBN.second, APPLICATION_ERROR, lMsg, "");
+        if (!lBN.second)
+        {
+            sprintf_s(lMsg, "A word named \"%s\" already exist (NOT TESTED)", aWord->GetName());
+            KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
+        }
 
         auto lBO = mWords_ByOffset.insert(ByOffset::value_type(aWord->GetOffset(), aWord));
-
-        sprintf_s(lMsg, "A word already exist at offset %u", aWord->GetOffset());
-        KMS_EXCEPTION_ASSERT(lBO.second, APPLICATION_ERROR, lMsg, "");
+        if (!lBO.second)
+        {
+            sprintf_s(lMsg, "A word already exist at offset %u (NOT TESTED)", aWord->GetOffset());
+            KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
+        }
     }
 
     void WordList::Clear() { mWords_ByName.clear(); mWords_ByOffset.clear(); }

@@ -5,6 +5,7 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGI_DefineList.cpp
 
+// TEST COVERAGE  2023-08-08  KMS - Martin Dubois, P. Eng.
 #include "Component.h"
 
 // ===== Local ==============================================================
@@ -33,6 +34,8 @@ namespace TRiLOGI
 
     bool DefineList::ImportConstant(const char* aName, const char* aValue)
     {
+        assert(NULL != aName);
+
         auto lObject = FindObject_ByName(aName);
         if (NULL == lObject)
         {
@@ -56,7 +59,7 @@ namespace TRiLOGI
         if (NULL == lConstant)
         {
             ::Console::Error_Begin()
-                << "The name " << aName << " is already used for a word";
+                << "The name " << aName << " is already used for a word (NOT TESTED)";
             ::Console::Error_End();
             return false;
         }
@@ -66,6 +69,8 @@ namespace TRiLOGI
 
     bool DefineList::ImportWord(const char* aName)
     {
+        assert(NULL != aName);
+
         auto lObject = FindObject_ByName(aName);
         if (NULL == lObject)
         {
@@ -87,7 +92,7 @@ namespace TRiLOGI
         if (NULL == lWord)
         {
             ::Console::Error_Begin()
-                << "The name " << aName << " is already used for a constant";
+                << "The name " << aName << " is already used for a constant (NOT TESTED)";
             ::Console::Error_End();
         }
 
@@ -96,6 +101,8 @@ namespace TRiLOGI
 
     bool DefineList::ImportWord(const char* aName, unsigned int aOffset)
     {
+        assert(NULL != aName);
+
         auto lObject = FindObject_ByName(aName);
         if (NULL == lObject)
         {
@@ -128,13 +135,13 @@ namespace TRiLOGI
         if (NULL == lWord)
         {
             ::Console::Error_Begin()
-                << "The name " << aName << " is already used for a constant";
+                << "The name " << aName << " is already used for a constant (NOT TESTED)";
             ::Console::Error_End();
         }
         else if (lWord->GetOffset() != aOffset)
         {
             ::Console::Error_Begin()
-                << "The name " << aName << " is already uses witch another offset";
+                << "The name " << aName << " is already uses witch another offset (NOT TESTED)";
             ::Console::Error_End();
         }
 
@@ -143,8 +150,6 @@ namespace TRiLOGI
 
     unsigned int DefineList::Parse(Text::File_UTF16* aFile_PC6, unsigned int aLineNo)
     {
-        assert(NULL != aFile_PC6);
-
         auto lResult = ObjectList::Parse(aFile_PC6, aLineNo, 0);
 
         ::Console::Stats(mConstants.GetCount(), "constants");
@@ -173,12 +178,10 @@ namespace TRiLOGI
         char         lMsg[64];
         char         lText[LINE_LENGTH];
 
+        sprintf_s(lMsg, "Line %u  Invalid define line", aLineNo);
+
         auto lRet = swscanf_s(aLine, L"%u,%S", &lIndex, lText SizeInfo(lText));
-        if (2 != lRet)
-        {
-            sprintf_s(lMsg, "Line %u  Invalid define line", aLineNo);
-            KMS_EXCEPTION(APPLICATION_ERROR, lMsg, lRet);
-        }
+        KMS_EXCEPTION_ASSERT(2 == lRet, APPLICATION_ERROR, lMsg, lRet);
 
         char         lComment[NAME_LENGTH];
         Object     * lDefine;
@@ -207,6 +210,7 @@ namespace TRiLOGI
         }
         else
         {
+            // NOT TESTED
             KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
         }
 

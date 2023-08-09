@@ -134,10 +134,12 @@ namespace EBPro
         FILE* lFile;
 
         auto lRet = fopen_s(&lFile, lPath, "wb");
-
-        char lMsg[64 + PATH_LENGTH];
-        sprintf_s(lMsg, "Cannot open \"%s\" for writting", lPath);
-        KMS_EXCEPTION_ASSERT(0 == lRet, APPLICATION_ERROR, lMsg, lRet);
+        if (0 != lRet)
+        {
+            char lMsg[64 + PATH_LENGTH];
+            sprintf_s(lMsg, "Cannot open \"%s\" for writting", lPath);
+            KMS_EXCEPTION(APPLICATION_ERROR, lMsg, lRet);
+        }
 
         Header_Write(lFile);
 

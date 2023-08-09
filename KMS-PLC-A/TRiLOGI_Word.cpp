@@ -5,6 +5,8 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGI_Word.cpp
 
+// TEST COVERAGE  2023-08-08  KMS - Martin Dubois, P. Eng.
+
 #include "Component.h"
 
 // ===== Local ==============================================================
@@ -18,9 +20,7 @@ namespace TRiLOGI
 
     Word::Word(const char* aName, unsigned int aIndex, unsigned int aLineNo, unsigned int aOffset, const char* aComment, unsigned int aFlags)
         : Object(aName, aIndex, aLineNo, aFlags | FLAG_SINGLE_USE_INFO), mComment(aComment), mOffset(aOffset)
-    {
-        assert(NULL != aName);
-    }
+    {}
 
     unsigned int Word::GetOffset() const { return mOffset; }
 
@@ -40,6 +40,7 @@ namespace TRiLOGI
         }
         else
         {
+            // NOT TESTED
             swprintf_s(aOut SizeInfoV(lOutLen), L"%u,%S,DM[%u],%S", GetIndex(), GetName(), mOffset, mComment.c_str());
         }
     }

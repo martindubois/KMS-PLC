@@ -5,6 +5,8 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGI_ObjectList.cpp
 
+// TEST COVERAGE  2023-08-08  KMS - Martin Dubois, P. Eng.
+
 #include "Component.h"
 
 // ===== C++ ================================================================
@@ -192,6 +194,7 @@ namespace TRiLOGI
                 break;
 
             case 2:
+                // NOT TESTED
                 if (lObj->TestFlag(Object::FLAG_SINGLE_USE_WARNING))
                 {
                     ::Console::Warning_Begin(lLineNo)
@@ -240,7 +243,7 @@ namespace TRiLOGI
 
         if (!lBI.second)
         {
-            sprintf_s(lMsg, "An object with index %u already exist", aObject->GetIndex());
+            sprintf_s(lMsg, "An object with index %u already exist (NOT TESTED)", aObject->GetIndex());
             KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
         }
 
@@ -248,7 +251,7 @@ namespace TRiLOGI
 
         if (!lBN.second)
         {
-            sprintf_s(lMsg, "An object named \"%s\" already exist", aObject->GetName());
+            sprintf_s(lMsg, "An object named \"%s\" already exist (NOT TESTED)", aObject->GetName());
             KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
         }
     }
@@ -265,7 +268,7 @@ namespace TRiLOGI
         if (2 != lRet)
         {
             char lMsg[64];
-            sprintf_s(lMsg, "Line %u  Invalid bit line", aLineNo);
+            sprintf_s(lMsg, "Line %u  Invalid bit line (NOT TESTED)", aLineNo);
             KMS_EXCEPTION(APPLICATION_ERROR, lMsg, lRet);
         }
 
@@ -282,7 +285,7 @@ namespace TRiLOGI
         if (mMaxQty <= mObjects_ByIndex.size())
         {
             char lMsg[64 + NAME_LENGTH];
-            sprintf_s(lMsg, "Too many %s", mElementName);
+            sprintf_s(lMsg, "Too many %s (NOT TESTED)", mElementName);
             KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
         }
 
@@ -315,14 +318,19 @@ namespace TRiLOGI
                 break;
             }
 
+            // NOT TESTED
             lResult = lIt->second->GetLineNo();
         }
 
         return lResult;
     }
 
+    // NOT TESTED
     void ObjectList::Replace(Object* aOld, Object* aNew)
     {
+        assert(NULL != aOld);
+        assert(NULL != aNew);
+        
         auto lByIndex = mObjects_ByIndex.find(aOld->GetIndex());
         auto lByName  = mObjects_ByName .find(aOld->GetName ());
 

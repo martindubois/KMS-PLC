@@ -5,6 +5,8 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGI_ConstantList.cpp
 
+// TEST COVERAGE  2023-08-08  KMS - Martin Dubois, P. Eng.
+
 #include "Component.h"
 
 // ===== Local ==============================================================
@@ -26,10 +28,12 @@ namespace TRiLOGI
 
     bool Constant::SetValue(const char* aValue, Text::File_UTF16* aFile_PC6)
     {
+        assert(NULL != aValue);
+
         bool lResult = (mValue != aValue);
         if (lResult)
         {
-            ::Console::Change("Constant changed", GetName(), mValue.c_str(), aValue);
+            ::Console::Change("Constant changed (NOT TESTED)", GetName(), mValue.c_str(), aValue);
 
             mValue = aValue;
 
@@ -46,7 +50,7 @@ namespace TRiLOGI
             AddFlags(Object::FLAG_NOT_USED);
 
             ::Console::Warning_Begin(GetLineNo())
-                << "The constant named \"" << GetName() << "\" (" << GetIndex() << ") has no value";
+                << "The constant named \"" << GetName() << "\" (" << GetIndex() << ") has no value (NOT TESTED)";
             ::Console::Warning_End();
         }
     }
@@ -67,6 +71,7 @@ namespace TRiLOGI
         }
         else
         {
+            // NOT TESTED
             swprintf_s(aOut SizeInfoV(lOutLen), L"%u,%S,%S,%S", GetIndex(), GetName(), mValue.c_str(), mComment.c_str());
         }
     }

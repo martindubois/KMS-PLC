@@ -5,6 +5,8 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGI_CounterList.cpp
 
+// TEST COVERAGE  2023-08-08  KMS - Martin Dubois, P. Eng.
+
 #include "Component.h"
 
 // ===== C++ ================================================================
@@ -45,7 +47,8 @@ namespace TRiLOGI
         if (3 != lRet)
         {
             char lMsg[64];
-            sprintf_s(lMsg, "Line %u  Invalid timer line", aLineNo);
+            sprintf_s(lMsg, "Line %u  Invalid timer line (NOT TESTED)", aLineNo);
+            KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
         }
 
         auto lCounter = new Counter(lName, lIndex, aLineNo, lInit, aFlags);
@@ -55,6 +58,8 @@ namespace TRiLOGI
 
     bool CounterList::Import(const char* aName, unsigned int aInit)
     {
+        assert(NULL != aName);
+
         Counter* lCounter;
 
         auto lObject = FindObject_ByName(aName);

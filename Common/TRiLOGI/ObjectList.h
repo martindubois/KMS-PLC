@@ -4,6 +4,7 @@
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
 // File      Common/TRiLOGI/ObjectList.h
+// Status    TEST
 
 #pragma once
 
@@ -23,8 +24,6 @@ namespace TRiLOGI
     {
 
     public:
-
-        ObjectList(const char* aElementName, unsigned int aMaxQty);
 
         ~ObjectList();
 
@@ -53,6 +52,8 @@ namespace TRiLOGI
 
         typedef std::map<unsigned int, Object*> ByIndex;
         typedef std::map<std::string , Object*> ByName;
+
+        ObjectList(const char* aElementName, unsigned int aMaxQty);
 
         const char* GetElementName() const;
 

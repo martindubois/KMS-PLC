@@ -52,6 +52,8 @@ namespace EBPro
 
     Address::Address(const char* aLine, unsigned int aLineNo) : mType(AddressType::UNKNOWN)
     {
+        assert(NULL != aLine);
+
         char lAddress [NAME_LENGTH];
         char lComment [LINE_LENGTH];
         char lDataType[NAME_LENGTH];
@@ -115,6 +117,7 @@ namespace EBPro
         , mType(aType)
     {
         assert(NULL != aName);
+        assert(AddressType::QTY > aType);
 
         char lAddr[32];
 
@@ -132,15 +135,13 @@ namespace EBPro
         , mType(aType)
     {
         assert(NULL != aName);
+        assert(AddressType::QTY > aType);
         assert(NULL != aAddr);
     }
 
-    const char  * Address::GetAddress() const { return mAddress.c_str(); }
+    const char* Address::GetAddress() const { return mAddress.c_str(); }
 
-    uint16_t Address::GetAddress_UInt16() const
-    {
-        return Convert::ToUInt16(mAddress.c_str());
-    }
+    uint16_t Address::GetAddress_UInt16() const { return Convert::ToUInt16(mAddress.c_str()); }
 
     unsigned int Address::GetLineNo() const { return mLineNo; }
     const char * Address::GetName  () const { return mName   .c_str(); }
@@ -149,6 +150,8 @@ namespace EBPro
     // NOT TESTED
     void Address::GetLine(char* aOut, unsigned int aOutSize_byte) const
     {
+        assert(NULL != aOut);
+
         auto lType = static_cast<unsigned int>(mType);
 
         sprintf_s(aOut SizeInfoV(aOutSize_byte), "%s,%s,%s,%s,%s,%s", mName.c_str(),
@@ -168,16 +171,21 @@ namespace EBPro
 
     bool Address::Set(AddressType aType, const char* aAddr)
     {
-        char lMsg[128 + NAME_LENGTH];
-        sprintf_s(lMsg, "The improted address type of \"%s\" does not match the current type", mName.c_str());
-        KMS_EXCEPTION_ASSERT(mType == aType, APPLICATION_ERROR, lMsg, "");
+        assert(AddressType::QTY > aType);
+        assert(NULL != aAddr);
+
+        if (mType != aType)
+        {
+            char lMsg[128 + NAME_LENGTH];
+            sprintf_s(lMsg, "The improted address type of \"%s\" does not match the current type", mName.c_str());
+            KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
+        }
 
         bool lResult = 0 != strcmp(mAddress.c_str(), aAddr);
         if (lResult)
         {
-            ::Console::Change("Address changed", GetName(), mAddress.c_str(), aAddr);
+            ::Console::Change("Address changed (NOT TESTED)", GetName(), mAddress.c_str(), aAddr);
 
-            // NOT TESTED
             mAddress = aAddr;
         }
 
@@ -191,6 +199,9 @@ namespace EBPro
 
 AddressType ToAddressType(const char* aType, const char* aSubType)
 {
+    assert(NULL != aType);
+    assert(NULL != aSubType);
+
     unsigned int lResult;
 
     for (lResult = static_cast<unsigned int>(AddressType::LOCAL_HMI_LB); lResult < static_cast<unsigned int>(AddressType::UNKNOWN); lResult++)

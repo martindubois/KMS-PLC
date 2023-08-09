@@ -5,16 +5,19 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/Address.cpp
 
+// TEST COVERAGE  2023-08-07  KMS - Martin Dubois, P. Eng.
+
 #include "Component.h"
 
-// ===== Local ===============================================================
+// ===== Local ==============================================================
 #include "Function.h"
 
 using namespace KMS;
 
 // Public
-// ///////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////
 
+// NOT TESTED  Return true
 bool Function::operator != (const Function& aB) const
 {
     auto lCount = mLines.size();

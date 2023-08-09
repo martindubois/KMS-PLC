@@ -5,6 +5,8 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGI_Object.cpp
 
+// TEST COVERAGE  2023-08-08  KMS - Martin Dubois, P. Eng.
+
 #include "Component.h"
 
 // ===== Local ==============================================================
@@ -40,9 +42,20 @@ namespace TRiLOGI
 
     const char* Object::GetName() const { return mName.c_str(); }
 
-    void Object::SetName(const char* aName, unsigned int aLineNo) { assert(NULL != aName); mLineNo = aLineNo; mName = aName; }
+    void Object::SetName(const char* aName, unsigned int aLineNo)
+    {
+        assert(NULL != aName);
 
-    bool Object::TestFlag(unsigned int aFlag) const { assert(0 != aFlag); return 0 != (mFlags & aFlag); }
+        mLineNo = aLineNo;
+        mName   = aName;
+    }
+
+    bool Object::TestFlag(unsigned int aFlag) const
+    {
+        assert(0 != aFlag);
+
+        return 0 != (mFlags & aFlag);
+    }
 
     void Object::GetLine(wchar_t* aOut, unsigned int aOutSize_byte) const
     {
@@ -56,6 +69,7 @@ namespace TRiLOGI
 
     Object::Object(unsigned int aIndex) : mFlags(0), mIndex(aIndex), mLineNo(0) {}
 
+    // NOT TESTED
     void Object::Update(Text::File_UTF16* aFile_PC6)
     {
         assert(NULL != aFile_PC6);

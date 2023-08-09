@@ -1,0 +1,76 @@
+
+# Author    KMS - Martin Dubois, P. Eng.
+# Copyright (C) 2023 KMS
+# License   http://www.apache.org/licenses/LICENSE-2.0
+# Product   KMS-PLC
+# File      Tests/Test07/PLC.PC6.txt
+
+# ===== COUNTER =============================================================
+
+COUNTER Test07_A
+
+# Same name
+COUNTER Test07_A
+
+# ===== CONSTANT ============================================================
+
+CONSTANT Test07_B
+
+# Same name
+CONSTANT Test07_B
+
+# ===== FUNCTION ============================================================
+
+FUNCTION Test07_C
+FUNCTION END
+
+# Same name
+FUNCTION Test07_C
+FUNCTION END
+
+# ===== INPUT ===============================================================
+
+INPUT Test07_D 0
+
+# Same name
+INPUT Test07_D
+
+# Same index
+INPUT Test07_E 0
+
+# ===== OUTPUT ==============================================================
+
+OUTPUT Test07_F 0
+
+# Same name
+OUTPUT Test07_F
+
+# Same index
+OUTPUT Test07_G 0
+
+# ===== RELAY ===============================================================
+
+RELAY Test07_H 0
+
+# Same name
+RELAY Test07_H
+
+# Same index
+RELAY Test07_I 0
+
+# ===== TIMER ===============================================================
+
+TIMER Test07_J
+
+# Same name
+TIMER Test07_J
+
+# ===== WORD ================================================================
+
+WORD Test07_K 0
+
+# Same name
+WORD Test07_K
+
+# Same index
+WORD Test07_L 0

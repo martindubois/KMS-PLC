@@ -128,10 +128,9 @@ namespace EBPro
                 if (   ((*lItA)->GetType() == (*lItB)->GetType())
                     && (0 == strcmp((*lItA)->GetAddress(), (*lItB)->GetAddress())))
                 {
-                    // NOT TESTED
                     ::Console::Warning_Begin((*lItA)->GetLineNo(), (*lItB)->GetLineNo())
                         << "The addresses named \"" << (*lItA)->GetName() << "\" and \"" << (*lItB)->GetName()
-                        << "\" are the same (" << (*lItA)->GetAddress() << ")";
+                        << "\" are the same (" << (*lItA)->GetAddress() << ") (NOT TESTED)";
                     ::Console::Warning_End();
                 }
             }
@@ -204,6 +203,8 @@ namespace EBPro
 
     Address* AddressList::Find_ByName(const char* aName)
     {
+        assert(NULL != aName);
+
         auto lIt = mAddresses_ByName.find(aName);
         if (mAddresses_ByName.end() == lIt)
         {
@@ -225,8 +226,7 @@ namespace EBPro
         auto lAddress = Find_ByName(aName);
         if (NULL == lAddress)
         {
-            // NOT TESTED
-            ::Console::Change("New address", aName);
+            ::Console::Change("New address (NOT TESTED)", aName);
 
             lResult = true;
 

@@ -5,6 +5,8 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGI_Software.cpp
 
+// TEST COVERAGE  2023-08-08  KMS - Martin Dubois, P. Eng.
+
 #include "Component.h"
 
 // ===== Import/Includes ====================================================
@@ -23,6 +25,7 @@ namespace TRiLOGI
 
     Software::Software() {}
 
+    // NOT TESTED
     void Software::Edit(const char* aFile)
     {
         Proc::Process lP(File::Folder::CURRENT, aFile);

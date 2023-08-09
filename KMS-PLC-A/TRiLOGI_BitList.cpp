@@ -5,6 +5,8 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGI_BitList.cpp
 
+// TEST COVERAGE  2023-08-08  KMS - Martin Dubois, P. Eng.
+
 #include "Component.h"
 
 // ===== Local ==============================================================
@@ -42,7 +44,10 @@ namespace TRiLOGI
 
     bool BitList::Import(const char* aName)
     {
+        assert(NULL != aName);
+
         auto lObject = FindObject_ByName(aName);
+
         bool lResult = NULL == lObject;
         if (lResult)
         {
@@ -63,6 +68,8 @@ namespace TRiLOGI
 
     bool BitList::Import(const char* aName, unsigned int aIndex)
     {
+        assert(NULL != aName);
+
         auto lObject = FindObject_ByName(aName);
         if (NULL == lObject)
         {
@@ -88,7 +95,7 @@ namespace TRiLOGI
         if (aIndex != lObject->GetIndex())
         {
             ::Console::Error_Begin()
-                << "The name " << aName << " is already used for another index";
+                << "The name " << aName << " is already used for another index (NOT TESTED)";
             ::Console::Error_End();
         }
 

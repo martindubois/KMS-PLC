@@ -22,7 +22,8 @@ using namespace KMS;
 
 typedef struct
 {
-    const char * mConfigFile;
+    const char * mFolder;
+    const char * mToDelete;
     unsigned int mExceptions[2];
     int          mResults   [2];
 }
@@ -30,7 +31,7 @@ Case_Normal;
 
 typedef struct
 {
-    const char    * mConfigFile;
+    const char    * mFolder;
     Exception::Code mCode;
 }
 Case_Exception;
@@ -40,26 +41,27 @@ Case_Exception;
 
 #define KMS_PLC_CFG "KMS-PLC.cfg"
 
-#define CONFIG_FILE "ConfigFiles+=Tests\\"
+#define TESTS "Tests\\"
 
 #define TEST_0 "Tests\\Test00"
 #define TEST_1 "Tests\\Test01"
 
 static const Case_Normal CASE_N[] =
 {
-    { CONFIG_FILE "Test00\\" KMS_PLC_CFG, { 0, 0 }, { 0, 0 } },
-    { CONFIG_FILE "Test01\\" KMS_PLC_CFG, { 0, 0 }, { 0, 0 } },
-    { CONFIG_FILE "Test02\\" KMS_PLC_CFG, { 2, 2 }, { 0, 0 } },
+    { TESTS "Test00", "PLC.PC6", { 0, 0 }, { 0, 0 } },
+    { TESTS "Test01", nullptr  , { 0, 0 }, { 0, 0 } },
+    { TESTS "Test02", nullptr  , { 2, 2 }, { 0, 0 } },
+    { TESTS "Test06", "PLC.PC6", { 0, 0 }, { 0, 0 } },
+    { TESTS "Test07", "PLC.PC6", { 0, 0 }, { 0, 0 } },
 };
 
 #define CASE_N_QTY (sizeof(CASE_N) / sizeof(CASE_N[0]))
 
 static const Case_Exception CASE_E[] =
 {
-    { CONFIG_FILE "Test03\\" KMS_PLC_CFG, Exception::Code::APPLICATION_USER_ERROR },
-    { CONFIG_FILE "Test04\\" KMS_PLC_CFG, Exception::Code::APPLICATION_USER_ERROR },
-    { CONFIG_FILE "Test05\\" KMS_PLC_CFG, Exception::Code::APPLICATION_USER_ERROR },
-    { CONFIG_FILE "Test06\\" KMS_PLC_CFG, Exception::Code::APPLICATION_USER_ERROR },
+    { TESTS "Test03", Exception::Code::APPLICATION_USER_ERROR },
+    { TESTS "Test04", Exception::Code::APPLICATION_USER_ERROR },
+    { TESTS "Test05", Exception::Code::APPLICATION_USER_ERROR },
 };
 
 #define CASE_E_QTY (sizeof(CASE_E) / sizeof(CASE_E[0]))
@@ -105,11 +107,26 @@ KMS_TEST(System_Case, "System_Case", "Auto", sTest_Case)
 
     for (unsigned int i = 0; i < CASE_N_QTY; i++)
     {
-        const char* lV[1] = { CASE_N[i].mConfigFile };
+        File::Folder lFolder(File::Folder::CURRENT, CASE_N[i].mFolder);
+
+        char lConfigFile[PATH_LENGTH];
+
+        lFolder.GetPath(KMS_PLC_CFG, lConfigFile, sizeof(lConfigFile));
+
+        if ((NULL != CASE_N[i].mToDelete) && lFolder.DoesFileExist(CASE_N[i].mToDelete))
+        {
+            lFolder.Delete(CASE_N[i].mToDelete);
+        }
+
+        char lArg[LINE_LENGTH];
+
+        sprintf_s(lArg, "ConfigFiles+=%s", lConfigFile);
+
+        const char* lV[1] = { lArg };
 
         for (unsigned int j = 0; j < 2; j++)
         {
-            std::cout << "    Case " << i << ", Execution " << j << "..." << std::endl;
+            std::cout << "    Case " << i << " (" << CASE_N[i].mFolder << "), Execution " << j << "..." << std::endl;
 
             Cfg::Configurator lC;
             System            lS;
@@ -133,9 +150,19 @@ KMS_TEST(System_Exception, "System_Exception", "Auto", sTest_Exception)
 
     for (unsigned int i = 0; i < CASE_E_QTY; i++)
     {
-        const char* lV[1] = { CASE_E[i].mConfigFile };
+        File::Folder lFolder(File::Folder::CURRENT, CASE_E[i].mFolder);
 
-        std::cout << "    Exception " << i << "..." << std::endl;
+        char lConfigFile[PATH_LENGTH];
+
+        lFolder.GetPath(KMS_PLC_CFG, lConfigFile, sizeof(lConfigFile));
+
+        char lArg[LINE_LENGTH];
+
+        sprintf_s(lArg, "ConfigFiles+=%s", lConfigFile);
+
+        const char* lV[1] = { lArg };
+
+        std::cout << "    Case " << i << " (" << CASE_E[i].mFolder << ") ..." << std::endl;
 
         Cfg::Configurator lC;
         System            lS;

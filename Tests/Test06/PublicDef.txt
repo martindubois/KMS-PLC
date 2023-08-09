@@ -1,0 +1,30 @@
+
+# Author    KMS - Martin Dubois, P. Eng.
+# Copyright (C) 2023 KMS
+# License   http://www.apache.org/licenses/LICENSE-2.0
+# Product   KMS-PLC
+# File      Tests/Test06/PublicDef.txt
+
+# COUNTER
+ADDRESS   Test06_A
+ADDRESSES Test06_B
+
+# INPUT
+ADDRESS   Test06_E
+ADDRESSES Test06_F
+
+# OUTPUT
+ADDRESS   Test06_G
+ADDRESSES Test06_H
+
+# RELAY
+ADDRESS   Test06_I
+ADDRESSES Test06_J
+
+# TIMER
+ADDRESS   Test06_K
+ADDRESSES Test06_L
+
+# WORD
+ADDRESS   Test06_M
+ADDRESSES Test06_N

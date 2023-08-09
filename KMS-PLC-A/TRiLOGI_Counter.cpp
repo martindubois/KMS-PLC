@@ -5,6 +5,8 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGI_Counter.cpp
 
+// TEST COVERAGE  2023-08-08  KMS - Martin Dubois, P. Eng.
+
 #include "Component.h"
 
 // ===== Local ==============================================================
@@ -20,16 +22,14 @@ namespace TRiLOGI
 
     Counter::Counter(const char* aName, unsigned int aIndex, unsigned int aLineNo, unsigned int aInit, unsigned int aFlags)
         : Object(aName, aIndex, aLineNo, aFlags | FLAG_SINGLE_USE_WARNING), mInit(aInit)
-    {
-        assert(NULL != aName);
-    }
+    {}
 
     bool Counter::SetInit(unsigned int aInit, Text::File_UTF16* aFile_PC6)
     {
         bool lResult = mInit != aInit;
         if (lResult)
         {
-            ::Console::Change("Counter changed", GetName());
+            ::Console::Change("Counter changed (NOT TESTED)", GetName());
 
             mInit = aInit;
 
@@ -45,9 +45,9 @@ namespace TRiLOGI
 
     void Counter::GetLine(wchar_t* aOut, unsigned int aOutSize_byte) const
     {
-        wchar_t lLine[LINE_LENGTH];
+        assert(NULL != aOut);
 
-        swprintf_s(lLine SizeInfoV(aOutSize_byte / sizeof(wchar_t)), L"%u,%S %u", GetIndex(), GetName(), mInit);
+        swprintf_s(aOut SizeInfoV(aOutSize_byte / sizeof(wchar_t)), L"%u,%S %u", GetIndex(), GetName(), mInit);
     }
 
 }

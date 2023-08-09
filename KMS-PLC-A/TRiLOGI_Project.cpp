@@ -5,7 +5,7 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGI_Project.cpp
 
-// TEST COVERAGE 2023-07-20 KMS - Martin Dubois, P. Eng.
+// TEST COVERAGE  2023-08-08  KMS - Martin Dubois, P. Eng.
 
 #include "Component.h"
 
@@ -87,8 +87,7 @@ namespace TRiLOGI
         }
         else
         {
-            // NOT TESTED
-            ::Console::Progress_End("Cleaned (No change)");
+            ::Console::Progress_End("Cleaned (No change) (NOT TESTED)");
         }
     }
 
@@ -147,7 +146,6 @@ namespace TRiLOGI
         }
     }
 
-    // NOT TESTED  COUNTER, RELAY With index, TIMER, WORD with offset
     void Project::Import()
     {
         ::Console::Progress_Begin("TRiLOGY", "Importing sources");
@@ -438,6 +436,8 @@ namespace TRiLOGI
 
     void Project::AddPublicAddress(const char* aPrivate, const char* aPublic)
     {
+        assert(NULL != aPrivate);
+
         auto lObj = mInputs.FindObject_ByName(aPrivate);
         if (NULL == lObj)
         {

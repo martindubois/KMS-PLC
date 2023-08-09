@@ -5,6 +5,8 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGI_Timer.cpp
 
+// TEST COVERAGE  2023-08-08  KMS - Martin Dubois, P. Eng.
+
 #include "Component.h"
 
 // ===== Local ==============================================================
@@ -20,16 +22,14 @@ namespace TRiLOGI
 
     Timer::Timer(const char* aName, unsigned int aIndex, unsigned int aLineNo, unsigned int aInit, unsigned int aFlags)
         : Object(aName, aIndex, aLineNo, aFlags | FLAG_SINGLE_USE_WARNING), mInit(aInit)
-    {
-        assert(NULL != aName);
-    }
+    {}
 
     bool Timer::SetInit(unsigned int aInit, Text::File_UTF16* aFile_PC6)
     {
         bool lResult = mInit != aInit;
         if (lResult)
         {
-            ::Console::Change("Timer changed", GetName());
+            ::Console::Change("Timer changed (NOT TESTED)", GetName());
 
             mInit = aInit;
 
@@ -47,7 +47,7 @@ namespace TRiLOGI
     {
         assert(NULL != aOut);
 
-        swprintf_s(aOut SizeInfoV(aOutSize_byte / sizeof(wchar_t)), L"%u:%S:%u", GetIndex(), GetName(), mInit);
+        swprintf_s(aOut SizeInfoV(aOutSize_byte / sizeof(wchar_t)), L"%u,%S %u", GetIndex(), GetName(), mInit);
     }
 
 }

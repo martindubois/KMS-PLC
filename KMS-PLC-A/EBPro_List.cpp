@@ -63,8 +63,7 @@ namespace EBPro
 
         if (lChanged)
         {
-            // NOT TESTED
-            ::Console::Progress_Begin("EBPro", "Saving", mToImport.Get());
+            ::Console::Progress_Begin("EBPro", "Saving (NOT TESTED)", mToImport.Get());
 
             SaveToImport();
         }
@@ -74,8 +73,7 @@ namespace EBPro
             // we verify if the ToImport is configured.
             if (IsToImportConfigured() && File::Folder::CURRENT.DoesFileExist(mToImport.Get()))
             {
-                // NOT TESTED
-                ::Console::Progress_Begin("EBPro", "Deleting", mToImport.Get());
+                ::Console::Progress_Begin("EBPro", "Deleting (NOT TESTED)", mToImport.Get());
 
                 File::Folder lCurrent(File::Folder::Id::CURRENT);
 

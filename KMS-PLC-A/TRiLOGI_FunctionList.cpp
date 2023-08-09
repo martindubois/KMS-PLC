@@ -5,6 +5,8 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGI_FunctionList.cpp
 
+// TEST COVERAGE  2023-08-08  KMS - Martin Dubois, P. Eng.
+
 #include "Component.h"
 
 // ===== C++ ================================================================
@@ -60,6 +62,7 @@ namespace TRiLOGI
 
             if (lIt->second->TestFlag(Object::FLAG_TO_APPLY))
             {
+                // NOT TESTED
                 lResult = true;
 
                 lFunction->Apply(lFile);
@@ -78,6 +81,8 @@ namespace TRiLOGI
 
     bool FunctionList::Import(const char* aName, Text::File_ASCII* aFile, Text::File_ASCII::Internal::iterator* aIt)
     {
+        assert(NULL != aName);
+
         unsigned int lCodeBegin;
         unsigned int lCodeEnd;
         unsigned int lFlags;
@@ -127,7 +132,7 @@ namespace TRiLOGI
         {
             if (*lNew != *lFunction)
             {
-                ::Console::Change("Function changed", aName);
+                ::Console::Change("Function changed (NOT TESTED)", aName);
 
                 Replace(lFunction, lNew);
             }
@@ -171,7 +176,7 @@ namespace TRiLOGI
                     auto lBI = mObjects_ByIndex.insert(ByIndex::value_type(lIndex, lFunction));
                     if (!lBI.second)
                     {
-                        sprintf_s(lMsg, "Line %u  A function already exist at index %u", lLineNo, lIndex);
+                        sprintf_s(lMsg, "Line %u  A function already exist at index %u (NOT TESTED)", lLineNo, lIndex);
                         KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
                     }
 
@@ -182,7 +187,7 @@ namespace TRiLOGI
             {
                 if (NULL != lFunction)
                 {
-                    sprintf_s(lMsg, "Line %u  A function is malformed", lLineNo);
+                    sprintf_s(lMsg, "Line %u  A function is malformed (NOT TESTED)", lLineNo);
                     KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
                 }
 
@@ -209,7 +214,7 @@ namespace TRiLOGI
             auto lBI = mObjects_ByIndex.insert(ByIndex::value_type(lIndex, lFunction));
             if (!lBI.second)
             {
-                sprintf_s(lMsg, "Line %u  A function already exist at index %u", aLineNo, lIndex);
+                sprintf_s(lMsg, "Line %u  A function already exist at index %u (NOT TESTED)", aLineNo, lIndex);
                 KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
             }
         }
@@ -239,13 +244,14 @@ namespace TRiLOGI
             auto lRet = swscanf_s(lLine, L"%u,%S", &lIndex, lName SizeInfo(lName));
             if (2 != lRet)
             {
-                sprintf_s(lMsg, "Line %u  Corrupted PC6 file", aLineNo);
+                sprintf_s(lMsg, "Line %u  Corrupted PC6 file (NOT TESTED)", aLineNo);
                 KMS_EXCEPTION(APPLICATION_ERROR, lMsg, lRet);
             }
 
             auto lFunction = Find_ByIndex(lIndex);
             if (NULL == lFunction)
             {
+                // NOT TESTED
                 lFunction = new Function(lIndex, 0);
 
                 auto lBI = mObjects_ByIndex.insert(ByIndex::value_type(lIndex, lFunction));
@@ -261,7 +267,7 @@ namespace TRiLOGI
             auto lBI = mObjects_ByName.insert(ByName::value_type(lName, lFunction));
             if (!lBI.second)
             {
-                sprintf_s(lMsg, "Line %u  A function named \"%s\" already exist", lLineNo, lName);
+                sprintf_s(lMsg, "Line %u  A function named \"%s\" already exist (NOT TESTED)", lLineNo, lName);
                 KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
             }
         }
@@ -294,7 +300,7 @@ namespace TRiLOGI
                 lFunction->AddFlags(Object::FLAG_NOT_USED);
 
                 ::Console::Warning_Begin(lFunction->GetLineNo())
-                    << "The function named \"" << lName << "\" (" << lFunction->GetIndex() << ") is not used";
+                    << "The function named \"" << lName << "\" (" << lFunction->GetIndex() << ") is not used (NOT TESTED)";
                 ::Console::Warning_End();
                 break;
             }
@@ -303,7 +309,7 @@ namespace TRiLOGI
         if (0 < lCount)
         {
             ::Console::Warning_Begin()
-                << lCount << " unused functions";
+                << lCount << " unused functions (NOT TESTED)";
             ::Console::Warning_End();
         }
     }

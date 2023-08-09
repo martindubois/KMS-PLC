@@ -5,7 +5,7 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGI_Function.cpp
 
-// TEST COVERAGE 2023-05-29 KMS - Martin Dubois, P. Eng.
+// TEST COVERAGE  2023-08-08  KMS - Martin Dubois, P. Eng.
 
 #include "Component.h"
 
@@ -51,6 +51,8 @@ namespace TRiLOGI
     // NOT TESTED
     void Function::Apply(Text::File_UTF16* aFile)
     {
+        assert(NULL != aFile);
+
         assert(mLineNo_Code_Begin < mLineNo_Code_End);
 
         unsigned int lIndex    = 0;
@@ -82,6 +84,8 @@ namespace TRiLOGI
 
     void Function::Insert(Text::File_UTF16* aFile)
     {
+        assert(NULL != aFile);
+
         unsigned int lLineNo = mLineNo_Code_Begin;
 
         aFile->InsertLine(lLineNo, L"\xc8"); lLineNo++;

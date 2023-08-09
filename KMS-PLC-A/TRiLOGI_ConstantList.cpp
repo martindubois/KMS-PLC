@@ -5,6 +5,8 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGI_ConstantList.cpp
 
+// TEST COVERAGE  2023-08-08  KMS - Martin Dubois, P. Eng.
+
 #include "Component.h"
 
 // ===== Local ==============================================================
@@ -22,11 +24,13 @@ namespace TRiLOGI
     {
         assert(NULL != aConstant);
 
-        std::pair<ByName::iterator, bool> lBN = mConstants_ByName.insert(ByName::value_type(aConstant->GetName(), aConstant));
-
-        char lMsg[64 + NAME_LENGTH];
-        sprintf_s(lMsg, "A constant named \"%s\" already exist", aConstant->GetName());
-        KMS_EXCEPTION_ASSERT(lBN.second, APPLICATION_ERROR, lMsg, "");
+        auto lBN = mConstants_ByName.insert(ByName::value_type(aConstant->GetName(), aConstant));
+        if (!lBN.second)
+        {
+            char lMsg[64 + NAME_LENGTH];
+            sprintf_s(lMsg, "A constant named \"%s\" already exist (NOT TESTED)", aConstant->GetName());
+            KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
+        }
     }
 
     void ConstantList::Clear() { mConstants_ByName.clear(); }
