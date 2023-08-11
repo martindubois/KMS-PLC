@@ -24,7 +24,7 @@ namespace TRiLOGI
 
         void AddConstant(Constant* aConstant);
 
-        void Clear();
+        void ClearList();
 
         unsigned int GetCount() const;
 

@@ -29,11 +29,11 @@ namespace TRiLOGI
 
     FunctionList::FunctionList() : ObjectList("function", 256) {}
 
-    void FunctionList::Clear()
+    void FunctionList::ClearList()
     {
         mLineNo_End_Code = 0;
 
-        ObjectList::Clear();
+        ObjectList::ClearList();
     }
 
     void FunctionList::SetLineNo_End_Code(unsigned int aLineNo)

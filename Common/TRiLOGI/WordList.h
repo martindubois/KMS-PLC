@@ -13,6 +13,10 @@
 #include <regex>
 #include <string>
 
+// ===== Import =============================================================
+#include <KMS/DI/Dictionary.h>
+#include <KMS/DI/UInt.h>
+
 // ===== Local ==============================================================
 #include "../Address.h"
 
@@ -22,18 +26,18 @@ namespace TRiLOGI
     class Object;
     class Word;
 
-    class WordList
+    class WordList : public KMS::DI::Dictionary
     {
 
     public:
 
         WordList();
 
-        Object* AddWord(const char* aName, unsigned int aIndex, unsigned int aLineNo, const char* aComment, unsigned int aFlags);
+        TRiLOGI::Object* AddWord(const char* aName, unsigned int aIndex, unsigned int aLineNo, const char* aComment, unsigned int aFlags);
 
         void AddWord(Word* aWord);
 
-        void Clear();
+        void ClearList();
 
         void GetAddresses(const std::regex& aRegEx, AddressList* aOut) const;
 
@@ -44,7 +48,11 @@ namespace TRiLOGI
 
         const Word* Find_ByOffset(unsigned int aOffset) const;
 
-        void Verify() const;
+        void ValidateConfig() const;
+
+        // ===== Configurable attributes ====================================
+        KMS::DI::UInt<uint16_t> mOffsetMax;
+        KMS::DI::UInt<uint16_t> mOffsetNew;
 
     private:
 

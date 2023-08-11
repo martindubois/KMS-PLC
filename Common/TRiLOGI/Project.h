@@ -12,6 +12,7 @@
 #include <KMS/DI/Array.h>
 #include <KMS/DI/Boolean.h>
 #include <KMS/DI/Dictionary.h>
+#include <KMS/DI/Enum.h>
 #include <KMS/DI/String_Expand.h>
 #include <KMS/Text/File_UTF16.h>
 
@@ -64,6 +65,7 @@ namespace TRiLOGI
         KMS::DI::String_Expand mFileName;
         KMS::DI::String_Expand mHeaderFile;
         KMS::DI::String_Expand mHeaderPrefix;
+        KMS::DI::Enum<ProjectType, PROJECT_TYPE_NAMES> mProjectType;
         KMS::DI::Array         mPublicDefs;
         KMS::DI::Array         mSources;
         KMS::DI::String_Expand mToolConfig;

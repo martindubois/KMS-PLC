@@ -25,7 +25,7 @@ namespace TRiLOGI
     // Public
     // //////////////////////////////////////////////////////////////////////
 
-    ObjectList::~ObjectList() { Clear(); }
+    ObjectList::~ObjectList() { ClearList(); }
 
     bool ObjectList::Apply()
     {
@@ -50,7 +50,7 @@ namespace TRiLOGI
         return lResult;
     }
 
-    void ObjectList::Clear()
+    void ObjectList::ClearList()
     {
         mFile_PC6 = nullptr;
 
@@ -240,7 +240,6 @@ namespace TRiLOGI
         char lMsg[64 + NAME_LENGTH];
 
         auto lBI = mObjects_ByIndex.insert(ObjectList::ByIndex::value_type(aObject->GetIndex(), aObject));
-
         if (!lBI.second)
         {
             sprintf_s(lMsg, "An object with index %u already exist (NOT TESTED)", aObject->GetIndex());
@@ -248,7 +247,6 @@ namespace TRiLOGI
         }
 
         auto lBN = mObjects_ByName.insert(ObjectList::ByName::value_type(aObject->GetName(), aObject));
-
         if (!lBN.second)
         {
             sprintf_s(lMsg, "An object named \"%s\" already exist (NOT TESTED)", aObject->GetName());
@@ -264,7 +262,6 @@ namespace TRiLOGI
         char         lName[NAME_LENGTH];
 
         auto lRet = swscanf_s(aLine, L"%u,%S", &lIndex, lName SizeInfo(lName));
-
         if (2 != lRet)
         {
             char lMsg[64];

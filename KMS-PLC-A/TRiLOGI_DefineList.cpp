@@ -24,12 +24,12 @@ namespace TRiLOGI
 
     DefineList::DefineList() : ObjectList("define", 2000) {}
 
-    void DefineList::Clear()
+    void DefineList::ClearList()
     {
-        mConstants.Clear();
-        mWords    .Clear();
+        mConstants.ClearList();
+        mWords    .ClearList();
 
-        ObjectList::Clear();
+        ObjectList::ClearList();
     }
 
     bool DefineList::ImportConstant(const char* aName, const char* aValue)
@@ -140,6 +140,7 @@ namespace TRiLOGI
         }
         else if (lWord->GetOffset() != aOffset)
         {
+            // TODO  Project type new - Update the offset
             ::Console::Error_Begin()
                 << "The name " << aName << " is already uses witch another offset (NOT TESTED)";
             ::Console::Error_End();

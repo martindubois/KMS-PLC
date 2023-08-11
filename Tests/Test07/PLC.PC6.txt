@@ -67,10 +67,10 @@ TIMER Test07_J
 
 # ===== WORD ================================================================
 
-WORD Test07_K 0
+WORD Test07_K 1
 
 # Same name
 WORD Test07_K
 
 # Same index
-WORD Test07_L 0
+WORD Test07_L 1

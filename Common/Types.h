@@ -26,3 +26,17 @@ enum class AddressType
 
     QTY
 };
+
+enum class ProjectType
+{
+    LEGACY = 0,
+    NEW,
+
+    QTY
+};
+
+// Constants
+// //////////////////////////////////////////////////////////////////////////
+
+extern const char* ADDRESS_TYPE_NAMES[];
+extern const char* PROJECT_TYPE_NAMES[];

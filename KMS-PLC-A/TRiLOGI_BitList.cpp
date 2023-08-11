@@ -92,6 +92,7 @@ namespace TRiLOGI
             return false;
         }
 
+        // TODO  New project type - Change the index
         if (aIndex != lObject->GetIndex())
         {
             ::Console::Error_Begin()

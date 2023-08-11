@@ -27,7 +27,7 @@ typedef struct
 }
 AddressTypeName;
 
-static const AddressTypeName ADDRESS_TYPE_NAMES[] =
+static const AddressTypeName ADDRESS_SUBTYPE_NAMES[] =
 {
     { "Local HMI" , "LB"       },
     { "Local HMI" , "LW"       },
@@ -155,7 +155,7 @@ namespace EBPro
         auto lType = static_cast<unsigned int>(mType);
 
         sprintf_s(aOut SizeInfoV(aOutSize_byte), "%s,%s,%s,%s,%s,%s", mName.c_str(),
-            ADDRESS_TYPE_NAMES[lType].mType, ADDRESS_TYPE_NAMES[lType].mSubType,
+            ADDRESS_SUBTYPE_NAMES[lType].mType, ADDRESS_SUBTYPE_NAMES[lType].mSubType,
             mAddress.c_str(), mComment.c_str(), mDataType.c_str());
     }
 
@@ -206,8 +206,8 @@ AddressType ToAddressType(const char* aType, const char* aSubType)
 
     for (lResult = static_cast<unsigned int>(AddressType::LOCAL_HMI_LB); lResult < static_cast<unsigned int>(AddressType::UNKNOWN); lResult++)
     {
-        if (   (0 == strcmp(ADDRESS_TYPE_NAMES[lResult].mType   , aType    ))
-            && (0 == strcmp(ADDRESS_TYPE_NAMES[lResult].mSubType, aSubType)))
+        if (   (0 == strcmp(ADDRESS_SUBTYPE_NAMES[lResult].mType   , aType    ))
+            && (0 == strcmp(ADDRESS_SUBTYPE_NAMES[lResult].mSubType, aSubType)))
         {
             break;
         }

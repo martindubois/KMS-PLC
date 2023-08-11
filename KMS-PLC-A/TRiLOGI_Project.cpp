@@ -30,11 +30,14 @@ using namespace KMS;
 static const Cfg::MetaData MD_CREATE_IF_NEEDED("CreateIfNeeded = false | true");
 static const Cfg::MetaData MD_EXPORTED        ("Exported = {Path}.PC6.txt");
 static const Cfg::MetaData MD_FILE_NAME       ("FileName = {Path}.PC6");
-static const Cfg::MetaData MD_HEADER_FILE     {"HeaderFile = {Path}.h"};
-static const Cfg::MetaData MD_HEADER_PREFIX   {"HeaderPrefix = {Prefix}"};
+static const Cfg::MetaData MD_HEADER_FILE     ("HeaderFile = {Path}.h");
+static const Cfg::MetaData MD_HEADER_PREFIX   ("HeaderPrefix = {Prefix}");
 static const Cfg::MetaData MD_PUBLIC_DEFS     ("PublicDefs += {Path}.txt");
+static const Cfg::MetaData MD_PROJECT_TYPE    ("ProjectType = LEGACY | NEW");
 static const Cfg::MetaData MD_SOURCES         ("Sources += {Path}.PC6.txt");
-static const Cfg::MetaData MD_TOOL_CONFIG     {"HeaderFile = {Path}.cfg"};
+static const Cfg::MetaData MD_TOOL_CONFIG     ("HeaderFile = {Path}.cfg");
+
+#define PROJECT_TYPE_DEFAULT (ProjectType::LEGACY)
 
 // Static function declarations
 // //////////////////////////////////////////////////////////////////////////
@@ -47,7 +50,12 @@ namespace TRiLOGI
     // Public
     // //////////////////////////////////////////////////////////////////////
 
-    Project::Project() : mInputs("input", 1, 256), mOutputs("output", 1, 256), mRelays("relay", 1025, 512)
+    Project::Project()
+        : mInputs ("input" ,    1, 256)
+        , mOutputs("output",    1, 256)
+        , mRelays ("relay" , 1025, 512)
+        // ===== Configurable attributes ====================================
+        , mProjectType(PROJECT_TYPE_DEFAULT)
     {
         mPublicDefs.SetCreator(DI::String_Expand::Create);
         mSources   .SetCreator(DI::String_Expand::Create);
@@ -58,8 +66,11 @@ namespace TRiLOGI
         AddEntry("HeaderFile"    , &mHeaderFile    , false, &MD_HEADER_FILE);
         AddEntry("HeaderPrefix"  , &mHeaderPrefix  , false, &MD_HEADER_PREFIX);
         AddEntry("PublicDefs"    , &mPublicDefs    , false, &MD_PUBLIC_DEFS);
+        AddEntry("ProjectType"   , &mProjectType   , false, &MD_PROJECT_TYPE);
         AddEntry("Sources"       , &mSources       , false, &MD_SOURCES);
         AddEntry("ToolConfig"    , &mToolConfig    , false, &MD_TOOL_CONFIG);
+
+        AddEntry("Words", &mDefines.mWords, false);
     }
 
     bool Project::IsValid() const { return 0 < mFile.GetLineCount(); }
@@ -313,6 +324,8 @@ namespace TRiLOGI
                 KMS_EXCEPTION(APPLICATION_USER_ERROR, lMsg, "");
             }
         }
+
+        mDefines.mWords.ValidateConfig();
     }
 
     void Project::Verify()
@@ -658,13 +671,13 @@ namespace TRiLOGI
 
     void Project::Reparse()
     {
-        mCounters  .Clear();
-        mDefines   .Clear();
-        mFunctions .Clear();
-        mInputs    .Clear();
-        mOutputs   .Clear();
-        mRelays    .Clear();
-        mTimers    .Clear();
+        mCounters .ClearList();
+        mDefines  .ClearList();
+        mFunctions.ClearList();
+        mInputs   .ClearList();
+        mOutputs  .ClearList();
+        mRelays   .ClearList();
+        mTimers   .ClearList();
 
         mPublicAddresses.clear();
 

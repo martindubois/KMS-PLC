@@ -27,7 +27,7 @@ namespace TRiLOGI
 
         FunctionList();
 
-        void Clear();
+        void ClearList();
 
         void SetLineNo_End_Code(unsigned int aLineNo);
 

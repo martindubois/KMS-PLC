@@ -23,7 +23,7 @@ namespace TRiLOGI
 
         DefineList();
 
-        void Clear();
+        void ClearList();
 
         void Display_ByIndex(FILE* aOut) const;
         void Display_ByName (FILE* aOut) const;

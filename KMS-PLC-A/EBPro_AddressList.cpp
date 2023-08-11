@@ -22,21 +22,6 @@
 
 using namespace KMS;
 
-// Constants
-// //////////////////////////////////////////////////////////////////////////
-
-static const char* ADDRESS_TYPE_NAMES[] =
-{
-    "LB",
-    "LW",
-    "LW_BIT",
-    "RW_A",
-    "RW_A_BIT",
-    "MODBUS_RTU_1X",
-    "MODBUS_RTU_4X",
-    "UNKNOWN",
-};
-
 namespace EBPro
 {
 
@@ -92,20 +77,20 @@ namespace EBPro
         if (!mFile_CSV.mLines.empty())
         {
             ::Console::Progress_Begin("EBPro", "Parsing", GetExported());
-
-            unsigned int lLineNo = 0;
-
-            for (const auto lLine : mFile_CSV.mLines)
             {
-                auto lA = new Address(lLine.c_str(), lLineNo);
+                unsigned int lLineNo = 0;
 
-                mAddresses.push_back(lA);
+                for (const auto lLine : mFile_CSV.mLines)
+                {
+                    auto lA = new Address(lLine.c_str(), lLineNo);
 
-                mAddresses_ByName.insert(ByName::value_type(lA->GetName(), lA));
+                    mAddresses.push_back(lA);
 
-                lLineNo++;
+                    mAddresses_ByName.insert(ByName::value_type(lA->GetName(), lA));
+
+                    lLineNo++;
+                }
             }
-
             ::Console::Progress_End("Parsed");
         }
     }
@@ -113,29 +98,29 @@ namespace EBPro
     void AddressList::Verify() const
     {
         ::Console::Progress_Begin("EBPro", "Verifying addresses");
-
-        for (auto lItA = mAddresses.begin(); lItA != mAddresses.end(); lItA++)
         {
-            for (auto lItB = lItA + 1; lItB != mAddresses.end(); lItB++)
+            for (auto lItA = mAddresses.begin(); lItA != mAddresses.end(); lItA++)
             {
-                if (0 == strcmp((*lItA)->GetName(), (*lItB)->GetName()))
+                for (auto lItB = lItA + 1; lItB != mAddresses.end(); lItB++)
                 {
-                    ::Console::Warning_Begin((*lItA)->GetLineNo(), (*lItB)->GetLineNo())
-                        << "2 addresses are named \"" << (*lItA)->GetName() << "\"";
-                    ::Console::Warning_End();
-                }
+                    if (0 == strcmp((*lItA)->GetName(), (*lItB)->GetName()))
+                    {
+                        ::Console::Warning_Begin((*lItA)->GetLineNo(), (*lItB)->GetLineNo())
+                            << "2 addresses are named \"" << (*lItA)->GetName() << "\"";
+                        ::Console::Warning_End();
+                    }
 
-                if (   ((*lItA)->GetType() == (*lItB)->GetType())
-                    && (0 == strcmp((*lItA)->GetAddress(), (*lItB)->GetAddress())))
-                {
-                    ::Console::Warning_Begin((*lItA)->GetLineNo(), (*lItB)->GetLineNo())
-                        << "The addresses named \"" << (*lItA)->GetName() << "\" and \"" << (*lItB)->GetName()
-                        << "\" are the same (" << (*lItA)->GetAddress() << ") (NOT TESTED)";
-                    ::Console::Warning_End();
+                    if (   ((*lItA)->GetType() == (*lItB)->GetType())
+                        && (0 == strcmp((*lItA)->GetAddress(), (*lItB)->GetAddress())))
+                    {
+                        ::Console::Warning_Begin((*lItA)->GetLineNo(), (*lItB)->GetLineNo())
+                            << "The addresses named \"" << (*lItA)->GetName() << "\" and \"" << (*lItB)->GetName()
+                            << "\" are the same (" << (*lItA)->GetAddress() << ") (NOT TESTED)";
+                        ::Console::Warning_End();
+                    }
                 }
             }
         }
-
         ::Console::Progress_End("Verified");
     }
 

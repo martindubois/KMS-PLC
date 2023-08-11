@@ -60,6 +60,7 @@
     <ClCompile Include="TRiLOGI_TimerList.cpp" />
     <ClCompile Include="TRiLOGI_Word.cpp" />
     <ClCompile Include="TRiLOGI_WordList.cpp" />
+    <ClCompile Include="Types.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Convert.h" />

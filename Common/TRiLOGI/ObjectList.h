@@ -28,7 +28,7 @@ namespace TRiLOGI
         ~ObjectList();
 
         bool Apply();
-        void Clear();
+        void ClearList();
 
         unsigned int GetCount() const;
 

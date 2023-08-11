@@ -33,7 +33,7 @@ namespace TRiLOGI
         }
     }
 
-    void ConstantList::Clear() { mConstants_ByName.clear(); }
+    void ConstantList::ClearList() { mConstants_ByName.clear(); }
 
     unsigned int ConstantList::GetCount() const { return static_cast<unsigned int>(mConstants_ByName.size()); }
 
