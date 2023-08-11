@@ -4,6 +4,7 @@ Copyright (C) 2022-2023 KMS
 Product   KMS-PLC
 File      KMS-PLC/_DocUser/KMS.ReadMe.txt
 
+0.1.9-dev Windows 1023-08-11
 * TRiLOGY
     * ProjectType
     * Words.OffsetMax and Words.OffsetNew

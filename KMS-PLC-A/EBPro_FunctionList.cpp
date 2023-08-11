@@ -33,19 +33,19 @@ namespace EBPro
         if (nullptr != mFile_Data)
         {
             ::Console::Progress_Begin("EBPro", "Parsing ", GetExported());
-
-            DataPtr lPtr(mFile_Data, mFile->GetMappedSize());
-
-            Header_Parse(&lPtr);
-
-            while (!lPtr.IsAtEnd())
             {
-                auto lFunction = new Function();
-                lFunction->Read(&lPtr);
+                DataPtr lPtr(mFile_Data, mFile->GetMappedSize());
 
-                Add(lFunction);
+                Header_Parse(&lPtr);
+
+                while (!lPtr.IsAtEnd())
+                {
+                    auto lFunction = new Function();
+                    lFunction->Read(&lPtr);
+
+                    Add(lFunction);
+                }
             }
-
             ::Console::Progress_End("Parsed");
         }
     }

@@ -55,9 +55,9 @@ namespace EBPro
             assert(nullptr != lSource);
 
             ::Console::Progress_Begin("EBPro", "Importing", lSource->Get());
-
-            lChanged |= ImportSource(lSource->Get());
-
+            {
+                lChanged |= ImportSource(lSource->Get());
+            }
             ::Console::Progress_End("Imported");
         }
 
@@ -74,11 +74,11 @@ namespace EBPro
             if (IsToImportConfigured() && File::Folder::CURRENT.DoesFileExist(mToImport.Get()))
             {
                 ::Console::Progress_Begin("EBPro", "Deleting (NOT TESTED)", mToImport.Get());
+                {
+                    File::Folder lCurrent(File::Folder::Id::CURRENT);
 
-                File::Folder lCurrent(File::Folder::Id::CURRENT);
-
-                lCurrent.Delete(mToImport.Get());
-
+                    lCurrent.Delete(mToImport.Get());
+                }
                 ::Console::Progress_End("Deleted");
             }
         }
@@ -89,9 +89,9 @@ namespace EBPro
         if (IsExportedConfigured())
         {
             ::Console::Progress_Begin("EBPro", "Reading", GetExported());
-
-            ReadExported();
-
+            {
+                ReadExported();
+            }
             ::Console::Progress_End("Read");
         }
     }

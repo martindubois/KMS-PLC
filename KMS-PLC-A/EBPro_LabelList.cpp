@@ -54,27 +54,27 @@ namespace EBPro
             auto lPath = std::string(GetExported()) + ".txt";
 
             ::Console::Progress_Begin("EBPro", "Exporting", lPath.c_str());
-
-            FILE* lFile;
-
-            auto lErr = fopen_s(&lFile, lPath.c_str(), "w,ccs=UTF-8");
-            if (0 != lErr)
             {
-                char lMsg[64 + PATH_LENGTH];
-                sprintf_s(lMsg, "Cannot open \"%s\" for writing", lPath.c_str());
-                KMS_EXCEPTION(APPLICATION_ERROR, lMsg, lErr);
+                FILE* lFile;
+
+                auto lErr = fopen_s(&lFile, lPath.c_str(), "w,ccs=UTF-8");
+                if (0 != lErr)
+                {
+                    char lMsg[64 + PATH_LENGTH];
+                    sprintf_s(lMsg, "Cannot open \"%s\" for writing", lPath.c_str());
+                    KMS_EXCEPTION(APPLICATION_ERROR, lMsg, lErr);
+                }
+
+                assert(nullptr != lFile);
+
+                for (auto lLabel : mLabels)
+                {
+                    lLabel->Export(lFile, mLanguages);
+                }
+
+                auto lRet = fclose(lFile);
+                assert(0 == lRet);
             }
-
-            assert(nullptr != lFile);
-
-            for (auto lLabel : mLabels)
-            {
-                lLabel->Export(lFile, mLanguages);
-            }
-
-            auto lRet = fclose(lFile);
-            assert(0 == lRet);
-
             ::Console::Progress_End("Exported");
         }
     }
@@ -86,41 +86,41 @@ namespace EBPro
             const char* lExported = GetExported();
 
             ::Console::Progress_Begin("EBPro", "Parsing", lExported);
-
-            FILE* lFile;
-
-            auto lErr = fopen_s(&lFile, lExported, "rb");
-
-            char lMsg[64 + PATH_LENGTH];
-            sprintf_s(lMsg, "Cannot open \"%s\" for reading", lExported);
-            KMS_EXCEPTION_ASSERT(0 == lErr, APPLICATION_ERROR, lMsg, lErr);
-
-            assert(nullptr != lFile);
-
-            uint16_t lLabelCount;
-
-            auto lSize_byte = fread_s(&lLabelCount SizeInfo(lLabelCount) + 1, 1, sizeof(lLabelCount), lFile);
-            KMS_EXCEPTION_ASSERT(sizeof(lLabelCount) == lSize_byte, APPLICATION_ERROR, "Cannot read the exported LBL file", lSize_byte);
-
-            lSize_byte = fread_s(mHeader SizeInfo(mHeader) + 1, 1, sizeof(mHeader), lFile);
-            KMS_EXCEPTION_ASSERT(sizeof(mHeader) == lSize_byte, APPLICATION_ERROR, "Cannot read the exported LBL file", lSize_byte);
-
-            while (!feof(lFile))
             {
-                auto lLabel = new Label;
+                FILE* lFile;
 
-                lLabel->Read(lFile);
+                auto lErr = fopen_s(&lFile, lExported, "rb");
 
-                mLabels.push_back(lLabel);
+                char lMsg[64 + PATH_LENGTH];
+                sprintf_s(lMsg, "Cannot open \"%s\" for reading", lExported);
+                KMS_EXCEPTION_ASSERT(0 == lErr, APPLICATION_ERROR, lMsg, lErr);
+
+                assert(nullptr != lFile);
+
+                uint16_t lLabelCount;
+
+                auto lSize_byte = fread_s(&lLabelCount SizeInfo(lLabelCount) + 1, 1, sizeof(lLabelCount), lFile);
+                KMS_EXCEPTION_ASSERT(sizeof(lLabelCount) == lSize_byte, APPLICATION_ERROR, "Cannot read the exported LBL file", lSize_byte);
+
+                lSize_byte = fread_s(mHeader SizeInfo(mHeader) + 1, 1, sizeof(mHeader), lFile);
+                KMS_EXCEPTION_ASSERT(sizeof(mHeader) == lSize_byte, APPLICATION_ERROR, "Cannot read the exported LBL file", lSize_byte);
+
+                while (!feof(lFile))
+                {
+                    auto lLabel = new Label;
+
+                    lLabel->Read(lFile);
+
+                    mLabels.push_back(lLabel);
+                }
+
+                ::Console::Stats(mLabels.size(), "labels");
+
+                KMS_EXCEPTION_ASSERT(lLabelCount == mLabels.size(), APPLICATION_ERROR, "Corrupted exported LBL file", lLabelCount);
+
+                auto lRet = fclose(lFile);
+                assert(0 == lRet);
             }
-
-            ::Console::Stats(mLabels.size(), "labels");
-
-            KMS_EXCEPTION_ASSERT(lLabelCount == mLabels.size(), APPLICATION_ERROR, "Corrupted exported LBL file", lLabelCount);
-
-            auto lRet = fclose(lFile);
-            assert(0 == lRet);
-
             ::Console::Progress_End("Parsed");
         }
     }
@@ -153,24 +153,24 @@ namespace EBPro
     void LabelList::Verify() const
     {
         ::Console::Progress_Begin("EBPro", "Verifying labels");
-
-        for (Internal::const_iterator lItA = mLabels.begin(); lItA != mLabels.end(); lItA++)
         {
-            for (Internal::const_iterator lItB = lItA + 1; lItB != mLabels.end(); lItB++)
+            for (Internal::const_iterator lItA = mLabels.begin(); lItA != mLabels.end(); lItA++)
             {
-                if ((*lItA)->mName == (*lItB)->mName)
+                for (Internal::const_iterator lItB = lItA + 1; lItB != mLabels.end(); lItB++)
                 {
-                    ::Console::Warning_Begin()
-                        << "The label " << (*lItA)->mName.c_str() << " is present twice";
-                    ::Console::Warning_End();
+                    if ((*lItA)->mName == (*lItB)->mName)
+                    {
+                        ::Console::Warning_Begin()
+                            << "The label " << (*lItA)->mName.c_str() << " is present twice";
+                        ::Console::Warning_End();
+                    }
                 }
+
+                (*lItA)->Verify();
             }
 
-            (*lItA)->Verify();
+            // TODO Verify more
         }
-
-        // TODO Verify more
-
         ::Console::Progress_End("Verified");
     }
 

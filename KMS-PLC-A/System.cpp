@@ -115,33 +115,33 @@ void System::Verify()
     if ((0 < mEBPro.mAddresses.GetCount()) && mTRiLOGI.IsValid())
     {
         ::Console::Progress_Begin("System", "Verifying shared addresses");
-
-        for (const auto lA : mEBPro.mAddresses.mAddresses)
         {
-            switch (lA->GetType())
+            for (const auto lA : mEBPro.mAddresses.mAddresses)
             {
-            case AddressType::MODBUS_RTU_1X:
-                if (!mTRiLOGI.VerifyAddress_1X(lA->GetAddress_UInt16()))
+                switch (lA->GetType())
                 {
-                    ::Console::Error_Begin()
-                        << "The HMI access an invalid PLC address named \""
-                        << lA->GetName() << "\" (1x-" << lA->GetAddress() << ") (NOT TESTED)";
-                    ::Console::Error_End();
-                }
-                break;
+                case AddressType::MODBUS_RTU_1X:
+                    if (!mTRiLOGI.VerifyAddress_1X(lA->GetAddress_UInt16()))
+                    {
+                        ::Console::Error_Begin()
+                            << "The HMI access an invalid PLC address named \""
+                            << lA->GetName() << "\" (1x-" << lA->GetAddress() << ") (NOT TESTED)";
+                        ::Console::Error_End();
+                    }
+                    break;
 
-            case AddressType::MODBUS_RTU_4X:
-                if (!mTRiLOGI.VerifyAddress_4X(lA->GetAddress_UInt16()))
-                {
-                    ::Console::Error_Begin()
-                        << "The HMI access an invalid PLC address named \""
-                        << lA->GetName() << "\" (4x-" << lA->GetAddress() << ") (NOT TESTED)";
-                    ::Console::Error_End();
+                case AddressType::MODBUS_RTU_4X:
+                    if (!mTRiLOGI.VerifyAddress_4X(lA->GetAddress_UInt16()))
+                    {
+                        ::Console::Error_Begin()
+                            << "The HMI access an invalid PLC address named \""
+                            << lA->GetName() << "\" (4x-" << lA->GetAddress() << ") (NOT TESTED)";
+                        ::Console::Error_End();
+                    }
+                    break;
                 }
-                break;
             }
         }
-
         ::Console::Progress_End("Verifyed");
     }
 }
