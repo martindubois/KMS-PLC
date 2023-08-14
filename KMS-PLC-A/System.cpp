@@ -5,7 +5,7 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/System.cpp
 
-// TEST COVERAGE  2023-08-07  KMS - Martin Dubois, P. Eng.
+// TEST COVERAGE  2023-08-14  KMS - Martin Dubois, P. Eng.
 
 #include "Component.h"
 
@@ -118,6 +118,7 @@ void System::Verify()
         {
             for (const auto lA : mEBPro.mAddresses.mAddresses)
             {
+                // NOT TESTED
                 switch (lA->GetType())
                 {
                 case AddressType::MODBUS_RTU_1X:
@@ -189,7 +190,6 @@ int System::Run()
 
     Read  ();
     Parse ();
-    Verify();
 
     return CLI::Tool::Run();
 }

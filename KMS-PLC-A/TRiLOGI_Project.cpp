@@ -17,8 +17,9 @@
 #include <KMS/Text/File_ASCII.h>
 
 // ===== Local ==============================================================
-#include "../Common/TRiLOGI/Project.h"
 #include "../Common/Version.h"
+
+#include "../Common/TRiLOGI/Project.h"
 
 #include "TRiLOGI/Word.h"
 
@@ -56,9 +57,13 @@ namespace TRiLOGI
         , mRelays ("relay" , 1025, 512)
         // ===== Configurable attributes ====================================
         , mProjectType(PROJECT_TYPE_DEFAULT)
+        // ===== Callbacks ==================================================
+        , ON_PROJECT_TYPE_CHANGED(this, &Project::OnProjectTypeChanged)
     {
         mPublicDefs.SetCreator(DI::String_Expand::Create);
         mSources   .SetCreator(DI::String_Expand::Create);
+
+        mProjectType.mOnChanged = &ON_PROJECT_TYPE_CHANGED;
 
         AddEntry("CreateIfNeeded", &mCreateIfNeeded, false, &MD_CREATE_IF_NEEDED);
         AddEntry("Exported"      , &mExported      , false, &MD_EXPORTED);
@@ -143,74 +148,24 @@ namespace TRiLOGI
 
         auto lChanged = false;
 
+        switch (mProjectType)
+        {
+        case ProjectType::LEGACY: break;
+
+        case ProjectType::NEW:
+            lChanged = true;
+            RemoveParsed();
+            break;
+
+        default: assert(false);
+        }
+
         for (const auto& lEntry : mSources.mInternal)
         {
             auto lSource = dynamic_cast<const DI::String*>(lEntry.Get());
             assert(nullptr != lSource);
 
-            Text::File_ASCII lFile;
-
-            lFile.Read(File::Folder::CURRENT, lSource->Get());
-
-            lFile.RemoveEmptyLines();
-            lFile.RemoveComments_Script();
-
-            for (auto lIt = lFile.mLines.begin(); lIt != lFile.mLines.end(); lIt++)
-            {
-                unsigned int lIndex;
-                unsigned int lInit;
-                unsigned int lOffset;
-                char lName[NAME_LENGTH];
-                char lValue[LINE_LENGTH];
-
-                // TODO Import Constant and Word comment or at least put the source file name in the
-                //      comment of newly created ones.
-
-                if (2 == sscanf_s(lIt->c_str(), "COUNTER %[0-9A-Za-z_] %u", lName SizeInfo(lName), &lInit))
-                {
-                    lChanged |= mCounters.Import(lName, lInit);
-                }
-                else if (2 == sscanf_s(lIt->c_str(), "CONSTANT %[0-9A-Za-z_] %s", lName SizeInfo(lName), lValue SizeInfo(lValue)))
-                {
-                    lChanged |= mDefines.ImportConstant(lName, lValue);
-                }
-                else if (1 == sscanf_s(lIt->c_str(), "FUNCTION %[0-9A-Za-z_]", lName SizeInfo(lName)))
-                {
-                    lChanged |= mFunctions.Import(lName, &lFile, &lIt);
-                }
-                else if (2 == sscanf_s(lIt->c_str(), "INPUT %[0-9A-Za-z_] %u", lName SizeInfo(lName), &lIndex))
-                {
-                    lChanged |= mInputs.Import(lName, lIndex);
-                }
-                else if (2 == sscanf_s(lIt->c_str(), "OUTPUT %[0-9A-Za-z_] %u", lName SizeInfo(lName), &lIndex))
-                {
-                    lChanged |= mOutputs.Import(lName, lIndex);
-                }
-                else if (2 == sscanf_s(lIt->c_str(), "RELAY %[0-9A-Za-z_] %u", lName SizeInfo(lName), &lIndex))
-                {
-                    lChanged |= mRelays.Import(lName, lIndex);
-                }
-                else if (1 == sscanf_s(lIt->c_str(), "RELAY %[0-9A-Za-z_]", lName SizeInfo(lName)))
-                {
-                    lChanged |= mRelays.Import(lName);
-                }
-                else if (2 == sscanf_s(lIt->c_str(), "TIMER %[0-9A-Za-z_] %u", lName SizeInfo(lName), &lInit))
-                {
-                    lChanged |= mTimers.Import(lName, lInit);
-                }
-                else if (2 == sscanf_s(lIt->c_str(), "WORD %[0-9A-Za-z_] %u", lName SizeInfo(lName), &lOffset))
-                {
-                    lChanged |= mDefines.ImportWord(lName, lOffset);
-                }
-                else if (1 == sscanf_s(lIt->c_str(), "WORD %[0-9A-Za-z_]", lName SizeInfo(lName)))
-                {
-                    lChanged |= mDefines.ImportWord(lName);
-                }
-                else
-                {
-                    ::Console::Warning_IgnoredLine(lIt->GetUserLineNo(), lIt->c_str());
-                }
-            }
+            lChanged |= Import_Source(lSource->Get());
         }
 
         if (lChanged)
@@ -222,7 +177,17 @@ namespace TRiLOGI
 
             ::Console::Progress_End("Imported");
 
-            Instruction_Write();
+            switch (mProjectType)
+            {
+            case ProjectType::LEGACY: Instruction_Write(); break;
+
+            case ProjectType::NEW:
+                Verify();
+                Write();
+                break;
+
+            default: assert(false);
+            }
         }
         else
         {
@@ -236,8 +201,7 @@ namespace TRiLOGI
         {
             ::Console::Progress_Begin("TRiLOGY", "Parsing", mFileName.Get());
 
-            unsigned int lLineNo    = 1;
-            auto         lLineCount = mFile.GetLineCount();
+            unsigned int lLineNo = 1;
 
             lLineNo = mInputs  .Parse(&mFile, lLineNo, TRiLOGI::Object::FLAG_SINGLE_USE_INFO);
             lLineNo = mOutputs .Parse(&mFile, lLineNo, TRiLOGI::Object::FLAG_SINGLE_USE_INFO);
@@ -599,6 +563,77 @@ namespace TRiLOGI
         ::Console::Progress_End("Exported");
     }
 
+    bool Project::Import_Source(const char* aFileName)
+    {
+        auto lResult = false;
+
+        Text::File_ASCII lFile;
+
+        lFile.Read(File::Folder::CURRENT, aFileName);
+
+        lFile.RemoveEmptyLines();
+        lFile.RemoveComments_Script();
+
+        for (auto lIt = lFile.mLines.begin(); lIt != lFile.mLines.end(); lIt++)
+        {
+            unsigned int lIndex;
+            unsigned int lInit;
+            unsigned int lOffset;
+            char lName[NAME_LENGTH];
+            char lValue[LINE_LENGTH];
+
+            // TODO Import Constant and Word comment or at least put the source file name in the
+            //      comment of newly created ones.
+
+            if (2 == sscanf_s(lIt->c_str(), "COUNTER %[0-9A-Za-z_] %u", lName SizeInfo(lName), &lInit))
+            {
+                lResult |= mCounters.Import(lName, lInit);
+            }
+            else if (2 == sscanf_s(lIt->c_str(), "CONSTANT %[0-9A-Za-z_] %s", lName SizeInfo(lName), lValue SizeInfo(lValue)))
+            {
+                lResult |= mDefines.ImportConstant(lName, lValue);
+            }
+            else if (1 == sscanf_s(lIt->c_str(), "FUNCTION %[0-9A-Za-z_]", lName SizeInfo(lName)))
+            {
+                lResult |= mFunctions.Import(lName, &lFile, &lIt);
+            }
+            else if (2 == sscanf_s(lIt->c_str(), "INPUT %[0-9A-Za-z_] %u", lName SizeInfo(lName), &lIndex))
+            {
+                lResult |= mInputs.Import(lName, lIndex);
+            }
+            else if (2 == sscanf_s(lIt->c_str(), "OUTPUT %[0-9A-Za-z_] %u", lName SizeInfo(lName), &lIndex))
+            {
+                lResult |= mOutputs.Import(lName, lIndex);
+            }
+            else if (2 == sscanf_s(lIt->c_str(), "RELAY %[0-9A-Za-z_] %u", lName SizeInfo(lName), &lIndex))
+            {
+                lResult |= mRelays.Import(lName, lIndex);
+            }
+            else if (1 == sscanf_s(lIt->c_str(), "RELAY %[0-9A-Za-z_]", lName SizeInfo(lName)))
+            {
+                lResult |= mRelays.Import(lName);
+            }
+            else if (2 == sscanf_s(lIt->c_str(), "TIMER %[0-9A-Za-z_] %u", lName SizeInfo(lName), &lInit))
+            {
+                lResult |= mTimers.Import(lName, lInit);
+            }
+            else if (2 == sscanf_s(lIt->c_str(), "WORD %[0-9A-Za-z_] %u", lName SizeInfo(lName), &lOffset))
+            {
+                lResult |= mDefines.ImportWord(lName, lOffset);
+            }
+            else if (1 == sscanf_s(lIt->c_str(), "WORD %[0-9A-Za-z_]", lName SizeInfo(lName)))
+            {
+                lResult |= mDefines.ImportWord(lName);
+            }
+            else
+            {
+                ::Console::Warning_IgnoredLine(lIt->GetUserLineNo(), lIt->c_str());
+            }
+        }
+
+        return lResult;
+    }
+
     unsigned int Project::ParseNothing(unsigned int aLineNo)
     {
         assert(0 < aLineNo);
@@ -669,6 +704,47 @@ namespace TRiLOGI
         }
     }
 
+    void Project::RemoveParsed()
+    {
+        unsigned int lLineNo = 1;
+
+        lLineNo = RemoveRead(lLineNo); // Inputs
+        lLineNo = RemoveRead(lLineNo); // Outputs
+        lLineNo = RemoveRead(lLineNo); // Relays
+        lLineNo = RemoveRead(lLineNo); // Timers
+        lLineNo = RemoveRead(lLineNo); // Counters
+        lLineNo = ParseNothing(lLineNo); // Circuits
+        lLineNo = RemoveRead(lLineNo); // Functions
+        lLineNo = RemoveRead(lLineNo); // Function names
+        lLineNo = ParseNothing(lLineNo); // Quick tags
+        lLineNo = RemoveRead(lLineNo); // Defines
+
+        Reparse();
+    }
+
+    unsigned int Project::RemoveRead(unsigned int aLineNo)
+    {
+        assert(0 < aLineNo);
+
+        auto lLineCount = mFile.GetLineCount();
+        auto lLineNo    = aLineNo;
+
+        while (lLineNo < lLineCount)
+        {
+            const wchar_t* lLine = mFile.GetLine(lLineNo);
+            if (L'~' == lLine[0])
+            {
+                lLineNo++;
+                break;
+            }
+
+            mFile.RemoveLines(lLineNo, 1);
+            lLineCount--;
+        }
+
+        return lLineNo;
+    }
+
     void Project::Reparse()
     {
         mCounters .ClearList();
@@ -682,6 +758,21 @@ namespace TRiLOGI
         mPublicAddresses.clear();
 
         Parse();
+    }
+
+    // ===== Callbacks ======================================================
+
+    unsigned int Project::OnProjectTypeChanged(void*, void*)
+    {
+        mCounters .SetProjectType(mProjectType);
+        mDefines  .SetProjectType(mProjectType);
+        mFunctions.SetProjectType(mProjectType);
+        mInputs   .SetProjectType(mProjectType);
+        mOutputs  .SetProjectType(mProjectType);
+        mRelays   .SetProjectType(mProjectType);
+        mTimers   .SetProjectType(mProjectType);
+
+        return 0;
     }
 
 }

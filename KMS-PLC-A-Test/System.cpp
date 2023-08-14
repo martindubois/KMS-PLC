@@ -23,9 +23,9 @@ using namespace KMS;
 typedef struct
 {
     const char * mFolder;
-    const char * mToDelete;
+    const char * mToDelete_Before;
+    const char * mToDelete_After;
     unsigned int mExceptions[2];
-    int          mResults   [2];
 }
 Case_Normal;
 
@@ -48,13 +48,13 @@ Case_Exception;
 
 static const Case_Normal CASE_N[] =
 {
-    { TESTS "Test00", "PLC.PC6", { 0, 0 }, { 0, 0 } },
-    { TESTS "Test01", nullptr  , { 0, 0 }, { 0, 0 } },
-    { TESTS "Test02", nullptr  , { 2, 2 }, { 0, 0 } },
-    { TESTS "Test06", "PLC.PC6", { 0, 0 }, { 0, 0 } },
-    { TESTS "Test07", "PLC.PC6", { 0, 0 }, { 0, 0 } },
-    { TESTS "Test08", nullptr  , { 2, 2 }, { 0, 0 } },
-    { TESTS "Test09", nullptr  , { 2, 2 }, { 0, 0 } },
+    { TESTS "Test00", nullptr  , nullptr        , { 0, 0 } },
+    { TESTS "Test01", "PLC.PC6", "PLC.PC6.*.bak", { 0, 0 } },
+    { TESTS "Test02", nullptr  , nullptr        , { 2, 2 } },
+    { TESTS "Test06", "PLC.PC6", "PLC.PC6.*.bak", { 0, 0 } },
+    { TESTS "Test07", "PLC.PC6", nullptr        , { 0, 0 } },
+    { TESTS "Test08", nullptr  , nullptr        , { 2, 2 } },
+    { TESTS "Test09", nullptr  , nullptr        , { 2, 2 } },
 };
 
 #define CASE_N_QTY (sizeof(CASE_N) / sizeof(CASE_N[0]))
@@ -115,9 +115,9 @@ KMS_TEST(System_Case, "System_Case", "Auto", sTest_Case)
 
         lFolder.GetPath(KMS_PLC_CFG, lConfigFile, sizeof(lConfigFile));
 
-        if ((nullptr != CASE_N[i].mToDelete) && lFolder.DoesFileExist(CASE_N[i].mToDelete))
+        if ((nullptr != CASE_N[i].mToDelete_Before) && lFolder.DoesFileExist(CASE_N[i].mToDelete_Before))
         {
-            lFolder.Delete(CASE_N[i].mToDelete);
+            lFolder.Delete(CASE_N[i].mToDelete_Before);
         }
 
         char lArg[LINE_LENGTH];
@@ -141,7 +141,12 @@ KMS_TEST(System_Case, "System_Case", "Auto", sTest_Case)
                 Dbg::gLog.SetHideCount(Dbg::LogFile::Level::LEVEL_ERROR, CASE_N[i].mExceptions[j]);
             }
 
-            KMS_TEST_COMPARE(lS.Run(), CASE_N[i].mResults[j]);
+            KMS_TEST_COMPARE(lS.Run(), 0L);
+        }
+
+        if (nullptr != CASE_N[i].mToDelete_After)
+        {
+            lFolder.DeleteFiles(CASE_N[i].mToDelete_After);
         }
     }
 }

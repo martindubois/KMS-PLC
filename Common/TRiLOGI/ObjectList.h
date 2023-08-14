@@ -15,6 +15,9 @@
 // ===== Import/Includes ====================================================
 #include <KMS/Text/File_UTF16.h>
 
+// ===== Local ==============================================================
+#include "../Types.h"
+
 namespace TRiLOGI
 {
 
@@ -48,6 +51,8 @@ namespace TRiLOGI
 
         void Verify(const KMS::Text::File_UTF16& aFile_CP6);
 
+        void SetProjectType(ProjectType aPT);
+
     protected:
 
         typedef std::map<unsigned int, Object*> ByIndex;
@@ -58,6 +63,8 @@ namespace TRiLOGI
         const char* GetElementName() const;
 
         KMS::Text::File_UTF16* GetFile_PC6();
+
+        bool IsProjectLegacy() const;
 
         void AddObject(Object* aObject);
 
@@ -82,6 +89,8 @@ namespace TRiLOGI
 
         unsigned int mLineNo_End;
         unsigned int mMaxQty;
+
+        ProjectType mProjectType;
 
     };
 

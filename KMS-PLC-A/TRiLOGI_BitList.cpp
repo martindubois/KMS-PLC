@@ -5,7 +5,7 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGI_BitList.cpp
 
-// TEST COVERAGE  2023-08-08  KMS - Martin Dubois, P. Eng.
+// TEST COVERAGE  2023-08-14  KMS - Martin Dubois, P. Eng.
 
 #include "Component.h"
 
@@ -51,7 +51,10 @@ namespace TRiLOGI
         bool lResult = nullptr == lObject;
         if (lResult)
         {
-            ::Console::Change("New", GetElementName(), aName);
+            if (IsProjectLegacy())
+            {
+                ::Console::Change("New", GetElementName(), aName);
+            }
 
             unsigned int lIndex;
             unsigned int lLineNo;
@@ -76,7 +79,10 @@ namespace TRiLOGI
             lObject = FindObject_ByIndex(aIndex);
             if (nullptr == lObject)
             {
-                ::Console::Change("New", GetElementName(), aName);
+                if (IsProjectLegacy())
+                {
+                    ::Console::Change("New", GetElementName(), aName);
+                }
 
                 auto lLineNo = FindLineNo(aIndex);
 
@@ -92,7 +98,6 @@ namespace TRiLOGI
             return false;
         }
 
-        // TODO  New project type - Change the index
         if (aIndex != lObject->GetIndex())
         {
             ::Console::Error_Begin()

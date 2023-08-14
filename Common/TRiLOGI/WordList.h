@@ -48,6 +48,8 @@ namespace TRiLOGI
 
         const Word* Find_ByOffset(unsigned int aOffset) const;
 
+        void SetProjectType(ProjectType aPT);
+
         void ValidateConfig() const;
 
         // ===== Configurable attributes ====================================
@@ -60,6 +62,11 @@ namespace TRiLOGI
         typedef std::map<unsigned int, Word*> ByOffset;
 
         NO_COPY(WordList);
+
+        unsigned int FindFreeOffset_Dec();
+        unsigned int FindFreeOffset_Inc();
+
+        ProjectType mProjectType;
 
         ByName   mWords_ByName;
         ByOffset mWords_ByOffset;

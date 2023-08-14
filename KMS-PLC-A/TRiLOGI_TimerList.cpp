@@ -31,7 +31,10 @@ namespace TRiLOGI
         auto lObject = FindObject_ByName(aName);
         if (nullptr == lObject)
         {
-            ::Console::Change("New timer", aName);
+            if (IsProjectLegacy())
+            {
+                ::Console::Change("New timer", aName);
+            }
 
             unsigned int lIndex;
             unsigned int lLineNo;

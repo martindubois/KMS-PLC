@@ -5,7 +5,7 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGI_WordList.cpp
 
-// TEST COVERAGE  2023-08-10  KMS - Martin Dubois, P. Eng.
+// TEST COVERAGE  2023-08-14  KMS - Martin Dubois, P. Eng.
 
 #include "Component.h"
 
@@ -25,8 +25,9 @@ using namespace KMS;
 #define OFFSET_MIN (   1)
 #define OFFSET_MAX (3999)
 
-#define OFFSET_MAX_DEFAULT OFFSET_MAX
-#define OFFSET_NEW_DEFAULT (999)
+#define OFFSET_MAX_DEFAULT        OFFSET_MAX
+#define OFFSET_NEW_DEFAULT_LEGACY (999)
+#define OFFSET_NEW_DEFAULT_NEW    (  2)
 
 static const Cfg::MetaData MD_OFFSET_MAX("OffsetMax = {Max}");
 static const Cfg::MetaData MD_OFFSET_NEW("OffsetNew = {New}");
@@ -38,9 +39,10 @@ namespace TRiLOGI
     // //////////////////////////////////////////////////////////////////////
 
     WordList::WordList()
+        : mProjectType(ProjectType::LEGACY)
         // ===== Configurable attributes ====================================
-        : mOffsetMax(OFFSET_MAX_DEFAULT)
-        , mOffsetNew(OFFSET_NEW_DEFAULT)
+        , mOffsetMax(OFFSET_MAX_DEFAULT)
+        , mOffsetNew(OFFSET_NEW_DEFAULT_LEGACY)
     {
         AddEntry("OffsetMax", &mOffsetMax, false, &MD_OFFSET_MAX);
         AddEntry("OffsetNew", &mOffsetNew, false, &MD_OFFSET_NEW);
@@ -48,26 +50,14 @@ namespace TRiLOGI
 
     Object* WordList::AddWord(const char* aName, unsigned int aIndex, unsigned int aLineNo, const char* aComment, unsigned int aFlags)
     {
-        unsigned int lOffset = mOffsetNew;
+        unsigned int lOffset;
 
-        for (auto lIt = mWords_ByOffset.rbegin(); lIt != mWords_ByOffset.rend(); lIt++)
+        switch (mProjectType)
         {
-            if (lOffset > lIt->first)
-            {
-                break;
-            }
+        case ProjectType::LEGACY: lOffset = FindFreeOffset_Dec(); break;
+        case ProjectType::NEW   : lOffset = FindFreeOffset_Inc(); break;
 
-            if (lOffset == lIt->first)
-            {
-                lOffset = lIt->first - 1;
-            }
-        }
-
-        if (OFFSET_MIN > lOffset)
-        {
-            char lMsg[64];
-            sprintf_s(lMsg, "Line %u  Too many word (NOT TESTED)", aLineNo);
-            KMS_EXCEPTION(APPLICATION_ERROR, lMsg, aName);
+        default: assert(false);
         }
 
         auto lResult = new Word(aName, aIndex, aLineNo, lOffset, aComment, aFlags);
@@ -153,6 +143,24 @@ namespace TRiLOGI
         return lIt->second;
     }
 
+    void WordList::SetProjectType(ProjectType aPT)
+    {
+        assert(ProjectType::QTY > aPT);
+
+        mProjectType = aPT;
+
+        switch (mProjectType)
+        {
+        case ProjectType::LEGACY: break; // NOT TESTED
+
+        case ProjectType::NEW:
+            mOffsetNew = OFFSET_NEW_DEFAULT_NEW;
+            break;
+
+        default: assert(false);
+        }
+    }
+
     void WordList::ValidateConfig() const
     {
         // mOffsetMax
@@ -160,9 +168,72 @@ namespace TRiLOGI
         KMS_EXCEPTION_ASSERT(OFFSET_MAX >= mOffsetMax, APPLICATION_USER_ERROR, "Words.OffsetMax it above the absolute maximum", "");
 
         // mOffsetNew
-        KMS_EXCEPTION_ASSERT(OFFSET_MIN < mOffsetNew , APPLICATION_USER_ERROR, "Words.OffsetNew is below the minimum", "");
-        KMS_EXCEPTION_ASSERT(OFFSET_MAX >= mOffsetMax, APPLICATION_USER_ERROR, "Words.OffsetNew it above the absolute maximum", "");
-        KMS_EXCEPTION_ASSERT(mOffsetMax >= mOffsetNew, APPLICATION_USER_ERROR, "Words.OffsetNew is above the condfigured maximum", "");
+        switch (mProjectType)
+        {
+        case ProjectType::LEGACY:
+            KMS_EXCEPTION_ASSERT(OFFSET_MAX >= mOffsetNew, APPLICATION_USER_ERROR, "Words.OffsetNew it above the absolute maximum", "");
+            KMS_EXCEPTION_ASSERT(OFFSET_MIN <  mOffsetNew, APPLICATION_USER_ERROR, "Words.OffsetNew is below the minimum", "");
+            KMS_EXCEPTION_ASSERT(mOffsetMax >= mOffsetNew, APPLICATION_USER_ERROR, "Words.OffsetNew is above the condfigured maximum", "");
+            break;
+        case ProjectType::NEW:
+            KMS_EXCEPTION_ASSERT(OFFSET_MAX >  mOffsetNew, APPLICATION_USER_ERROR, "Words.OffsetNew it above the absolute maximum", "");
+            KMS_EXCEPTION_ASSERT(OFFSET_MIN <= mOffsetNew, APPLICATION_USER_ERROR, "Words.OffsetNew is below the minimum", "");
+            KMS_EXCEPTION_ASSERT(mOffsetMax >  mOffsetNew, APPLICATION_USER_ERROR, "Words.OffsetNew is above the configured maximum", "");
+            break;
+
+        default: assert(false);
+        }
+    }
+
+    // Private
+    // //////////////////////////////////////////////////////////////////////
+
+    unsigned int WordList::FindFreeOffset_Dec()
+    {
+        assert(mOffsetMax >= mOffsetNew);
+
+        unsigned int lResult = mOffsetNew;
+
+        for (auto lIt = mWords_ByOffset.rbegin(); lIt != mWords_ByOffset.rend(); lIt++)
+        {
+            if (lResult > lIt->first)
+            {
+                break; // NOT TESTED
+            }
+
+            if (lResult == lIt->first)
+            {
+                lResult = lIt->first - 1;
+            }
+        }
+
+        KMS_EXCEPTION_ASSERT(OFFSET_MIN <= lResult, APPLICATION_ERROR, "Too many word (NOT TESTED)", "");
+
+        return lResult;
+    }
+
+    unsigned int WordList::FindFreeOffset_Inc()
+    {
+        assert(mOffsetMax > mOffsetNew);
+
+        unsigned int lResult = mOffsetNew;
+
+        for (auto lIt = mWords_ByOffset.begin(); lIt != mWords_ByOffset.end(); lIt++)
+        {
+            if (lResult < lIt->first)
+            {
+                break;
+            }
+
+            if (lResult == lIt->first)
+            {
+                lResult = lIt->first + 1; // NOT TESTED
+            }
+        }
+
+        KMS_EXCEPTION_ASSERT(mOffsetMax >= lResult, APPLICATION_ERROR, "Too many word (NOT TESTED)", "");
+
+        return lResult;
     }
 
 }

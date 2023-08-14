@@ -5,7 +5,7 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGI_DefineList.cpp
 
-// TEST COVERAGE  2023-08-08  KMS - Martin Dubois, P. Eng.
+// TEST COVERAGE  2023-08-14  KMS - Martin Dubois, P. Eng.
 #include "Component.h"
 
 // ===== Local ==============================================================
@@ -39,7 +39,10 @@ namespace TRiLOGI
         auto lObject = FindObject_ByName(aName);
         if (nullptr == lObject)
         {
-            ::Console::Change("New constant", aName);
+            if (IsProjectLegacy())
+            {
+                ::Console::Change("New constant", aName);
+            }
 
             unsigned int lIndex;
             unsigned int lLineNo;
@@ -74,7 +77,10 @@ namespace TRiLOGI
         auto lObject = FindObject_ByName(aName);
         if (nullptr == lObject)
         {
-            ::Console::Change("New word", aName);
+            if (IsProjectLegacy())
+            {
+                ::Console::Change("New word", aName);
+            }
 
             unsigned int lIndex;
             unsigned int lLineNo;
@@ -115,7 +121,10 @@ namespace TRiLOGI
                 return false;
             }
 
-            ::Console::Change("New word", aName);
+            if (IsProjectLegacy())
+            {
+                ::Console::Change("New word", aName);
+            }
 
             unsigned int lIndex;
             unsigned int lLineNo;
@@ -140,7 +149,6 @@ namespace TRiLOGI
         }
         else if (lWord->GetOffset() != aOffset)
         {
-            // TODO  Project type new - Update the offset
             ::Console::Error_Begin()
                 << "The name " << aName << " is already uses witch another offset (NOT TESTED)";
             ::Console::Error_End();
@@ -164,6 +172,15 @@ namespace TRiLOGI
         ObjectList::Verify(aFile_PC6);
 
         mConstants.Verify();
+    }
+
+    // ===== ObjectList =====================================================
+
+    void DefineList::SetProjectType(ProjectType aPT)
+    {
+        ObjectList::SetProjectType(aPT);
+
+        mWords.SetProjectType(aPT);
     }
 
     // Protected
@@ -211,8 +228,7 @@ namespace TRiLOGI
         }
         else
         {
-            // NOT TESTED
-            KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
+            KMS_EXCEPTION(APPLICATION_ERROR, lMsg, ""); // NOT TESTED
         }
 
         ObjectList::AddObject(lDefine);

@@ -124,7 +124,10 @@ namespace TRiLOGI
 
         if (nullptr == lFunction)
         {
-            ::Console::Change("New function", aName);
+            if (IsProjectLegacy())
+            {
+                ::Console::Change("New function", aName);
+            }
 
             AddObject(lNew);
         }

@@ -9,6 +9,7 @@
 #pragma once
 
 // ===== Import =============================================================
+#include <KMS/Callback.h>
 #include <KMS/DI/Array.h>
 #include <KMS/DI/Boolean.h>
 #include <KMS/DI/Dictionary.h>
@@ -84,10 +85,16 @@ namespace TRiLOGI
         void Export_HeaderFile();
         void Export_ToolConfig();
 
+        bool Import_Source(const char* aFileName);
+
         unsigned int ParseNothing(unsigned int aLineNo);
 
         void ParsePublicDef(const char* aFileName);
         void ParsePublicDefs();
+
+        void RemoveParsed();
+
+        unsigned int RemoveRead(unsigned int aLineNo);
 
         void Reparse();
 
@@ -98,6 +105,10 @@ namespace TRiLOGI
         void Verify_Outputs   () const;
 
         void Verify_BitList(const BitList& aBits) const;
+
+        // ===== Callbacks ==================================================
+        const KMS::Callback<Project> ON_PROJECT_TYPE_CHANGED;
+        unsigned int OnProjectTypeChanged(void* aSender, void* aData);
 
         KMS::Text::File_UTF16 mFile;
 

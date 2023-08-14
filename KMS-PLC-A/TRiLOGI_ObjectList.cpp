@@ -5,7 +5,7 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGI_ObjectList.cpp
 
-// TEST COVERAGE  2023-08-08  KMS - Martin Dubois, P. Eng.
+// TEST COVERAGE  2023-08-14  KMS - Martin Dubois, P. Eng.
 
 #include "Component.h"
 
@@ -18,6 +18,11 @@
 #include "TRiLOGI/Object.h"
 
 using namespace KMS;
+
+// Constants
+// //////////////////////////////////////////////////////////////////////////
+
+#define INDEX_NEW_DEFAULT_NEW (0)
 
 namespace TRiLOGI
 {
@@ -115,6 +120,8 @@ namespace TRiLOGI
         return lIt->second;
     }
 
+    void ObjectList::SetProjectType(ProjectType aPT) { mProjectType = aPT; }
+
     unsigned int ObjectList::Clean()
     {
         assert(nullptr != mFile_PC6);
@@ -194,7 +201,6 @@ namespace TRiLOGI
                 break;
 
             case 2:
-                // NOT TESTED
                 if (lObj->TestFlag(Object::FLAG_SINGLE_USE_WARNING))
                 {
                     ::Console::Warning_Begin(lLineNo)
@@ -223,7 +229,11 @@ namespace TRiLOGI
     // //////////////////////////////////////////////////////////////////////
 
     ObjectList::ObjectList(const char* aElementName, unsigned int aMaxQty)
-        : mElementName(aElementName), mFile_PC6(nullptr), mLineNo_End(0), mMaxQty(aMaxQty)
+        : mElementName(aElementName)
+        , mFile_PC6(nullptr)
+        , mLineNo_End(0)
+        , mMaxQty(aMaxQty)
+        , mProjectType(ProjectType::LEGACY)
     {
         assert(nullptr != aElementName);
         assert(0 < aMaxQty);
@@ -232,6 +242,8 @@ namespace TRiLOGI
     const char* ObjectList::GetElementName() const { return mElementName; }
 
     Text::File_UTF16* ObjectList::GetFile_PC6() { return mFile_PC6; }
+
+    bool ObjectList::IsProjectLegacy() const { return ProjectType::LEGACY == mProjectType; }
 
     void ObjectList::AddObject(Object* aObject)
     {
@@ -286,18 +298,48 @@ namespace TRiLOGI
             KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
         }
 
-        auto lIndex  = mMaxQty - 1;
+        unsigned int lIndex;
+
         auto lLineNo = mLineNo_End;
 
-        for (auto lIt = mObjects_ByIndex.rbegin(); lIt != mObjects_ByIndex.rend(); lIt++)
+        switch (mProjectType)
         {
-            if (lIndex > lIt->first)
-            {
-                break;
-            }
+        case ProjectType::LEGACY:
+            lIndex  = mMaxQty - 1;
 
-            lIndex  = lIt->first - 1;
-            lLineNo = lIt->second->GetLineNo();
+            for (auto lIt = mObjects_ByIndex.rbegin(); lIt != mObjects_ByIndex.rend(); lIt++)
+            {
+                if (lIndex > lIt->first)
+                {
+                    break; // NOT TESTED
+                }
+
+                if (lIndex == lIt->first)
+                {
+                    lIndex = lIt->first - 1;
+                }
+                lLineNo = lIt->second->GetLineNo();
+            }
+            break;
+
+        case ProjectType::NEW:
+            lIndex  = 0;
+
+            for (auto lIt = mObjects_ByIndex.begin(); lIt != mObjects_ByIndex.end(); lIt++)
+            {
+                if (lIndex < lIt->first)
+                {
+                    break;
+                }
+
+                if (lIndex == lIt->first)
+                {
+                    lIndex = lIt->first + 1;
+                }
+            }
+            break;
+
+        default: assert(false);
         }
 
         *aIndex = lIndex;

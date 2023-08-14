@@ -39,6 +39,9 @@ namespace TRiLOGI
 
         WordList mWords;
 
+        // ===== ObjectList =================================================
+        void SetProjectType(ProjectType aPT);
+
     protected:
 
         // ===== ObjectList =================================================

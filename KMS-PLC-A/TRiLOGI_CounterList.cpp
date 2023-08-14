@@ -65,7 +65,10 @@ namespace TRiLOGI
         auto lObject = FindObject_ByName(aName);
         if (nullptr == lObject)
         {
-            ::Console::Change("New counter - ", aName);
+            if (IsProjectLegacy())
+            {
+                ::Console::Change("New counter - ", aName);
+            }
 
             unsigned int lIndex;
             unsigned int lLineNo;
