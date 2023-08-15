@@ -29,6 +29,8 @@ namespace TRiLOGI
 
         void SetLineNo_Code(unsigned int aBegin, unsigned int aEnd);
 
+        void AddCodeToFile(KMS::Text::File_UTF16* aFile);
+
         void Apply(KMS::Text::File_UTF16* aFile);
 
         void Insert(KMS::Text::File_UTF16* aFile);

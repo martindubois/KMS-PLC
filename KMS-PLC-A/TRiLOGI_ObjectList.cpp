@@ -33,6 +33,22 @@ namespace TRiLOGI
 
     ObjectList::~ObjectList() { ClearList(); }
 
+    void ObjectList::AddToFile(Text::File_UTF16* aFile_PC6)
+    {
+        assert(nullptr != aFile_PC6);
+
+        for (const auto& lEntry : mObjects_ByIndex)
+        {
+            assert(nullptr != lEntry.second);
+
+            wchar_t lLine[LINE_LENGTH];
+
+            lEntry.second->GetLine(lLine, sizeof(lLine));
+
+            aFile_PC6->AddLine(lLine);
+        }
+    }
+
     bool ObjectList::Apply()
     {
         assert(nullptr != mFile_PC6);

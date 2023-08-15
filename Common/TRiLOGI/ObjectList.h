@@ -30,6 +30,7 @@ namespace TRiLOGI
 
         ~ObjectList();
 
+        void AddToFile(KMS::Text::File_UTF16* aFile_PC6);
         bool Apply();
         void ClearList();
 

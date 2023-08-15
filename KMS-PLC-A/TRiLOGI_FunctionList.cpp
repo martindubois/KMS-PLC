@@ -52,6 +52,17 @@ namespace TRiLOGI
         return dynamic_cast<Function*>(FindObject_ByName(aName));
     }
 
+    void FunctionList::AddCodeToFile(Text::File_UTF16* aFile_PC6)
+    {
+        for (const auto& lEntry : mObjects_ByIndex)
+        {
+            auto* lFunction = dynamic_cast<Function*>(lEntry.second);
+            assert(nullptr != lFunction);
+
+            lFunction->AddCodeToFile(aFile_PC6);
+        }
+    }
+
     bool FunctionList::Apply_Code()
     {
         auto lFile   = GetFile_PC6();

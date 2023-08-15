@@ -13,6 +13,8 @@
 #include <codecvt>
 
 // ===== Local ==============================================================
+#include "TRiLOGI/PC6.h"
+
 #include "TRiLOGI/Function.h"
 
 using namespace KMS;
@@ -46,6 +48,29 @@ namespace TRiLOGI
 
         mLineNo_Code_Begin = aBegin;
         mLineNo_Code_End   = aEnd  ;
+    }
+
+    void Function::AddCodeToFile(Text::File_UTF16* aFile_PC6)
+    {
+        assert(nullptr != aFile_PC6);
+
+        aFile_PC6->AddLine(PC6_FUNCTION_MARK);
+
+        wchar_t lLine[LINE_LENGTH];
+
+        swprintf_s(lLine, L"Fn#%u,%u", GetIndex(), mLength);
+
+        aFile_PC6->AddLine(lLine);
+
+        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> lConverter;
+
+        for (const auto& lLine : mLines)
+        {
+            std::wstring lLineW(lConverter.from_bytes(lLine.c_str()));
+
+            aFile_PC6->AddLine(lLineW.c_str());
+
+        }
     }
 
     // NOT TESTED
@@ -88,7 +113,7 @@ namespace TRiLOGI
 
         unsigned int lLineNo = mLineNo_Code_Begin;
 
-        aFile->InsertLine(lLineNo, L"\xc8"); lLineNo++;
+        aFile->InsertLine(lLineNo, PC6_FUNCTION_MARK); lLineNo++;
 
         wchar_t lLine[LINE_LENGTH];
 

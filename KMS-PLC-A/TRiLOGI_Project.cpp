@@ -171,18 +171,21 @@ namespace TRiLOGI
 
         if (lChanged)
         {
-            if (Apply())
-            {
-                Reparse();
-            }
-
             ::Console::Progress_End("Imported");
 
             switch (mProjectType)
             {
-            case ProjectType::LEGACY: Instruction_Write(); break;
+            case ProjectType::LEGACY:
+                if (Apply())
+                {
+                    Reparse();
+                }
+
+                Instruction_Write();
+                break;
 
             case ProjectType::NEW:
+                BuildFile();
                 Verify();
                 Write();
                 break;
@@ -470,6 +473,26 @@ namespace TRiLOGI
         return lResult;
     }
 
+    void Project::BuildFile()
+    {
+        mFile.Clear();
+
+        mFile.AddLine(PC6_FILE_HEADER);
+        mInputs   .AddToFile    (&mFile); mFile.AddLine(PC6_SECTION_END);
+        mOutputs  .AddToFile    (&mFile); mFile.AddLine(PC6_SECTION_END);
+        mRelays   .AddToFile    (&mFile); mFile.AddLine(PC6_SECTION_END);
+        mTimers   .AddToFile    (&mFile); mFile.AddLine(PC6_SECTION_END);
+        mCounters .AddToFile    (&mFile); mFile.AddLine(PC6_SECTION_END);
+        mCircuits .AddToFile    (&mFile); mFile.AddLine(PC6_SECTION_END_CIRCUIT);
+        mFunctions.AddCodeToFile(&mFile); mFile.AddLine(PC6_SECTION_END_CUSTFN);
+        mFunctions.AddToFile    (&mFile); mFile.AddLine(PC6_SECTION_END_CUSTFNLABEL);
+        mQuickTags.AddToFile    (&mFile); mFile.AddLine(PC6_SECTION_END_QUICKTAGS);
+        mDefines  .AddToFile    (&mFile); mFile.AddLine(PC6_SECTION_END_DEFINES);
+        mFooter   .AddToFile    (&mFile);
+
+        Reparse();
+    }
+
     void Project::Create()
     {
         mFile.AddLine(PC6_FILE_HEADER);
@@ -483,7 +506,7 @@ namespace TRiLOGI
         mFile.AddLine(PC6_SECTION_END_CUSTFNLABEL); mFunctions.SetFile(&mFile, 8);
         mFile.AddLine(PC6_SECTION_END_QUICKTAGS  );
         mFile.AddLine(PC6_SECTION_END_DEFINES    ); mDefines.SetFile(&mFile, 10);
-        mFile.AddLine(PC6_SECTION_END_BREAKPOINTS);
+        mFile.AddLine(PC6_SECTION_END_BREAKPOINT );
     }
 
     void Project::Export_HeaderFile()

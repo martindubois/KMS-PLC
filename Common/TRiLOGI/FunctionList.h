@@ -37,6 +37,8 @@ namespace TRiLOGI
         Function* Find_ByIndex(unsigned int aIndex);
         Function* Find_ByName (const char* aName);
 
+        void AddCodeToFile(KMS::Text::File_UTF16* aFile_PC6);
+
         bool Apply_Code();
 
         bool Import(const char* aName, KMS::Text::File_ASCII* aFile, KMS::Text::File_ASCII::Internal::iterator* aIt);

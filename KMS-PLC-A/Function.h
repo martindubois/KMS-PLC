@@ -27,15 +27,13 @@ public:
 
 protected:
 
+    typedef std::vector<std::string> StringList;
+
     unsigned int GetLength() const;
 
     const char* GetLine(unsigned int aIndex) const;
 
     unsigned int GetLineCount() const;
-
-private:
-
-    typedef std::vector<std::string> StringList;
 
     StringList mLines;
 

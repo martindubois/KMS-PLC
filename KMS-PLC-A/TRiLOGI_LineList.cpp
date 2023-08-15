@@ -26,6 +26,16 @@ namespace TRiLOGI
 
     void LineList::ClearList() { mLines.clear(); }
 
+    void LineList::AddToFile(Text::File_UTF16* aFile_PC6)
+    {
+        assert(NULL != aFile_PC6);
+
+        for (const auto& lLine : mLines)
+        {
+            aFile_PC6->AddLine(lLine.c_str());
+        }
+    }
+
     unsigned int LineList::Parse(Text::File_UTF16* aFile_PC6, unsigned int aLineNo, bool aUntilEnd)
     {
         assert(nullptr != aFile_PC6);

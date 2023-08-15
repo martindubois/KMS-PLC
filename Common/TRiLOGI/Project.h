@@ -81,6 +81,8 @@ namespace TRiLOGI
 
         bool Apply();
 
+        void BuildFile();
+
         void Create();
 
         void Export_HeaderFile();
