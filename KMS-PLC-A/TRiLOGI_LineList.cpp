@@ -12,6 +12,8 @@
 // ===== Local ==============================================================
 #include "../Common/TRiLOGI/LineList.h"
 
+#include "TRiLOGI/PC6.h"
+
 using namespace KMS;
 
 namespace TRiLOGI
@@ -36,7 +38,7 @@ namespace TRiLOGI
         {
             const wchar_t* lLine = aFile_PC6->GetLine(lLineNo);
 
-            if ((!aUntilEnd) && (L'~' == lLine[0]))
+            if ((!aUntilEnd) && (PC6_SECTION_END_C == lLine[0]))
             {
                 lLineNo++;
                 break;

@@ -17,6 +17,7 @@
 
 #include "Function.h"
 
+#include "TRiLOGI/PC6.h"
 #include "TRiLOGI/Function.h"
 
 using namespace KMS;
@@ -168,7 +169,7 @@ namespace TRiLOGI
             auto lLine = aFile_PC6->GetLine(lLineNo);
             assert(nullptr != lLine);
 
-            if (0 == wcscmp(L"~END_CUSTFN~", lLine)) { mLineNo_End_Code = lLineNo; lLineNo++; break; }
+            if (0 == wcscmp(PC6_SECTION_END_CUSTFN, lLine)) { mLineNo_End_Code = lLineNo; lLineNo++; break; }
 
             if (0 == wcscmp(L"\xc8", lLine))
             {
@@ -238,7 +239,7 @@ namespace TRiLOGI
         for (; lLineNo < lLineCount; lLineNo++)
         {
             auto lLine = aFile_PC6->GetLine(lLineNo);
-            if (0 == wcscmp(L"~END_CUSTFNLABEL~", lLine)) { SetFile(aFile_PC6, lLineNo); lLineNo++; break; }
+            if (0 == wcscmp(PC6_SECTION_END_CUSTFNLABEL, lLine)) { SetFile(aFile_PC6, lLineNo); lLineNo++; break; }
 
             unsigned int lIndex;
             char         lMsg[64 + NAME_LENGTH];

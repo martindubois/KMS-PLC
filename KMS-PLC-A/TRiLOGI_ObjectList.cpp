@@ -16,6 +16,7 @@
 #include "../Common/TRiLOGI/ObjectList.h"
 
 #include "TRiLOGI/Object.h"
+#include "TRiLOGI/PC6.h"
 
 using namespace KMS;
 
@@ -154,7 +155,7 @@ namespace TRiLOGI
             auto lLine = aFile_PC6->GetLine(lLineNo);
             assert(nullptr != lLine);
 
-            if (L'~' == lLine[0])
+            if (PC6_SECTION_END_C == lLine[0])
             {
                 SetFile(aFile_PC6, lLineNo);
                 lLineNo++;

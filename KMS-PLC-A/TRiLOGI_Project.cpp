@@ -21,6 +21,7 @@
 
 #include "../Common/TRiLOGI/Project.h"
 
+#include "TRiLOGI/PC6.h"
 #include "TRiLOGI/Word.h"
 
 using namespace KMS;
@@ -471,18 +472,18 @@ namespace TRiLOGI
 
     void Project::Create()
     {
-        mFile.AddLine(L"\x00f8\x00f5TRiLOGI Ver 5.0");
-        mFile.AddLine(L"~"); mInputs  .SetFile(&mFile, 1);
-        mFile.AddLine(L"~"); mOutputs .SetFile(&mFile, 2);
-        mFile.AddLine(L"~"); mRelays  .SetFile(&mFile, 3);
-        mFile.AddLine(L"~"); mTimers  .SetFile(&mFile, 4);
-        mFile.AddLine(L"~"); mCounters.SetFile(&mFile, 5);
-        mFile.AddLine(L"~END_CIRCUIT~");
-        mFile.AddLine(L"~END_CUSTFN~"     ); mFunctions.SetLineNo_End_Code(7);
-        mFile.AddLine(L"~END_CUSTFNLABEL~"); mFunctions.SetFile(&mFile, 8);
-        mFile.AddLine(L"~END_QUICKTAGS~");
-        mFile.AddLine(L"~END_DEFINES~"); mDefines.SetFile(&mFile, 10);
-        mFile.AddLine(L"~END_BREAKPOINTS~");
+        mFile.AddLine(PC6_FILE_HEADER);
+        mFile.AddLine(PC6_SECTION_END); mInputs  .SetFile(&mFile, 1);
+        mFile.AddLine(PC6_SECTION_END); mOutputs .SetFile(&mFile, 2);
+        mFile.AddLine(PC6_SECTION_END); mRelays  .SetFile(&mFile, 3);
+        mFile.AddLine(PC6_SECTION_END); mTimers  .SetFile(&mFile, 4);
+        mFile.AddLine(PC6_SECTION_END); mCounters.SetFile(&mFile, 5);
+        mFile.AddLine(PC6_SECTION_END_CIRCUIT    );
+        mFile.AddLine(PC6_SECTION_END_CUSTFN     ); mFunctions.SetLineNo_End_Code(7);
+        mFile.AddLine(PC6_SECTION_END_CUSTFNLABEL); mFunctions.SetFile(&mFile, 8);
+        mFile.AddLine(PC6_SECTION_END_QUICKTAGS  );
+        mFile.AddLine(PC6_SECTION_END_DEFINES    ); mDefines.SetFile(&mFile, 10);
+        mFile.AddLine(PC6_SECTION_END_BREAKPOINTS);
     }
 
     void Project::Export_HeaderFile()
@@ -640,7 +641,7 @@ namespace TRiLOGI
         for (; lLineNo < lLineCount; lLineNo++)
         {
             const wchar_t* lLine = mFile.GetLine(lLineNo);
-            if (L'~' == lLine[0])
+            if (PC6_SECTION_END_C == lLine[0])
             {
                 lLineNo++;
                 break;
@@ -728,7 +729,7 @@ namespace TRiLOGI
         while (lLineNo < lLineCount)
         {
             const wchar_t* lLine = mFile.GetLine(lLineNo);
-            if (L'~' == lLine[0])
+            if (PC6_SECTION_END_C == lLine[0])
             {
                 lLineNo++;
                 break;
