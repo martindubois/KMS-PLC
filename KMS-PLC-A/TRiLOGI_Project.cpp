@@ -203,22 +203,17 @@ namespace TRiLOGI
 
             unsigned int lLineNo = 1;
 
-            lLineNo = mInputs  .Parse(&mFile, lLineNo, TRiLOGI::Object::FLAG_SINGLE_USE_INFO);
-            lLineNo = mOutputs .Parse(&mFile, lLineNo, TRiLOGI::Object::FLAG_SINGLE_USE_INFO);
-            lLineNo = mRelays  .Parse(&mFile, lLineNo, TRiLOGI::Object::FLAG_SINGLE_USE_INFO);
-            lLineNo = mTimers  .Parse(&mFile, lLineNo, TRiLOGI::Object::FLAG_SINGLE_USE_WARNING);
-            lLineNo = mCounters.Parse(&mFile, lLineNo, TRiLOGI::Object::FLAG_SINGLE_USE_WARNING);
-
-            // Circuits
-            lLineNo = ParseNothing(lLineNo);
-
+            lLineNo = mInputs   .Parse(&mFile, lLineNo, TRiLOGI::Object::FLAG_SINGLE_USE_INFO);
+            lLineNo = mOutputs  .Parse(&mFile, lLineNo, TRiLOGI::Object::FLAG_SINGLE_USE_INFO);
+            lLineNo = mRelays   .Parse(&mFile, lLineNo, TRiLOGI::Object::FLAG_SINGLE_USE_INFO);
+            lLineNo = mTimers   .Parse(&mFile, lLineNo, TRiLOGI::Object::FLAG_SINGLE_USE_WARNING);
+            lLineNo = mCounters .Parse(&mFile, lLineNo, TRiLOGI::Object::FLAG_SINGLE_USE_WARNING);
+            lLineNo = mCircuits .Parse(&mFile, lLineNo, false);
             lLineNo = mFunctions.Parse_Code(&mFile, lLineNo);
             lLineNo = mFunctions.Parse_Name(&mFile, lLineNo);
-
-            // Quick tags
-            lLineNo = ParseNothing(lLineNo);
-
-            lLineNo = mDefines.Parse(&mFile, lLineNo);
+            lLineNo = mQuickTags.Parse(&mFile, lLineNo, false);
+            lLineNo = mDefines  .Parse(&mFile, lLineNo);
+            lLineNo = mFooter   .Parse(&mFile, lLineNo, true);
 
             ParsePublicDefs();
         }
@@ -238,6 +233,7 @@ namespace TRiLOGI
         {
             ::Console::Progress_Begin("TRiLOGY", "Reading", mFileName.Get());
             {
+                mFile.Clear();
                 mFile.Read(File::Folder::CURRENT, mFileName.Get());
             }
             ::Console::Progress_End("Read");
@@ -748,10 +744,13 @@ namespace TRiLOGI
     void Project::Reparse()
     {
         mCounters .ClearList();
+        mCircuits .ClearList();
         mDefines  .ClearList();
+        mFooter   .ClearList();
         mFunctions.ClearList();
         mInputs   .ClearList();
         mOutputs  .ClearList();
+        mQuickTags.ClearList();
         mRelays   .ClearList();
         mTimers   .ClearList();
 

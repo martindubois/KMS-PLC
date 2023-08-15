@@ -56,6 +56,7 @@
     <ClCompile Include="TRiLOGI_Counter.cpp" />
     <ClCompile Include="TRiLOGI_CounterList.cpp" />
     <ClCompile Include="TRiLOGI_Software.cpp" />
+    <ClCompile Include="TRiLOGI_LineList.cpp" />
     <ClCompile Include="TRiLOGI_Timer.cpp" />
     <ClCompile Include="TRiLOGI_TimerList.cpp" />
     <ClCompile Include="TRiLOGI_Word.cpp" />

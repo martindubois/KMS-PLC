@@ -22,6 +22,7 @@
 #include "CounterList.h"
 #include "DefineList.h"
 #include "FunctionList.h"
+#include "LineList.h"
 #include "Software.h"
 #include "TimerList.h"
 
@@ -112,12 +113,15 @@ namespace TRiLOGI
 
         KMS::Text::File_UTF16 mFile;
 
+        LineList      mCircuits;
         CounterList   mCounters;
         DefineList    mDefines;
+        LineList      mFooter;
         FunctionList  mFunctions;
         BitList       mInputs;
         BitList       mOutputs;
         AddressList   mPublicAddresses;
+        LineList      mQuickTags;
         BitList       mRelays;
         Software      mSoftware;
         TimerList     mTimers;
