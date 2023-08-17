@@ -4,6 +4,7 @@ Copyright (C) 2022-2023 KMS
 Product   KMS-PLC
 File      KMS-PLC/_DocUser/KMS.ReadMe.txt
 
+0.1.10-dev Windows 2023-08-17
 * TRiLOGI
     * Remove PublicDefs attributes
     - Important refactoring
