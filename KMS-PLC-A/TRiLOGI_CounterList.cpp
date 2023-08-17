@@ -5,15 +5,9 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGI_CounterList.cpp
 
-// TEST COVERAGE  2023-08-08  KMS - Martin Dubois, P. Eng.
+// TEST COVERAGE  2023-08-15  KMS - Martin Dubois, P. Eng.
 
 #include "Component.h"
-
-// ===== C++ ================================================================
-#include <codecvt>
-
-// ===== Import/Includes ====================================================
-#include <KMS/Console/Color.h>
 
 // ===== Local ==============================================================
 #include "../Common/TRiLOGI/CounterList.h"
@@ -35,7 +29,7 @@ namespace TRiLOGI
 
     // ===== ObjectList =====================================================
 
-    void CounterList::AddObject(const wchar_t* aLine, unsigned int aLineNo, unsigned int aFlags)
+    void CounterList::AddObject(const wchar_t* aLine, unsigned int)
     {
         assert(nullptr != aLine);
 
@@ -44,47 +38,36 @@ namespace TRiLOGI
         char         lName[NAME_LENGTH];
 
         auto lRet = swscanf_s(aLine, L"%u,%S %u", &lIndex, lName SizeInfo(lName), &lInit);
-        if (3 != lRet)
-        {
-            char lMsg[64];
-            sprintf_s(lMsg, "Line %u  Invalid timer line (NOT TESTED)", aLineNo);
-            KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
-        }
+        KMS_EXCEPTION_ASSERT(3 == lRet, APPLICATION_ERROR, "Invalid timer line (NOT TESTED)", "");
 
-        auto lCounter = new Counter(lName, lIndex, aLineNo, lInit, aFlags);
+        auto lCounter = new Counter(lName, lIndex, lInit);
 
         ObjectList::AddObject(lCounter);
     }
 
     bool CounterList::Import(const char* aName, unsigned int aInit)
     {
-        assert(nullptr != aName);
-
-        Counter* lCounter;
-
         auto lObject = FindObject_ByName(aName);
         if (nullptr == lObject)
         {
             if (IsProjectLegacy())
             {
-                ::Console::Change("New counter - ", aName);
+                ::Console::Change("New counter (NOT TESTED) - ", aName);
             }
 
-            unsigned int lIndex;
-            unsigned int lLineNo;
+            auto lIndex = FindFreeIndex();
 
-            FindIndexAndLineNo(&lIndex, &lLineNo);
-
-            lCounter = new Counter(aName, lIndex, lLineNo, aInit, Object::FLAG_TO_INSERT);
+            auto lCounter = new Counter(aName, lIndex, aInit);
 
             ObjectList::AddObject(lCounter);
             return true;
         }
 
-        lCounter = dynamic_cast<Counter*>(lObject);
+        // NOT TESTED
+        auto lCounter = dynamic_cast<Counter*>(lObject);
         assert(nullptr != lCounter);
 
-        return lCounter->SetInit(aInit, GetFile_PC6());
+        return lCounter->SetInit(aInit);
     }
 
 }

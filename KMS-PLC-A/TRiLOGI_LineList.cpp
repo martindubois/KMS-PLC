@@ -26,9 +26,16 @@ namespace TRiLOGI
 
     void LineList::ClearList() { mLines.clear(); }
 
+    void LineList::AddLine(const wchar_t* aLine)
+    {
+        assert(nullptr != aLine);
+
+        mLines.push_back(aLine);
+    }
+
     void LineList::AddToFile(Text::File_UTF16* aFile_PC6)
     {
-        assert(NULL != aFile_PC6);
+        assert(nullptr != aFile_PC6);
 
         for (const auto& lLine : mLines)
         {
@@ -54,7 +61,7 @@ namespace TRiLOGI
                 break;
             }
 
-            mLines.push_back(lLine);
+            AddLine(lLine);
         }
 
         return lLineNo;

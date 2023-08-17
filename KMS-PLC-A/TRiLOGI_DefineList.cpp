@@ -5,7 +5,8 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGI_DefineList.cpp
 
-// TEST COVERAGE  2023-08-14  KMS - Martin Dubois, P. Eng.
+// TEST COVERAGE  2023-08-15  KMS - Martin Dubois, P. Eng.
+
 #include "Component.h"
 
 // ===== Local ==============================================================
@@ -44,12 +45,9 @@ namespace TRiLOGI
                 ::Console::Change("New constant", aName);
             }
 
-            unsigned int lIndex;
-            unsigned int lLineNo;
+            auto lIndex = FindFreeIndex();
 
-            FindIndexAndLineNo(&lIndex, &lLineNo);
-
-            auto lConstant = new Constant(aName, lIndex, lLineNo, aValue, "", Object::FLAG_TO_INSERT);
+            auto lConstant = new Constant(aName, lIndex, aValue, "");
 
             mConstants.AddConstant(lConstant);
 
@@ -67,7 +65,7 @@ namespace TRiLOGI
             return false;
         }
 
-        return lConstant->SetValue(aValue, GetFile_PC6());
+        return lConstant->SetValue(aValue);
     }
 
     bool DefineList::ImportWord(const char* aName)
@@ -82,12 +80,9 @@ namespace TRiLOGI
                 ::Console::Change("New word", aName);
             }
 
-            unsigned int lIndex;
-            unsigned int lLineNo;
+            auto lIndex = FindFreeIndex();
 
-            FindIndexAndLineNo(&lIndex, &lLineNo);
-
-            lObject = mWords.AddWord(aName, lIndex, lLineNo, "", Object::FLAG_TO_INSERT);
+            lObject = mWords.AddWord(aName, lIndex, "");
 
             ObjectList::AddObject(lObject);
 
@@ -126,12 +121,9 @@ namespace TRiLOGI
                 ::Console::Change("New word", aName);
             }
 
-            unsigned int lIndex;
-            unsigned int lLineNo;
+            auto lIndex = FindFreeIndex();
 
-            FindIndexAndLineNo(&lIndex, &lLineNo);
-
-            auto lNewWord = new Word(aName, lIndex, lLineNo, aOffset, "", Object::FLAG_TO_INSERT);
+            auto lNewWord = new Word(aName, lIndex, aOffset, "");
 
             mWords.AddWord(lNewWord);
 
@@ -167,9 +159,9 @@ namespace TRiLOGI
         return lResult;
     }
 
-    void DefineList::Verify(const Text::File_UTF16& aFile_PC6)
+    void DefineList::Verify(const Text::File_UTF16& aFile_PC6, const AddressList* aPublicAddresses)
     {
-        ObjectList::Verify(aFile_PC6);
+        ObjectList::Verify(aFile_PC6, aPublicAddresses);
 
         mConstants.Verify();
     }
@@ -188,18 +180,15 @@ namespace TRiLOGI
 
     // ===== ObjectList =====================================================
 
-    void DefineList::AddObject(const wchar_t* aLine, unsigned int aLineNo, unsigned int aFlags)
+    void DefineList::AddObject(const wchar_t* aLine, unsigned int)
     {
         assert(nullptr != aLine);
 
         unsigned int lIndex;
-        char         lMsg[64];
         char         lText[LINE_LENGTH];
 
-        sprintf_s(lMsg, "Line %u  Invalid define line", aLineNo);
-
         auto lRet = swscanf_s(aLine, L"%u,%S", &lIndex, lText SizeInfo(lText));
-        KMS_EXCEPTION_ASSERT(2 == lRet, APPLICATION_ERROR, lMsg, lRet);
+        KMS_EXCEPTION_ASSERT(2 == lRet, APPLICATION_ERROR, "Invalid define line", lRet);
 
         char         lComment[NAME_LENGTH];
         Object     * lDefine;
@@ -212,7 +201,7 @@ namespace TRiLOGI
 
         if (2 <= sscanf_s(lText, "%[^,],DM[%u],%[^\n\r\t]", &lName SizeInfo(lName), &lOffset, lComment SizeInfo(lComment)))
         {
-            auto lWord = new Word(lName, lIndex, aLineNo, lOffset, lComment, aFlags);
+            auto lWord = new Word(lName, lIndex, lOffset, lComment);
 
             mWords.AddWord(lWord);
 
@@ -220,7 +209,7 @@ namespace TRiLOGI
         }
         else if (1 <= sscanf_s(lText, "%[^,],%[^,],%[^\n\r\t]", &lName SizeInfo(lName), lValue SizeInfo(lValue), lComment SizeInfo(lComment)))
         {
-            auto lConstant = new Constant(lName, lIndex, aLineNo, lValue, lComment, aFlags);
+            auto lConstant = new Constant(lName, lIndex, lValue, lComment);
 
             mConstants.AddConstant(lConstant);
 
@@ -228,7 +217,7 @@ namespace TRiLOGI
         }
         else
         {
-            KMS_EXCEPTION(APPLICATION_ERROR, lMsg, ""); // NOT TESTED
+            KMS_EXCEPTION(APPLICATION_ERROR, "Invalid define line (NOT TESTED)", "");
         }
 
         ObjectList::AddObject(lDefine);

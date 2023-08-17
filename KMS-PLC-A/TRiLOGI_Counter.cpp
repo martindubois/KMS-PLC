@@ -5,7 +5,7 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGI_Counter.cpp
 
-// TEST COVERAGE  2023-08-08  KMS - Martin Dubois, P. Eng.
+// TEST COVERAGE  2023-08-15  KMS - Martin Dubois, P. Eng.
 
 #include "Component.h"
 
@@ -20,20 +20,18 @@ namespace TRiLOGI
     // Public
     // //////////////////////////////////////////////////////////////////////
 
-    Counter::Counter(const char* aName, unsigned int aIndex, unsigned int aLineNo, unsigned int aInit, unsigned int aFlags)
-        : Object(aName, aIndex, aLineNo, aFlags | FLAG_SINGLE_USE_WARNING), mInit(aInit)
+    Counter::Counter(const char* aName, unsigned int aIndex, unsigned int aInit)
+        : Object(aName, aIndex, FLAG_SINGLE_USE_WARNING), mInit(aInit)
     {}
 
-    bool Counter::SetInit(unsigned int aInit, Text::File_UTF16* aFile_PC6)
+    bool Counter::SetInit(unsigned int aInit)
     {
-        bool lResult = mInit != aInit;
+        auto lResult = mInit != aInit;
         if (lResult)
         {
             ::Console::Change("Counter changed (NOT TESTED)", GetName());
 
             mInit = aInit;
-
-            Update(aFile_PC6);
         }
 
         return lResult;

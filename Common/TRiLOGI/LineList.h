@@ -27,6 +27,8 @@ namespace TRiLOGI
 
         void ClearList();
 
+        void AddLine(const wchar_t* aLine);
+
         void AddToFile(KMS::Text::File_UTF16* aFile_PC6);
 
         unsigned int Parse(KMS::Text::File_UTF16* aFile_PC6, unsigned int aLineNo, bool aUntilEnd);

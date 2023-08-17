@@ -16,6 +16,7 @@
 
 // ===== Local ==============================================================
 #include "../Address.h"
+#include "../AddressList.h"
 
 #include "List.h"
 

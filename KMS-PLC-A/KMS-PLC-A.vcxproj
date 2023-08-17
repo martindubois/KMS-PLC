@@ -28,6 +28,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Address.cpp" />
+    <ClCompile Include="AddressList.cpp" />
     <ClCompile Include="Console.cpp" />
     <ClCompile Include="Convert.cpp" />
     <ClCompile Include="EBPro_Address.cpp" />

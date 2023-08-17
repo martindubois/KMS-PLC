@@ -1,9 +1,9 @@
 
 // Author    KMS - Martin Dubois, P. Eng.
-// Copyright (C) 2022 KMS
+// Copyright (C) 2022-2023 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
-// File      Common/System.h
+// File      Common/Address.h
 // Status    PROD_READY
 
 #pragma once
@@ -33,5 +33,3 @@ private:
     AddressType  mType;
 
 };
-
-typedef std::list<Address> AddressList;

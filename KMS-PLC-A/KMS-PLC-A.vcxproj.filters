@@ -126,6 +126,9 @@
     <ClCompile Include="TRiLOGI_LineList.cpp">
       <Filter>Source Files\TRiLOGI</Filter>
     </ClCompile>
+    <ClCompile Include="AddressList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Convert.h">

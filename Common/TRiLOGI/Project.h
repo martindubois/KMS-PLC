@@ -68,7 +68,6 @@ namespace TRiLOGI
         KMS::DI::String_Expand mHeaderFile;
         KMS::DI::String_Expand mHeaderPrefix;
         KMS::DI::Enum<ProjectType, PROJECT_TYPE_NAMES> mProjectType;
-        KMS::DI::Array         mPublicDefs;
         KMS::DI::Array         mSources;
         KMS::DI::String_Expand mToolConfig;
 
@@ -79,8 +78,6 @@ namespace TRiLOGI
         void AddPublicAddress(const char* aPrivate, const char* aPublic);
         void AddPublicAddresses(const char* aRegEx);
 
-        bool Apply();
-
         void BuildFile();
 
         void Create();
@@ -90,14 +87,10 @@ namespace TRiLOGI
 
         bool Import_Source(const char* aFileName);
 
-        unsigned int ParseNothing(unsigned int aLineNo);
+        void Parse_Legacy();
+        void Parse_New();
 
-        void ParsePublicDef(const char* aFileName);
-        void ParsePublicDefs();
-
-        void RemoveParsed();
-
-        unsigned int RemoveRead(unsigned int aLineNo);
+        unsigned int ParseNothing(unsigned int aLineNo, unsigned int aSectionCount);
 
         void Reparse();
 

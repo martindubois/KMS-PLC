@@ -19,6 +19,7 @@
 
 // ===== Local ==============================================================
 #include "../Address.h"
+#include "../AddressList.h"
 
 namespace TRiLOGI
 {
@@ -33,7 +34,7 @@ namespace TRiLOGI
 
         WordList();
 
-        TRiLOGI::Object* AddWord(const char* aName, unsigned int aIndex, unsigned int aLineNo, const char* aComment, unsigned int aFlags);
+        TRiLOGI::Object* AddWord(const char* aName, unsigned int aIndex, const char* aComment);
 
         void AddWord(Word* aWord);
 

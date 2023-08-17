@@ -5,7 +5,7 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGI_BitList.cpp
 
-// TEST COVERAGE  2023-08-14  KMS - Martin Dubois, P. Eng.
+// TEST COVERAGE  2023-08-15  KMS - Martin Dubois, P. Eng.
 
 #include "Component.h"
 
@@ -35,17 +35,17 @@ namespace TRiLOGI
             auto lBit = lVT.second;
             assert(nullptr != lBit);
 
-            if ((!lBit->TestFlag(Object::FLAG_NOT_USED)) && std::regex_match(lBit->GetName(), aRegEx))
+            auto lN = lBit->GetName();
+
+            if ((!lBit->TestFlag(Object::FLAG_NOT_USED)) && std::regex_match(lN, aRegEx))
             {
-                aOut->push_back(Address(lBit->GetName(), AddressType::MODBUS_RTU_1X, mStartAddress + lBit->GetIndex()));
+                aOut->Add(lN, AddressType::MODBUS_RTU_1X, mStartAddress + lBit->GetIndex());
             }
         }
     }
 
     bool BitList::Import(const char* aName)
     {
-        assert(nullptr != aName);
-
         auto lObject = FindObject_ByName(aName);
 
         bool lResult = nullptr == lObject;
@@ -56,12 +56,9 @@ namespace TRiLOGI
                 ::Console::Change("New", GetElementName(), aName);
             }
 
-            unsigned int lIndex;
-            unsigned int lLineNo;
+            auto lIndex = FindFreeIndex();
 
-            FindIndexAndLineNo(&lIndex, &lLineNo);
-
-            lObject = new Object(aName, lIndex, lLineNo, Object::FLAG_TO_INSERT);
+            lObject = new Object(aName, lIndex, 0);
 
             AddObject(lObject);
         }
@@ -84,9 +81,7 @@ namespace TRiLOGI
                     ::Console::Change("New", GetElementName(), aName);
                 }
 
-                auto lLineNo = FindLineNo(aIndex);
-
-                lObject = new Object(aName, aIndex, lLineNo, Object::FLAG_TO_INSERT);
+                lObject = new Object(aName, aIndex, 0);
 
                 AddObject(lObject);
                 return true;

@@ -48,7 +48,7 @@ namespace TRiLOGI
         AddEntry("OffsetNew", &mOffsetNew, false, &MD_OFFSET_NEW);
     }
 
-    Object* WordList::AddWord(const char* aName, unsigned int aIndex, unsigned int aLineNo, const char* aComment, unsigned int aFlags)
+    Object* WordList::AddWord(const char* aName, unsigned int aIndex, const char* aComment)
     {
         unsigned int lOffset;
 
@@ -60,7 +60,7 @@ namespace TRiLOGI
         default: assert(false);
         }
 
-        auto lResult = new Word(aName, aIndex, aLineNo, lOffset, aComment, aFlags);
+        auto lResult = new Word(aName, aIndex, lOffset, aComment);
 
         AddWord(lResult);
 
@@ -121,9 +121,11 @@ namespace TRiLOGI
             auto lWord = lVT.second;
             assert(nullptr != lWord);
 
-            if ((!lWord->TestFlag(TRiLOGI::Object::FLAG_NOT_USED)) && std::regex_match(lWord->GetName(), aRegEx))
+            auto lN = lWord->GetName();
+
+            if ((!lWord->TestFlag(TRiLOGI::Object::FLAG_NOT_USED)) && std::regex_match(lN, aRegEx))
             {
-                aOut->push_back(Address(lWord->GetName(), AddressType::MODBUS_RTU_4X, 1000 + lWord->GetOffset()));
+                aOut->Add(lN, AddressType::MODBUS_RTU_4X, 1000 + lWord->GetOffset());
             }
         }
     }

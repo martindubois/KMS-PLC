@@ -13,6 +13,8 @@
 
 // ===== Local ==============================================================
 #include "../Address.h"
+#include "../AddressList.h"
+
 #include "ObjectList.h"
 
 namespace TRiLOGI

@@ -5,7 +5,7 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGI_ObjectList.cpp
 
-// TEST COVERAGE  2023-08-14  KMS - Martin Dubois, P. Eng.
+// TEST COVERAGE  2023-08-15  KMS - Martin Dubois, P. Eng.
 
 #include "Component.h"
 
@@ -49,33 +49,8 @@ namespace TRiLOGI
         }
     }
 
-    bool ObjectList::Apply()
-    {
-        assert(nullptr != mFile_PC6);
-
-        auto lResult = false;
-
-        for (auto lIt = mObjects_ByIndex.rbegin(); lIt != mObjects_ByIndex.rend(); lIt++)
-        {
-            if (lIt->second->TestFlag(Object::FLAG_TO_INSERT))
-            {
-                lResult = true;
-
-                wchar_t lLine[LINE_LENGTH];
-
-                lIt->second->GetLine(lLine, sizeof(lLine));
-
-                mFile_PC6->InsertLine(lIt->second->GetLineNo(), lLine);
-            }
-        }
-
-        return lResult;
-    }
-
     void ObjectList::ClearList()
     {
-        mFile_PC6 = nullptr;
-
         for (const auto& lVT : mObjects_ByIndex)
         {
             assert(nullptr != lVT.second);
@@ -89,15 +64,6 @@ namespace TRiLOGI
 
     unsigned int ObjectList::GetCount() const { return static_cast<unsigned int>(mObjects_ByIndex.size()); }
 
-    void ObjectList::SetFile(Text::File_UTF16* aFile_PC6, unsigned int aLineNo_End)
-    {
-        assert(nullptr != aFile_PC6);
-        assert(0 < aLineNo_End);
-
-        mFile_PC6   = aFile_PC6;
-        mLineNo_End = aLineNo_End;
-    }
-
     const Object* ObjectList::FindObject_ByIndex(unsigned int aIndex) const
     {
         auto lIt = mObjects_ByIndex.find(aIndex);
@@ -106,6 +72,7 @@ namespace TRiLOGI
             return nullptr;
         }
 
+        // NOT TESTED
         assert(nullptr != lIt->second);
 
         return lIt->second;
@@ -126,6 +93,8 @@ namespace TRiLOGI
 
     Object* ObjectList::FindObject_ByName(const char* aName)
     {
+        assert(nullptr != aName);
+
         auto lIt = mObjects_ByName.find(aName);
         if (mObjects_ByName.end() == lIt)
         {
@@ -141,11 +110,9 @@ namespace TRiLOGI
 
     unsigned int ObjectList::Clean()
     {
-        assert(nullptr != mFile_PC6);
-
         unsigned int lResult = 0;
 
-        for (auto lIt = mObjects_ByIndex.rbegin(); lIt != mObjects_ByIndex.rend(); lIt++)
+        for (auto lIt = mObjects_ByIndex.begin(); lIt != mObjects_ByIndex.end(); )
         {
             auto lObject = lIt->second;
             assert(nullptr != lObject);
@@ -154,7 +121,14 @@ namespace TRiLOGI
             {
                 lResult++;
 
-                mFile_PC6->RemoveLines(lObject->GetLineNo(), 1);
+                auto lRet = mObjects_ByName.erase(lObject->GetName());
+                assert(1 == lRet);
+
+                lIt = mObjects_ByIndex.erase(lIt);
+            }
+            else
+            {
+                lIt++;
             }
         }
 
@@ -163,6 +137,8 @@ namespace TRiLOGI
 
     unsigned int ObjectList::Parse(Text::File_UTF16* aFile_PC6, unsigned int aLineNo, unsigned int aFlags)
     {
+        assert(nullptr != aFile_PC6);
+
         auto lLineCount = aFile_PC6->GetLineCount();
         auto lLineNo    = aLineNo;
 
@@ -173,12 +149,11 @@ namespace TRiLOGI
 
             if (PC6_SECTION_END_C == lLine[0])
             {
-                SetFile(aFile_PC6, lLineNo);
                 lLineNo++;
                 break;
             }
 
-            AddObject(lLine, lLineNo, aFlags);
+            AddObject(lLine, aFlags);
         }
 
         ::Console::Stats(GetCount(), GetElementName());
@@ -186,7 +161,7 @@ namespace TRiLOGI
         return lLineNo;
     }
 
-    void ObjectList::Verify(const Text::File_UTF16& aFile_PC6)
+    void ObjectList::Verify(const Text::File_UTF16& aFile_PC6, const AddressList* aPublicAddresses)
     {
         assert(nullptr != mElementName);
 
@@ -199,38 +174,41 @@ namespace TRiLOGI
             auto lObj = lVT.second;
             assert(nullptr != lObj);
 
-            auto lIndex  = lObj->GetIndex();
-            auto lLineNo = lObj->GetLineNo();
-            auto lName   = lObj->GetName();
+            auto lName = lObj->GetName();
             assert(nullptr != lName);
 
-            switch (aFile_PC6.CountOccurrence(lConverter.from_bytes(lName).c_str()))
+            if ((nullptr == aPublicAddresses) || (!aPublicAddresses->DoesContain(lName)))
             {
-            case 0: assert(false);
+                auto lIndex = lObj->GetIndex();
 
-            case 1:
-                lCount++;
-                lObj->AddFlags(Object::FLAG_NOT_USED);
-
-                ::Console::Warning_Begin(lLineNo)
-                    << "The " << mElementName << " named \"" << lName << "\" (" << lIndex << ") is useless";
-                ::Console::Warning_End();
-                break;
-
-            case 2:
-                if (lObj->TestFlag(Object::FLAG_SINGLE_USE_WARNING))
+                switch (aFile_PC6.CountOccurrence(lConverter.from_bytes(lName).c_str()))
                 {
-                    ::Console::Warning_Begin(lLineNo)
-                        << "The " << mElementName << " named \"" << lName << "\" (" << lIndex << ") is used only once";
+                case 0: assert(false);
+
+                case 1:
+                    lCount++;
+                    lObj->AddFlags(Object::FLAG_NOT_USED);
+
+                    ::Console::Warning_Begin()
+                        << "The " << mElementName << " named \"" << lName << "\" (" << lIndex << ") is useless";
                     ::Console::Warning_End();
+                    break;
+
+                case 2: // NOT TESTED
+                    if (lObj->TestFlag(Object::FLAG_SINGLE_USE_WARNING))
+                    {
+                        ::Console::Warning_Begin()
+                            << "The " << mElementName << " named \"" << lName << "\" (" << lIndex << ") is used only once";
+                        ::Console::Warning_End();
+                    }
+                    else if (lObj->TestFlag(Object::FLAG_SINGLE_USE_INFO))
+                    {
+                        ::Console::Info_Begin()
+                            << "The " << mElementName << " named \"" << lName << "\" (" << lIndex << ") is used only once";
+                        ::Console::Info_End();
+                    }
+                    break;
                 }
-                else if (lObj->TestFlag(Object::FLAG_SINGLE_USE_INFO))
-                {
-                    ::Console::Info_Begin(lLineNo)
-                        << "The " << mElementName << " named \"" << lName << "\" (" << lIndex << ") is used only once";
-                    ::Console::Info_End();
-                }
-                break;
             }
         }
 
@@ -247,8 +225,6 @@ namespace TRiLOGI
 
     ObjectList::ObjectList(const char* aElementName, unsigned int aMaxQty)
         : mElementName(aElementName)
-        , mFile_PC6(nullptr)
-        , mLineNo_End(0)
         , mMaxQty(aMaxQty)
         , mProjectType(ProjectType::LEGACY)
     {
@@ -257,8 +233,6 @@ namespace TRiLOGI
     }
 
     const char* ObjectList::GetElementName() const { return mElementName; }
-
-    Text::File_UTF16* ObjectList::GetFile_PC6() { return mFile_PC6; }
 
     bool ObjectList::IsProjectLegacy() const { return ProjectType::LEGACY == mProjectType; }
 
@@ -283,7 +257,7 @@ namespace TRiLOGI
         }
     }
 
-    void ObjectList::AddObject(const wchar_t* aLine, unsigned int aLineNo, unsigned int aFlags)
+    void ObjectList::AddObject(const wchar_t* aLine, unsigned int aFlags)
     {
         assert(nullptr != aLine);
 
@@ -291,23 +265,15 @@ namespace TRiLOGI
         char         lName[NAME_LENGTH];
 
         auto lRet = swscanf_s(aLine, L"%u,%S", &lIndex, lName SizeInfo(lName));
-        if (2 != lRet)
-        {
-            char lMsg[64];
-            sprintf_s(lMsg, "Line %u  Invalid bit line (NOT TESTED)", aLineNo);
-            KMS_EXCEPTION(APPLICATION_ERROR, lMsg, lRet);
-        }
+        KMS_EXCEPTION_ASSERT(2 == lRet, APPLICATION_ERROR, "Invalid bit line (NOT TESTED)", lRet);
 
-        auto lObject = new Object(lName, lIndex, aLineNo, aFlags);
+        auto lObject = new Object(lName, lIndex, aFlags);
 
         AddObject(lObject);
     }
 
-    void ObjectList::FindIndexAndLineNo(unsigned int* aIndex, unsigned int* aLineNo)
+    unsigned int ObjectList::FindFreeIndex()
     {
-        assert(nullptr != aIndex);
-        assert(nullptr != aLineNo);
-        
         if (mMaxQty <= mObjects_ByIndex.size())
         {
             char lMsg[64 + NAME_LENGTH];
@@ -315,67 +281,45 @@ namespace TRiLOGI
             KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
         }
 
-        unsigned int lIndex;
-
-        auto lLineNo = mLineNo_End;
+        unsigned int lResult;
 
         switch (mProjectType)
         {
         case ProjectType::LEGACY:
-            lIndex  = mMaxQty - 1;
+            lResult = mMaxQty - 1;
 
             for (auto lIt = mObjects_ByIndex.rbegin(); lIt != mObjects_ByIndex.rend(); lIt++)
             {
-                if (lIndex > lIt->first)
+                if (lResult > lIt->first)
                 {
                     break; // NOT TESTED
                 }
 
-                if (lIndex == lIt->first)
+                if (lResult == lIt->first)
                 {
-                    lIndex = lIt->first - 1;
+                    lResult = lIt->first - 1;
                 }
-                lLineNo = lIt->second->GetLineNo();
             }
             break;
 
         case ProjectType::NEW:
-            lIndex  = 0;
+            lResult = 0;
 
             for (auto lIt = mObjects_ByIndex.begin(); lIt != mObjects_ByIndex.end(); lIt++)
             {
-                if (lIndex < lIt->first)
+                if (lResult < lIt->first)
                 {
                     break;
                 }
 
-                if (lIndex == lIt->first)
+                if (lResult == lIt->first)
                 {
-                    lIndex = lIt->first + 1;
+                    lResult = lIt->first + 1;
                 }
             }
             break;
 
         default: assert(false);
-        }
-
-        *aIndex = lIndex;
-        *aLineNo = lLineNo;
-    }
-
-    unsigned int ObjectList::FindLineNo(unsigned int aIndex)
-    {
-        auto lResult = mLineNo_End;
-
-        for (auto lIt = mObjects_ByIndex.rbegin(); lIt != mObjects_ByIndex.rend(); lIt++)
-        {
-            if (aIndex > lIt->first)
-            {
-                break;
-            }
-
-            // NOT TESTED
-            lResult = lIt->second->GetLineNo();
         }
 
         return lResult;

@@ -26,8 +26,6 @@ namespace TRiLOGI
 
     bool TimerList::Import(const char* aName, unsigned int aInit)
     {
-        assert(nullptr != aName);
-
         auto lObject = FindObject_ByName(aName);
         if (nullptr == lObject)
         {
@@ -36,12 +34,9 @@ namespace TRiLOGI
                 ::Console::Change("New timer", aName);
             }
 
-            unsigned int lIndex;
-            unsigned int lLineNo;
+            auto lIndex = FindFreeIndex();
 
-            FindIndexAndLineNo(&lIndex, &lLineNo);
-
-            auto lTimer = new Timer(aName, lIndex, lLineNo, aInit, Object::FLAG_TO_INSERT);
+            auto lTimer = new Timer(aName, lIndex, aInit);
 
             ObjectList::AddObject(lTimer);
 
@@ -51,7 +46,7 @@ namespace TRiLOGI
         auto lTimer = dynamic_cast<Timer*>(lObject);
         assert(nullptr != lTimer);
 
-        return lTimer->SetInit(aInit, GetFile_PC6());
+        return lTimer->SetInit(aInit);
     }
 
     // Protected
@@ -59,7 +54,7 @@ namespace TRiLOGI
 
     // ===== ObjectList =====================================================
 
-    void TimerList::AddObject(const wchar_t* aLine, unsigned int aLineNo, unsigned int aFlags)
+    void TimerList::AddObject(const wchar_t* aLine, unsigned int)
     {
         assert(nullptr != aLine);
 
@@ -68,14 +63,9 @@ namespace TRiLOGI
         char         lName[NAME_LENGTH];
 
         auto lRet = swscanf_s(aLine, L"%u,%S %u", &lIndex, lName SizeInfo(lName), &lInit);
-        if (3 != lRet)
-        {
-            char lMsg[64];
-            sprintf_s(lMsg, "Line %u  Invalid timer line (NOT TESTED)", aLineNo);
-            KMS_EXCEPTION(APPLICATION_ERROR, lMsg, lRet);
-        }
+        KMS_EXCEPTION_ASSERT(3 == lRet, APPLICATION_ERROR, "Invalid timer line (NOT TESTED)", lRet);
 
-        auto lTimer = new Timer(lName, lIndex, aLineNo, lInit, aFlags);
+        auto lTimer = new Timer(lName, lIndex, lInit);
 
         ObjectList::AddObject(lTimer);
     }

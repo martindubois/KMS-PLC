@@ -27,10 +27,6 @@ namespace TRiLOGI
 
         FunctionList();
 
-        void ClearList();
-
-        void SetLineNo_End_Code(unsigned int aLineNo);
-
         void Display_ByIndex(FILE* aOut) const;
         void Display_ByName (FILE* aOut) const;
 
@@ -38,8 +34,6 @@ namespace TRiLOGI
         Function* Find_ByName (const char* aName);
 
         void AddCodeToFile(KMS::Text::File_UTF16* aFile_PC6);
-
-        bool Apply_Code();
 
         bool Import(const char* aName, KMS::Text::File_ASCII* aFile, KMS::Text::File_ASCII::Internal::iterator* aIt);
 
@@ -51,8 +45,6 @@ namespace TRiLOGI
     private:
 
         NO_COPY(FunctionList);
-
-        unsigned int mLineNo_End_Code;
 
     };
 

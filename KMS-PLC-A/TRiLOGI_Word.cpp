@@ -18,8 +18,8 @@ namespace TRiLOGI
     // Public
     // //////////////////////////////////////////////////////////////////////
 
-    Word::Word(const char* aName, unsigned int aIndex, unsigned int aLineNo, unsigned int aOffset, const char* aComment, unsigned int aFlags)
-        : Object(aName, aIndex, aLineNo, aFlags | FLAG_SINGLE_USE_INFO), mComment(aComment), mOffset(aOffset)
+    Word::Word(const char* aName, unsigned int aIndex, unsigned int aOffset, const char* aComment)
+        : Object(aName, aIndex, FLAG_SINGLE_USE_INFO), mComment(aComment), mOffset(aOffset)
     {}
 
     unsigned int Word::GetOffset() const { return mOffset; }

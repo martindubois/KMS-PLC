@@ -5,7 +5,7 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGI_Object.cpp
 
-// TEST COVERAGE  2023-08-08  KMS - Martin Dubois, P. Eng.
+// TEST COVERAGE  2023-08-15  KMS - Martin Dubois, P. Eng.
 
 #include "Component.h"
 
@@ -23,11 +23,9 @@ namespace TRiLOGI
     const unsigned int Object::FLAG_NOT_USED           = 0x00000001;
     const unsigned int Object::FLAG_SINGLE_USE_INFO    = 0x00000002;
     const unsigned int Object::FLAG_SINGLE_USE_WARNING = 0x00000004;
-    const unsigned int Object::FLAG_TO_APPLY           = 0x00000008;
-    const unsigned int Object::FLAG_TO_INSERT          = 0x00000010;
 
-    Object::Object(const char* aName, unsigned int aIndex, unsigned int aLineNo, unsigned int aFlags)
-        : mFlags(aFlags), mIndex(aIndex), mLineNo(aLineNo), mName(aName)
+    Object::Object(const char* aName, unsigned int aIndex, unsigned int aFlags)
+        : mFlags(aFlags), mIndex(aIndex), mName(aName)
     {
         assert(nullptr != aName);
     }
@@ -38,15 +36,12 @@ namespace TRiLOGI
 
     unsigned int Object::GetIndex() const { return mIndex; }
 
-    unsigned int Object::GetLineNo() const { return mLineNo; }
-
     const char* Object::GetName() const { return mName.c_str(); }
 
-    void Object::SetName(const char* aName, unsigned int aLineNo)
+    void Object::SetName(const char* aName)
     {
         assert(nullptr != aName);
 
-        mLineNo = aLineNo;
         mName   = aName;
     }
 
@@ -67,18 +62,6 @@ namespace TRiLOGI
     // Protected
     // //////////////////////////////////////////////////////////////////////
 
-    Object::Object(unsigned int aIndex) : mFlags(0), mIndex(aIndex), mLineNo(0) {}
-
-    // NOT TESTED
-    void Object::Update(Text::File_UTF16* aFile_PC6)
-    {
-        assert(nullptr != aFile_PC6);
-
-        wchar_t lLine[LINE_LENGTH];
-
-        GetLine(lLine, sizeof(lLine));
-
-        aFile_PC6->ReplaceLine(mLineNo, lLine);
-    }
+    Object::Object(unsigned int aIndex) : mFlags(0), mIndex(aIndex) {}
 
 }

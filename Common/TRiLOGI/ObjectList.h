@@ -16,7 +16,7 @@
 #include <KMS/Text/File_UTF16.h>
 
 // ===== Local ==============================================================
-#include "../Types.h"
+#include "../AddressList.h"
 
 namespace TRiLOGI
 {
@@ -31,12 +31,9 @@ namespace TRiLOGI
         ~ObjectList();
 
         void AddToFile(KMS::Text::File_UTF16* aFile_PC6);
-        bool Apply();
         void ClearList();
 
         unsigned int GetCount() const;
-
-        void SetFile(KMS::Text::File_UTF16* aFile_PC6, unsigned int aLineNo_End);
 
         const Object* FindObject_ByIndex(unsigned int aIndex) const;
 
@@ -50,7 +47,7 @@ namespace TRiLOGI
 
         unsigned int Parse(KMS::Text::File_UTF16* aFile_PC6, unsigned int aLineNo, unsigned int aFlags);
 
-        void Verify(const KMS::Text::File_UTF16& aFile_CP6);
+        void Verify(const KMS::Text::File_UTF16& aFile_CP6, const AddressList* aPublicAddresses);
 
         void SetProjectType(ProjectType aPT);
 
@@ -63,17 +60,13 @@ namespace TRiLOGI
 
         const char* GetElementName() const;
 
-        KMS::Text::File_UTF16* GetFile_PC6();
-
         bool IsProjectLegacy() const;
 
         void AddObject(Object* aObject);
 
-        virtual void AddObject(const wchar_t* aLine, unsigned int aLineNo, unsigned int aFlags);
+        virtual void AddObject(const wchar_t* aLine, unsigned int aFlags);
 
-        void FindIndexAndLineNo(unsigned int* aIndex, unsigned int* aLineNo);
-
-        unsigned int FindLineNo(unsigned int aIndex);
+        unsigned int FindFreeIndex();
 
         void Replace(Object* aOld, Object* aNew);
 
@@ -86,9 +79,6 @@ namespace TRiLOGI
 
         const char   * mElementName;
 
-        KMS::Text::File_UTF16* mFile_PC6;
-
-        unsigned int mLineNo_End;
         unsigned int mMaxQty;
 
         ProjectType mProjectType;

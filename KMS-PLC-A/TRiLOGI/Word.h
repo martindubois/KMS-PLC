@@ -18,7 +18,7 @@ namespace TRiLOGI
 
     public:
 
-        Word(const char* aName, unsigned int aIndex, unsigned int aLineNo, unsigned int aOffset, const char* aComment, unsigned int aFlags);
+        Word(const char* aName, unsigned int aIndex, unsigned int aOffset, const char* aComment);
 
         unsigned int GetOffset() const;
 

@@ -29,7 +29,7 @@ namespace TRiLOGI
     protected:
 
         // ===== ObjectList =================================================
-        virtual void AddObject(const wchar_t* aLine, unsigned int aLineNo, unsigned int aFlags);
+        virtual void AddObject(const wchar_t* aLine, unsigned int aFlags);
 
     private:
 

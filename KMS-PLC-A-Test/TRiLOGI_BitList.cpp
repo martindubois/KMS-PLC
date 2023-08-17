@@ -29,13 +29,9 @@ KMS_TEST(TRiLOGI_BitList_Base, "TRiLOGY_BitList_Base", "Auto", sTest_Base)
 
     // ===== ObjectList =====================================================
 
-    // Apply
-
     // Clear
 
     // GetCount
-
-    // SetFile
 
     // FindObject_ByIndex
     KMS_TEST_ASSERT(nullptr == lBL_C.FindObject_ByIndex(0));

@@ -35,7 +35,7 @@ namespace TRiLOGI
 
         unsigned int Parse(KMS::Text::File_UTF16* aFile_PC6, unsigned int aLineNo);
 
-        void Verify(const KMS::Text::File_UTF16& aFile_PC6);
+        void Verify(const KMS::Text::File_UTF16& aFile_PC6, const AddressList* aPublicAddresses);
 
         WordList mWords;
 
@@ -45,7 +45,7 @@ namespace TRiLOGI
     protected:
 
         // ===== ObjectList =================================================
-        virtual void AddObject(const wchar_t* aLine, unsigned int aLineNo, unsigned int aFlags);
+        virtual void AddObject(const wchar_t* aLine, unsigned int aFlags);
 
     private:
 

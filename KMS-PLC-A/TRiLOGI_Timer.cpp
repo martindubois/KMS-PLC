@@ -20,11 +20,11 @@ namespace TRiLOGI
     // Public
     // //////////////////////////////////////////////////////////////////////
 
-    Timer::Timer(const char* aName, unsigned int aIndex, unsigned int aLineNo, unsigned int aInit, unsigned int aFlags)
-        : Object(aName, aIndex, aLineNo, aFlags | FLAG_SINGLE_USE_WARNING), mInit(aInit)
+    Timer::Timer(const char* aName, unsigned int aIndex, unsigned int aInit)
+        : Object(aName, aIndex, FLAG_SINGLE_USE_WARNING), mInit(aInit)
     {}
 
-    bool Timer::SetInit(unsigned int aInit, Text::File_UTF16* aFile_PC6)
+    bool Timer::SetInit(unsigned int aInit)
     {
         bool lResult = mInit != aInit;
         if (lResult)
@@ -32,8 +32,6 @@ namespace TRiLOGI
             ::Console::Change("Timer changed (NOT TESTED)", GetName());
 
             mInit = aInit;
-
-            Update(aFile_PC6);
         }
 
         return lResult;

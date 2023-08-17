@@ -24,20 +24,17 @@ namespace TRiLOGI
         static const unsigned int FLAG_NOT_USED;
         static const unsigned int FLAG_SINGLE_USE_INFO;
         static const unsigned int FLAG_SINGLE_USE_WARNING;
-        static const unsigned int FLAG_TO_APPLY;
-        static const unsigned int FLAG_TO_INSERT;
 
-        Object(const char* aName, unsigned int mIndex, unsigned int aLineNo, unsigned int aFlags);
+        Object(const char* aName, unsigned int mIndex, unsigned int aFlags);
 
         virtual ~Object();
 
         void AddFlags(unsigned int aFlags);
 
         unsigned int GetIndex () const;
-        unsigned int GetLineNo() const;
         const char * GetName  () const;
 
-        void SetName(const char* aName, unsigned int aLineNo);
+        void SetName(const char* aName);
 
         bool TestFlag(unsigned int aFlag) const;
 
@@ -47,13 +44,10 @@ namespace TRiLOGI
 
         Object(unsigned int mIndex);
 
-        void Update(KMS::Text::File_UTF16* aFile_PC6);
-
     private:
 
         unsigned int mFlags;
         unsigned int mIndex;
-        unsigned int mLineNo;
         std::string  mName;
 
     };

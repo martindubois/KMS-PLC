@@ -18,11 +18,11 @@ namespace TRiLOGI
 
     public:
 
-        Counter(const char* aName, unsigned int aIndex, unsigned int aLineNo, unsigned int aInit, unsigned int aFlags);
+        Counter(const char* aName, unsigned int aIndex, unsigned int aInit);
 
         unsigned int GetInit () const;
 
-        bool SetInit(unsigned int aInit, KMS::Text::File_UTF16* aFile_PC6);
+        bool SetInit(unsigned int aInit);
 
         // ===== Object =====================================================
         virtual ~Counter();
