@@ -17,6 +17,9 @@
 
 using namespace KMS;
 
+KMS_RESULT_STATIC(RESULT_INVALID_ADDRESS_FORMAT);
+KMS_RESULT_STATIC(RESULT_INVALID_ADDRESS_TYPE);
+
 // Constants
 // //////////////////////////////////////////////////////////////////////////
 
@@ -93,12 +96,12 @@ namespace EBPro
                     lAddress  SizeInfo(lAddress),
                     lDataType SizeInfo(lDataType));
 
-                KMS_EXCEPTION_ASSERT(5 == lRet, APPLICATION_ERROR, lMsg, aLine);
+                KMS_EXCEPTION_ASSERT(5 == lRet, RESULT_INVALID_ADDRESS_FORMAT, lMsg, aLine);
                 break;
 
             default:
                 // NOT TESTED
-                KMS_EXCEPTION(APPLICATION_ERROR, lMsg, aLine);
+                KMS_EXCEPTION(RESULT_INVALID_ADDRESS_FORMAT, lMsg, aLine);
             }
         }
 
@@ -178,7 +181,7 @@ namespace EBPro
         {
             char lMsg[128 + NAME_LENGTH];
             sprintf_s(lMsg, "The improted address type of \"%s\" does not match the current type", mName.c_str());
-            KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
+            KMS_EXCEPTION(RESULT_INVALID_ADDRESS_TYPE, lMsg, "");
         }
 
         bool lResult = 0 != strcmp(mAddress.c_str(), aAddr);

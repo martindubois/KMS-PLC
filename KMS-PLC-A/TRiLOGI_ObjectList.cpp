@@ -20,6 +20,9 @@
 
 using namespace KMS;
 
+KMS_RESULT_STATIC(RESULT_ALREADY_EXIST);
+KMS_RESULT_STATIC(RESULT_TOO_MANY);
+
 // Constants
 // //////////////////////////////////////////////////////////////////////////
 
@@ -246,14 +249,14 @@ namespace TRiLOGI
         if (!lBI.second)
         {
             sprintf_s(lMsg, "An object with index %u already exist (NOT TESTED)", aObject->GetIndex());
-            KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
+            KMS_EXCEPTION(RESULT_ALREADY_EXIST, lMsg, "");
         }
 
         auto lBN = mObjects_ByName.insert(ObjectList::ByName::value_type(aObject->GetName(), aObject));
         if (!lBN.second)
         {
             sprintf_s(lMsg, "An object named \"%s\" already exist (NOT TESTED)", aObject->GetName());
-            KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
+            KMS_EXCEPTION(RESULT_ALREADY_EXIST, lMsg, "");
         }
     }
 
@@ -265,7 +268,7 @@ namespace TRiLOGI
         char         lName[NAME_LENGTH];
 
         auto lRet = swscanf_s(aLine, L"%u,%S", &lIndex, lName SizeInfo(lName));
-        KMS_EXCEPTION_ASSERT(2 == lRet, APPLICATION_ERROR, "Invalid bit line (NOT TESTED)", lRet);
+        KMS_EXCEPTION_ASSERT(2 == lRet, RESULT_INVALID_FORMAT, "Invalid bit line (NOT TESTED)", lRet);
 
         auto lObject = new Object(lName, lIndex, aFlags);
 
@@ -278,7 +281,7 @@ namespace TRiLOGI
         {
             char lMsg[64 + NAME_LENGTH];
             sprintf_s(lMsg, "Too many %s (NOT TESTED)", mElementName);
-            KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
+            KMS_EXCEPTION(RESULT_TOO_MANY, lMsg, "");
         }
 
         unsigned int lResult;

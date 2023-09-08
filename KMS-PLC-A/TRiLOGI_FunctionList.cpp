@@ -20,6 +20,10 @@
 
 using namespace KMS;
 
+KMS_RESULT_STATIC(RESULT_CORRUPTED_PC6_FILE);
+KMS_RESULT_STATIC(RESULT_ALREADY_EXIST);
+KMS_RESULT_STATIC(RESULT_INVALID_FUNCTION_FORMAT);
+
 namespace TRiLOGI
 {
 
@@ -132,7 +136,7 @@ namespace TRiLOGI
                     if (!lBI.second)
                     {
                         sprintf_s(lMsg, "Line %u  A function already exist at index %u (NOT TESTED)", lLineNo, lIndex);
-                        KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
+                        KMS_EXCEPTION(RESULT_ALREADY_EXIST, lMsg, "");
                     }
 
                     lFunction = nullptr;
@@ -143,7 +147,7 @@ namespace TRiLOGI
                 if (nullptr != lFunction)
                 {
                     sprintf_s(lMsg, "Line %u  A function is malformed (NOT TESTED)", lLineNo);
-                    KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
+                    KMS_EXCEPTION(RESULT_INVALID_FUNCTION_FORMAT, lMsg, "");
                 }
 
                 lFunction = new Function(lIndex, lLength);
@@ -167,7 +171,7 @@ namespace TRiLOGI
             if (!lBI.second)
             {
                 sprintf_s(lMsg, "Line %u  A function already exist at index %u (NOT TESTED)", aLineNo, lIndex);
-                KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
+                KMS_EXCEPTION(RESULT_ALREADY_EXIST, lMsg, "");
             }
         }
 
@@ -197,7 +201,7 @@ namespace TRiLOGI
             if (2 != lRet)
             {
                 sprintf_s(lMsg, "Line %u  Corrupted PC6 file (NOT TESTED)", aLineNo);
-                KMS_EXCEPTION(APPLICATION_ERROR, lMsg, lRet);
+                KMS_EXCEPTION(RESULT_CORRUPTED_PC6_FILE, lMsg, lRet);
             }
 
             auto lFunction = Find_ByIndex(lIndex);
@@ -210,7 +214,7 @@ namespace TRiLOGI
                 if (!lBI.second)
                 {
                     sprintf_s(lMsg, "Line %u  A function already exist at index %u", aLineNo, lIndex);
-                    KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
+                    KMS_EXCEPTION(RESULT_ALREADY_EXIST, lMsg, "");
                 }
             }
 
@@ -220,7 +224,7 @@ namespace TRiLOGI
             if (!lBI.second)
             {
                 sprintf_s(lMsg, "Line %u  A function named \"%s\" already exist (NOT TESTED)", lLineNo, lName);
-                KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
+                KMS_EXCEPTION(RESULT_ALREADY_EXIST, lMsg, "");
             }
         }
 

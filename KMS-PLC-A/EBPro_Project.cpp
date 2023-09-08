@@ -39,7 +39,7 @@ namespace EBPro
 
     void Project::Edit()
     {
-        KMS_EXCEPTION_ASSERT(0 < mFileName.GetLength(), APPLICATION_USER_ERROR, "No file name configured", "");
+        KMS_EXCEPTION_ASSERT(0 < mFileName.GetLength(), RESULT_INVALID_CONFIG, "No file name configured", "");
 
         mSoftware.Open(mFileName.Get());
     }
@@ -73,13 +73,6 @@ namespace EBPro
         mAddresses.Read();
         mFunctions.Read();
         mLabels   .Read();
-    }
-
-    void Project::ValidateConfig() const
-    {
-        mAddresses.ValidateConfig();
-        mFunctions.ValidateConfig();
-        mLabels   .ValidateConfig();
     }
 
     void Project::Verify() const

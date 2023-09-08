@@ -14,6 +14,8 @@
 
 using namespace KMS;
 
+KMS_RESULT_STATIC(RESULT_INVALID_FUNCTION_FORMAT);
+
 // Public
 // //////////////////////////////////////////////////////////////////////////
 
@@ -63,7 +65,7 @@ void Function::Parse(Text::File_ASCII* aFile, Text::File_ASCII::Internal::iterat
         AddLine((*aIt)->c_str());
     }
 
-    KMS_EXCEPTION(APPLICATION_ERROR, "The function is not terminated", "");
+    KMS_EXCEPTION(RESULT_INVALID_FUNCTION_FORMAT, "The function is not terminated", "");
 }
 
 // Protected

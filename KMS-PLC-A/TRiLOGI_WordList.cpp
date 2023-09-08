@@ -19,6 +19,9 @@
 
 using namespace KMS;
 
+KMS_RESULT_STATIC(RESULT_ALREADY_EXIST);
+KMS_RESULT_STATIC(RESULT_TOO_MANY);
+
 // Constants
 // /////////////////////////////////////////////////////////////////////////
 
@@ -80,33 +83,33 @@ namespace TRiLOGI
         if (OFFSET_MIN > lO)
         {
             sprintf_s(lMsg, "The offset of the word named \"%s\" is below the minimum (NOT TESTED)", lN);
-            KMS_EXCEPTION(APPLICATION_ERROR, lMsg, lO);
+            KMS_EXCEPTION(RESULT_INVALID_VALUE, lMsg, lO);
         }
 
         if (OFFSET_MAX < lO)
         {
             sprintf_s(lMsg, "The offset of the word named \"%s\" is above the absolute maximum (NOT TESTED)", lN);
-            KMS_EXCEPTION(APPLICATION_ERROR, lMsg, lO);
+            KMS_EXCEPTION(RESULT_INVALID_VALUE, lMsg, lO);
         }
 
         if (mOffsetMax < lO)
         {
             sprintf_s(lMsg, "The offset of the word named \"%s\" is above the configured maximum (NOT TESTED)", lN);
-            KMS_EXCEPTION(APPLICATION_ERROR, lMsg, lO);
+            KMS_EXCEPTION(RESULT_INVALID_VALUE, lMsg, lO);
         }
 
         auto lBN = mWords_ByName.insert(ByName::value_type(lN, aWord));
         if (!lBN.second)
         {
             sprintf_s(lMsg, "A word named \"%s\" already exist (NOT TESTED)", lN);
-            KMS_EXCEPTION(APPLICATION_ERROR, lMsg, lO);
+            KMS_EXCEPTION(RESULT_ALREADY_EXIST, lMsg, lO);
         }
 
         auto lBO = mWords_ByOffset.insert(ByOffset::value_type(lO, aWord));
         if (!lBO.second)
         {
             sprintf_s(lMsg, "A word already exist at offset %u (NOT TESTED)", lO);
-            KMS_EXCEPTION(APPLICATION_ERROR, lMsg, lN);
+            KMS_EXCEPTION(RESULT_ALREADY_EXIST, lMsg, lN);
         }
     }
 
@@ -163,24 +166,28 @@ namespace TRiLOGI
         }
     }
 
-    void WordList::ValidateConfig() const
+    // ===== DI::Container ==================================================
+
+    void WordList::Validate() const
     {
+        DI::Dictionary::Validate();
+
         // mOffsetMax
-        KMS_EXCEPTION_ASSERT(OFFSET_MIN <  mOffsetMax, APPLICATION_USER_ERROR, "Words.OffsetMax is below the minimum", "");
-        KMS_EXCEPTION_ASSERT(OFFSET_MAX >= mOffsetMax, APPLICATION_USER_ERROR, "Words.OffsetMax it above the absolute maximum", "");
+        KMS_EXCEPTION_ASSERT(OFFSET_MIN <  mOffsetMax, RESULT_INVALID_CONFIG, "Words.OffsetMax is below the minimum", "");
+        KMS_EXCEPTION_ASSERT(OFFSET_MAX >= mOffsetMax, RESULT_INVALID_CONFIG, "Words.OffsetMax it above the absolute maximum", "");
 
         // mOffsetNew
         switch (mProjectType)
         {
         case ProjectType::LEGACY:
-            KMS_EXCEPTION_ASSERT(OFFSET_MAX >= mOffsetNew, APPLICATION_USER_ERROR, "Words.OffsetNew it above the absolute maximum", "");
-            KMS_EXCEPTION_ASSERT(OFFSET_MIN <  mOffsetNew, APPLICATION_USER_ERROR, "Words.OffsetNew is below the minimum", "");
-            KMS_EXCEPTION_ASSERT(mOffsetMax >= mOffsetNew, APPLICATION_USER_ERROR, "Words.OffsetNew is above the condfigured maximum", "");
+            KMS_EXCEPTION_ASSERT(OFFSET_MAX >= mOffsetNew, RESULT_INVALID_CONFIG, "Words.OffsetNew it above the absolute maximum", "");
+            KMS_EXCEPTION_ASSERT(OFFSET_MIN <  mOffsetNew, RESULT_INVALID_CONFIG, "Words.OffsetNew is below the minimum", "");
+            KMS_EXCEPTION_ASSERT(mOffsetMax >= mOffsetNew, RESULT_INVALID_CONFIG, "Words.OffsetNew is above the condfigured maximum", "");
             break;
         case ProjectType::NEW:
-            KMS_EXCEPTION_ASSERT(OFFSET_MAX >  mOffsetNew, APPLICATION_USER_ERROR, "Words.OffsetNew it above the absolute maximum", "");
-            KMS_EXCEPTION_ASSERT(OFFSET_MIN <= mOffsetNew, APPLICATION_USER_ERROR, "Words.OffsetNew is below the minimum", "");
-            KMS_EXCEPTION_ASSERT(mOffsetMax >  mOffsetNew, APPLICATION_USER_ERROR, "Words.OffsetNew is above the configured maximum", "");
+            KMS_EXCEPTION_ASSERT(OFFSET_MAX >  mOffsetNew, RESULT_INVALID_CONFIG, "Words.OffsetNew it above the absolute maximum", "");
+            KMS_EXCEPTION_ASSERT(OFFSET_MIN <= mOffsetNew, RESULT_INVALID_CONFIG, "Words.OffsetNew is below the minimum", "");
+            KMS_EXCEPTION_ASSERT(mOffsetMax >  mOffsetNew, RESULT_INVALID_CONFIG, "Words.OffsetNew is above the configured maximum", "");
             break;
 
         default: assert(false);
@@ -209,7 +216,7 @@ namespace TRiLOGI
             }
         }
 
-        KMS_EXCEPTION_ASSERT(OFFSET_MIN <= lResult, APPLICATION_ERROR, "Too many word (NOT TESTED)", "");
+        KMS_EXCEPTION_ASSERT(OFFSET_MIN <= lResult, RESULT_TOO_MANY, "Too many word (NOT TESTED)", "");
 
         return lResult;
     }
@@ -233,7 +240,7 @@ namespace TRiLOGI
             }
         }
 
-        KMS_EXCEPTION_ASSERT(mOffsetMax >= lResult, APPLICATION_ERROR, "Too many word (NOT TESTED)", "");
+        KMS_EXCEPTION_ASSERT(mOffsetMax >= lResult, RESULT_TOO_MANY, "Too many word (NOT TESTED)", "");
 
         return lResult;
     }

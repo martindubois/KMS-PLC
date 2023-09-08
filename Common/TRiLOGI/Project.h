@@ -50,8 +50,6 @@ namespace TRiLOGI
 
         void Read();
 
-        void ValidateConfig() const;
-
         void Verify();
 
         bool VerifyAddress_1X(uint16_t aAddr) const;
@@ -60,6 +58,9 @@ namespace TRiLOGI
         void Write();
 
         const AddressList* GetPublicAddresses() const;
+
+        // ===== DI::Container ==============================================
+        void Validate() const;
 
         // ===== Configurable attributes ====================================
         KMS::DI::Boolean       mCreateIfNeeded;

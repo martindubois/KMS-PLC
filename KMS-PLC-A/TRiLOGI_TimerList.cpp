@@ -63,7 +63,7 @@ namespace TRiLOGI
         char         lName[NAME_LENGTH];
 
         auto lRet = swscanf_s(aLine, L"%u,%S %u", &lIndex, lName SizeInfo(lName), &lInit);
-        KMS_EXCEPTION_ASSERT(3 == lRet, APPLICATION_ERROR, "Invalid timer line (NOT TESTED)", lRet);
+        KMS_EXCEPTION_ASSERT(3 == lRet, RESULT_INVALID_FORMAT, "Invalid timer line (NOT TESTED)", lRet);
 
         auto lTimer = new Timer(lName, lIndex, lInit);
 

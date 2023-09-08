@@ -31,8 +31,7 @@ Case_Normal;
 
 typedef struct
 {
-    const char    * mFolder;
-    Exception::Code mCode;
+    const char* mFolder;
 }
 Case_Exception;
 
@@ -61,14 +60,14 @@ static const Case_Normal CASE_N[] =
 
 static const Case_Exception CASE_E[] =
 {
-    { TESTS "Test03", Exception::Code::APPLICATION_USER_ERROR },
-    { TESTS "Test04", Exception::Code::APPLICATION_USER_ERROR },
-    { TESTS "Test05", Exception::Code::APPLICATION_USER_ERROR },
+    { TESTS "Test03" },
+    { TESTS "Test04" },
+    { TESTS "Test05" },
 };
 
 #define CASE_E_QTY (sizeof(CASE_E) / sizeof(CASE_E[0]))
 
-KMS_TEST(System_Base, "System_Base", "Auto", sTest_Base)
+KMS_TEST(System_Base, "Auto", sTest_Base)
 {
     gConsole.Set_Null();
 
@@ -103,7 +102,7 @@ KMS_TEST(System_Base, "System_Base", "Auto", sTest_Base)
     // Run
 }
 
-KMS_TEST(System_Case, "System_Case", "Auto", sTest_Case)
+KMS_TEST(System_Case, "Auto", sTest_Case)
 {
     gConsole.Set_Null();
 
@@ -151,7 +150,7 @@ KMS_TEST(System_Case, "System_Case", "Auto", sTest_Case)
     }
 }
 
-KMS_TEST(System_Exception, "System_Exception", "Auto", sTest_Exception)
+KMS_TEST(System_Exception, "Auto", sTest_Exception)
 {
     gConsole.Set_Null();
 
@@ -180,17 +179,14 @@ KMS_TEST(System_Exception, "System_Exception", "Auto", sTest_Exception)
         try
         {
             Dbg::gLog.SetHideCount(Dbg::LogFile::Level::LEVEL_ERROR, 2);
-            lS.Run();
+            lS.Validate();
             KMS_TEST_ASSERT(false);
         }
-        catch (Exception eE)
-        {
-            KMS_TEST_COMPARE(eE.GetCode(), CASE_E[i].mCode);
-        }
+        KMS_TEST_CATCH(RESULT_INVALID_CONFIG)
     }
 }
 
-KMS_TEST(System_Main, "System_Main", "Auto", sTest_Main)
+KMS_TEST(System_Main, "Auto", sTest_Main)
 {
     gConsole.Set_Null();
 

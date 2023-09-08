@@ -188,7 +188,7 @@ namespace TRiLOGI
         char         lText[LINE_LENGTH];
 
         auto lRet = swscanf_s(aLine, L"%u,%S", &lIndex, lText SizeInfo(lText));
-        KMS_EXCEPTION_ASSERT(2 == lRet, APPLICATION_ERROR, "Invalid define line", lRet);
+        KMS_EXCEPTION_ASSERT(2 == lRet, RESULT_INVALID_FORMAT, "Invalid define line", lRet);
 
         char         lComment[NAME_LENGTH];
         Object     * lDefine;
@@ -217,7 +217,7 @@ namespace TRiLOGI
         }
         else
         {
-            KMS_EXCEPTION(APPLICATION_ERROR, "Invalid define line (NOT TESTED)", "");
+            KMS_EXCEPTION(RESULT_INVALID_FORMAT, "Invalid define line (NOT TESTED)", "");
         }
 
         ObjectList::AddObject(lDefine);

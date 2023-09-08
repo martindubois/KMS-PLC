@@ -14,6 +14,8 @@
 
 #include "TRiLOGI/Constant.h"
 
+KMS_RESULT_STATIC(RESULT_ALREADY_EXIST);
+
 namespace TRiLOGI
 {
 
@@ -29,7 +31,7 @@ namespace TRiLOGI
         {
             char lMsg[64 + NAME_LENGTH];
             sprintf_s(lMsg, "A constant named \"%s\" already exist (NOT TESTED)", aConstant->GetName());
-            KMS_EXCEPTION(APPLICATION_ERROR, lMsg, "");
+            KMS_EXCEPTION(RESULT_ALREADY_EXIST, lMsg, "");
         }
     }
 

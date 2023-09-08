@@ -96,7 +96,9 @@ namespace EBPro
         }
     }
 
-    void List::ValidateConfig() const
+    // ===== DI::Container ==================================================
+
+    void List::Validate() const
     {
         char lMsg[64 + PATH_LENGTH];
 
@@ -107,7 +109,7 @@ namespace EBPro
             if (!File::Folder::CURRENT.DoesFileExist(lStr))
             {
                 sprintf_s(lMsg, "\"%s\" does not exist (NOT TESTED)", lStr);
-                KMS_EXCEPTION(APPLICATION_USER_ERROR, lMsg, "");
+                KMS_EXCEPTION(RESULT_INVALID_CONFIG, lMsg, "");
             }
         }
 
@@ -119,7 +121,7 @@ namespace EBPro
             if (!File::Folder::CURRENT.DoesFileExist(lSource->Get()))
             {
                 sprintf_s(lMsg, "\"%s\" does not exist (NOT TESTED)", lSource->Get());
-                KMS_EXCEPTION(APPLICATION_USER_ERROR, lMsg, "");
+                KMS_EXCEPTION(RESULT_INVALID_CONFIG, lMsg, "");
             }
         }
 
@@ -143,7 +145,7 @@ namespace EBPro
 
     void List::ValidateConfig_ToImport() const
     {
-        KMS_EXCEPTION_ASSERT(IsToImportConfigured(), APPLICATION_USER_ERROR, "ToImport cannot be empty in this configuration", "");
+        KMS_EXCEPTION_ASSERT(IsToImportConfigured(), RESULT_INVALID_CONFIG, "ToImport cannot be empty in this configuration", "");
     }
 
 }

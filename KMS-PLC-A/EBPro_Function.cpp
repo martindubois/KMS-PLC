@@ -13,6 +13,11 @@
 
 using namespace KMS;
 
+KMS_RESULT_STATIC(RESULT_CORRUPTED_MLB_FILE);
+KMS_RESULT_STATIC(RESULT_CORRUPTED_SOURCE);
+KMS_RESULT_STATIC(RESULT_INVALID_FUNCTION_FORMAT);
+KMS_RESULT_STATIC(RESULT_INVALID_SOURCE);
+
 // Data type and constants
 // //////////////////////////////////////////////////////////////////////////
 
@@ -113,7 +118,7 @@ namespace EBPro
             mCode += "\r\n";
         }
 
-        KMS_EXCEPTION(APPLICATION_ERROR, "No FUNCTION END before the end of the source file", "");
+        KMS_EXCEPTION(RESULT_INVALID_SOURCE, "No FUNCTION END before the end of the source file", "");
     }
 
     void Function::Write(FILE* aOut) const
@@ -144,13 +149,13 @@ namespace EBPro
 
         const char* lPtr = aLine;
 
-        KMS_EXCEPTION_ASSERT(0 == strncmp("sub ", lPtr, 4), APPLICATION_USER_ERROR, "The function definition does not start with \"sub\"", aLine);
+        KMS_EXCEPTION_ASSERT(0 == strncmp("sub ", lPtr, 4), RESULT_INVALID_FUNCTION_FORMAT, "The function definition does not start with \"sub\"", aLine);
         lPtr += 4;
 
         ParseDataType(&lPtr, &mReturnType);
         ParseName(&lPtr, &mName);
 
-        KMS_EXCEPTION_ASSERT(0 == strncmp("(", lPtr, 1), APPLICATION_USER_ERROR, "The function definition does not contain argument list", aLine);
+        KMS_EXCEPTION_ASSERT(0 == strncmp("(", lPtr, 1), RESULT_INVALID_FUNCTION_FORMAT, "The function definition does not contain argument list", aLine);
         lPtr += 1;
 
         DataType lType;
@@ -171,7 +176,7 @@ namespace EBPro
             lPtr++;
         }
 
-        KMS_EXCEPTION_ASSERT(')' == *lPtr, APPLICATION_USER_ERROR, "The argument list is not terminated", aLine);
+        KMS_EXCEPTION_ASSERT(')' == *lPtr, RESULT_INVALID_FUNCTION_FORMAT, "The argument list is not terminated", aLine);
     }
 
 }
@@ -213,7 +218,7 @@ void ParseName(const char** aPtr, std::string* aOut)
     char lName[NAME_LENGTH];
 
     int lRet = sscanf_s(*aPtr, " %[^,(]", lName SizeInfo(lName));
-    KMS_EXCEPTION_ASSERT(1 == lRet, APPLICATION_ERROR, "Corrupted source file", "");
+    KMS_EXCEPTION_ASSERT(1 == lRet, RESULT_CORRUPTED_SOURCE, "Corrupted source file", "");
 
     *aOut  = lName;
     *aPtr += strlen(lName);
@@ -243,5 +248,5 @@ EBPro::DataType UInt32_to_DataType(uint32_t aIn)
         }
     }
 
-    KMS_EXCEPTION(APPLICATION_ERROR, "Corrupted mlb file", aIn);
+    KMS_EXCEPTION(RESULT_CORRUPTED_MLB_FILE, "Corrupted mlb file", aIn);
 }

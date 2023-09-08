@@ -12,6 +12,8 @@
 
 using namespace KMS;
 
+KMS_RESULT_STATIC(RESULT_CORRUPTED_MBL_FILE);
+
 namespace EBPro
 {
 
@@ -88,7 +90,7 @@ namespace EBPro
 
         Read(&lUInt32);
 
-        KMS_EXCEPTION_ASSERT(aExpected == lUInt32, APPLICATION_ERROR, "Corrupted mlb file", lUInt32);
+        KMS_EXCEPTION_ASSERT(aExpected == lUInt32, RESULT_CORRUPTED_MBL_FILE, "Corrupted mlb file", lUInt32);
     }
 
 }

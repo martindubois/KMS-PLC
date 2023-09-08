@@ -51,7 +51,8 @@ namespace TRiLOGI
 
         void SetProjectType(ProjectType aPT);
 
-        void ValidateConfig() const;
+        // ===== DI::Container ==============================================
+        void Validate() const;
 
         // ===== Configurable attributes ====================================
         KMS::DI::UInt<uint16_t> mOffsetMax;

@@ -13,7 +13,7 @@
 
 using namespace KMS;
 
-KMS_TEST(TRiLOGI_BitList_Base, "TRiLOGY_BitList_Base", "Auto", sTest_Base)
+KMS_TEST(TRiLOGI_BitList_Base, "Auto", sTest_Base)
 {
     // Constructor
           TRiLOGI::BitList lBL  ("Test", 0, 64);
@@ -45,7 +45,7 @@ KMS_TEST(TRiLOGI_BitList_Base, "TRiLOGY_BitList_Base", "Auto", sTest_Base)
     // Verify
 }
 
-KMS_TEST(TRiLOGI_BitList_Exception, "TRiLOGY_BitList_Exception", "Auto", sTest_Exception)
+KMS_TEST(TRiLOGI_BitList_Exception, "Auto", sTest_Exception)
 {
 
     // ===== ObjectList =====================================================

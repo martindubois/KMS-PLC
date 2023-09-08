@@ -138,7 +138,7 @@ namespace EBPro
         {
             char lMsg[64 + PATH_LENGTH];
             sprintf_s(lMsg, "Cannot open \"%s\" for writting", lPath);
-            KMS_EXCEPTION(APPLICATION_ERROR, lMsg, lRet);
+            KMS_EXCEPTION(RESULT_OPEN_FAILED, lMsg, lRet);
         }
 
         Header_Write(lFile);

@@ -10,11 +10,7 @@
 #include "Component.h"
 
 // ===== Import/Includes ====================================================
-#include <KMS/Cfg/Configurator.h>
-#include <KMS/Dbg/Log.h>
-#include <KMS/Dbg/Log_Cfg.h>
-#include <KMS/Dbg/Stats.h>
-#include <KMS/Dbg/Stats_Timer.h>
+#include <KMS/Main.h>
 
 // ===== Local ==============================================================
 #include "../Common/System.h"
@@ -33,36 +29,23 @@ using namespace KMS;
 
 int System::Main(int aCount, const char** aVector)
 {
-    assert(1 <= aCount);
-    assert(nullptr != aVector);
-
-    int lResult = __LINE__;
-
-    auto lET = new Dbg::Stats_Timer("ExecutionTime");
-    lET->Start();
-
-    try
+    KMS_MAIN_BEGIN;
     {
-        Cfg::Configurator lC;
-        System            lS;
-        Dbg::Log_Cfg      lLogCfg(&Dbg::gLog);
+        System lS;
 
-        lC.AddConfigurable(&lS);
+        lConfigurator.AddConfigurable(&lS);
 
-        lC.AddConfigurable(&lLogCfg);
-        lC.AddConfigurable(&Dbg::gStats);
+        lConfigurator.ParseFile(File::Folder::CURRENT, CONFIG_FILE);
 
-        lC.ParseFile(File::Folder::CURRENT, CONFIG_FILE);
+        KMS_MAIN_PARSE_ARGS(aCount, aVector);
 
-        lC.ParseArguments(aCount - 1, aVector + 1);
+        KMS_MAIN_VALIDATE;
 
         lResult = lS.Run();
     }
-    KMS_CATCH_RESULT(lResult);
-
-    lET->Stop();
+    KMS_MAIN_END;
     
-    return lResult;
+    KMS_MAIN_RETURN;
 }
 
 System::System()
@@ -185,9 +168,6 @@ void System::ExecuteCommand(const char* aC)
 
 int System::Run()
 {
-    mEBPro  .ValidateConfig();
-    mTRiLOGI.ValidateConfig();
-
     Read  ();
     Parse ();
 

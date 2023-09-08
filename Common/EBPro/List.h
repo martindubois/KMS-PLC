@@ -31,7 +31,8 @@ namespace EBPro
 
         virtual void Read();
 
-        virtual void ValidateConfig() const;
+        // ===== DI::Container ==============================================
+        virtual void Validate() const;
 
     protected:
 

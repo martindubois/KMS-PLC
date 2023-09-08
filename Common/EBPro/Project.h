@@ -36,8 +36,6 @@ namespace EBPro
 
         void Read();
 
-        void ValidateConfig() const;
-
         void Verify() const;
 
         AddressList mAddresses;

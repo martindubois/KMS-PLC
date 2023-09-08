@@ -112,7 +112,7 @@ namespace TRiLOGI
     // NOT TESTED
     void Project::Edit()
     {
-        KMS_EXCEPTION_ASSERT(0 < mFileName.GetLength(), APPLICATION_USER_ERROR, "No file name configured", "");
+        KMS_EXCEPTION_ASSERT(0 < mFileName.GetLength(), RESULT_INVALID_CONFIG, "No file name configured", "");
 
         mSoftware.Edit(mFileName.Get());
 
@@ -216,42 +216,6 @@ namespace TRiLOGI
         }
     }
 
-    void Project::ValidateConfig() const
-    {
-        char lMsg[64 + PATH_LENGTH];
-
-        if (0 < mFileName.GetLength())
-        {
-            if (!mCreateIfNeeded)
-            {
-                if (!File::Folder::CURRENT.DoesFileExist(mFileName.Get()))
-                {
-                    sprintf_s(lMsg, "\"%s\" does not exist", mFileName.Get());
-                    KMS_EXCEPTION(APPLICATION_USER_ERROR, lMsg, "");
-                }
-            }
-        }
-
-        if (0 < mHeaderPrefix.GetLength())
-        {
-            KMS_EXCEPTION_ASSERT(0 < mHeaderFile.GetLength(), APPLICATION_USER_ERROR, "A header prefix is specified without a header file name", "");
-        }
-
-        for (auto& lEntry : mSources.mInternal)
-        {
-            const DI::String* lSource = dynamic_cast<const DI::String*>(lEntry.Get());
-            assert(nullptr != lSource);
-
-            if (!File::Folder::CURRENT.DoesFileExist(lSource->Get()))
-            {
-                sprintf_s(lMsg, "\"%s\" does not exist", lSource->Get());
-                KMS_EXCEPTION(APPLICATION_USER_ERROR, lMsg, "");
-            }
-        }
-
-        mDefines.mWords.ValidateConfig();
-    }
-
     void Project::Verify()
     {
         if (0 < mFile.GetLineCount())
@@ -346,6 +310,44 @@ namespace TRiLOGI
     const AddressList* Project::GetPublicAddresses() const
     {
         return &mPublicAddresses;
+    }
+
+    // ===== DI::Container ==================================================
+
+    void Project::Validate() const
+    {
+        DI::Dictionary::Validate();
+
+        char lMsg[64 + PATH_LENGTH];
+
+        if (0 < mFileName.GetLength())
+        {
+            if (!mCreateIfNeeded)
+            {
+                if (!File::Folder::CURRENT.DoesFileExist(mFileName.Get()))
+                {
+                    sprintf_s(lMsg, "\"%s\" does not exist", mFileName.Get());
+                    KMS_EXCEPTION(RESULT_INVALID_CONFIG, lMsg, "");
+                }
+            }
+        }
+
+        if (0 < mHeaderPrefix.GetLength())
+        {
+            KMS_EXCEPTION_ASSERT(0 < mHeaderFile.GetLength(), RESULT_INVALID_CONFIG, "A header prefix is specified without a header file name", "");
+        }
+
+        for (auto& lEntry : mSources.mInternal)
+        {
+            const DI::String* lSource = dynamic_cast<const DI::String*>(lEntry.Get());
+            assert(nullptr != lSource);
+
+            if (!File::Folder::CURRENT.DoesFileExist(lSource->Get()))
+            {
+                sprintf_s(lMsg, "\"%s\" does not exist", lSource->Get());
+                KMS_EXCEPTION(RESULT_INVALID_CONFIG, lMsg, "");
+            }
+        }
     }
 
     // Private
@@ -455,7 +457,7 @@ namespace TRiLOGI
             {
                 char lMsg[64 + PATH_LENGTH];
                 sprintf_s(lMsg, "Cannot open \"%s\" for writing", lFileName);
-                KMS_EXCEPTION(APPLICATION_USER_ERROR, lMsg, "");
+                KMS_EXCEPTION(RESULT_OPEN_FAILED, lMsg, "");
             }
 
             lFile << "\n";
@@ -491,7 +493,7 @@ namespace TRiLOGI
             {
                 char lMsg[64 + PATH_LENGTH];
                 sprintf_s(lMsg, "Cannot open \"%s\" for writing", lFileName);
-                KMS_EXCEPTION(APPLICATION_USER_ERROR, lMsg, "");
+                KMS_EXCEPTION(RESULT_OPEN_FAILED, lMsg, "");
             }
 
             lFile << "\n";
