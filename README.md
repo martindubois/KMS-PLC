@@ -1,6 +1,6 @@
 
     Author    KMS - Martin Dubois, P. Eng.
-    Copyright (C) 2022 KMS
+    Copyright (C) 2022-2023 KMS
     License   http://www.apache.org/licenses/LICENSE-2.0
     Product   KMS-PLC
     File      README.md
@@ -21,10 +21,7 @@ repository) and execute:
 
 Outside of KMS, you first need to
 
-    - Install KMS-Framework (https://github.com/martindubois/KMS-Framework)
-      on your computer and then
-    - Add the installation folder to your PATH
-    - Navigate to the product folder and execute: KMS-Import.exe
+    TODO
 
     ===== Building ==========================================================
 
