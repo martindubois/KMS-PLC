@@ -97,8 +97,19 @@ namespace EBPro
             {
                 std::wstring lStr;
 
-                lRR = Read_String(aFile, &lStr);
-                KMS_EXCEPTION_ASSERT(ReadResult::OK == lRR, RESULT_CORRUPTED_LBL_FILE, "Corrupted exported LBL file", i);
+                switch (Read_String(aFile, &lStr))
+                {
+                case ReadResult::OK: break;
+
+                case ReadResult::EMPTY_STRING:
+                    if (0 < i)
+                    {
+                        lStr = lState->mStrings.front();
+                    }
+                    break;
+
+                default: KMS_EXCEPTION(RESULT_CORRUPTED_LBL_FILE, "Corrupted exported LBL file", i);
+                }
 
                 lState->mStrings.push_back(lStr);
             }
