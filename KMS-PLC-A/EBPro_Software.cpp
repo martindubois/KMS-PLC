@@ -169,6 +169,9 @@ void Instruction_End()
 
     ::Console::Instruction_End();
 
-    char lLine[LINE_LENGTH];
-    fgets(lLine, sizeof(lLine), stdin);
+    if (stdout == gConsole.OutputFile())
+    {
+        char lLine[LINE_LENGTH];
+        fgets(lLine, sizeof(lLine), stdin);
+    }
 }

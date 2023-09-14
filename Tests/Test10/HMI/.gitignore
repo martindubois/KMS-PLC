@@ -1,0 +1,8 @@
+
+# Author    KMS - Martin Dubois, P. Eng.
+# Copyright (C) 2023
+# License   http://www.apache.org/licenses/LICENSE-2.0
+# Product   KMS-PLC
+# File      Tests/Test10/HMI/.gitignore
+
+TO_IMPORT_Addresses.csv

@@ -5,7 +5,7 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGI_ObjectList.cpp
 
-// TEST COVERAGE  2023-08-15  KMS - Martin Dubois, P. Eng.
+// TEST COVERAGE  2023-09-14  KMS - Martin Dubois, P. Eng.
 
 #include "Component.h"
 
@@ -122,6 +122,7 @@ namespace TRiLOGI
 
             if (lObject->TestFlag(Object::FLAG_NOT_USED))
             {
+                // NOT TESTED
                 lResult++;
 
                 auto lRet = mObjects_ByName.erase(lObject->GetName());
@@ -268,7 +269,7 @@ namespace TRiLOGI
         char         lName[NAME_LENGTH];
 
         auto lRet = swscanf_s(aLine, L"%u,%S", &lIndex, lName SizeInfo(lName));
-        KMS_EXCEPTION_ASSERT(2 == lRet, RESULT_INVALID_FORMAT, "Invalid bit line (NOT TESTED)", lRet);
+        KMS_EXCEPTION_ASSERT(2 == lRet, RESULT_INVALID_FORMAT, "Invalid bit line", lRet);
 
         auto lObject = new Object(lName, lIndex, aFlags);
 

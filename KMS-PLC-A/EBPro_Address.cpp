@@ -5,7 +5,7 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/EBPro_Address.cpp
 
-// TEST COVERAGE 2023-06-01 KMS - Martin Dubois, P. Eng.
+// TEST COVERAGE 2023-09-14 KMS - Martin Dubois, P. Eng.
 
 #include "Component.h"
 
@@ -129,7 +129,6 @@ namespace EBPro
         mAddress = lAddr;
     }
 
-    // NOT TESTED
     Address::Address(const char* aName, AddressType aType, const char* aAddr, unsigned int aLineNo)
         : mAddress(aAddr)
         , mDataType("Undesignated")
@@ -147,10 +146,9 @@ namespace EBPro
     uint16_t Address::GetAddress_UInt16() const { return Convert::ToUInt16(mAddress.c_str()); }
 
     unsigned int Address::GetLineNo() const { return mLineNo; }
-    const char * Address::GetName  () const { return mName   .c_str(); }
+    const char * Address::GetName  () const { return mName.c_str(); }
     AddressType  Address::GetType  () const { return mType; }
 
-    // NOT TESTED
     void Address::GetLine(char* aOut, unsigned int aOutSize_byte) const
     {
         assert(nullptr != aOut);
@@ -180,7 +178,7 @@ namespace EBPro
         if (mType != aType)
         {
             char lMsg[128 + NAME_LENGTH];
-            sprintf_s(lMsg, "The improted address type of \"%s\" does not match the current type", mName.c_str());
+            sprintf_s(lMsg, "The improted address type of \"%s\" does not match the current type (NOT TESTED)", mName.c_str());
             KMS_EXCEPTION(RESULT_INVALID_ADDRESS_TYPE, lMsg, "");
         }
 

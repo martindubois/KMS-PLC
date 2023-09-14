@@ -5,7 +5,7 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/EBPro_List.cpp
 
-// TEST  COVERAGE 2023-08-06  KMS - Martin Dubois, P. Eng.
+// TEST  COVERAGE 2023-09-14  KMS - Martin Dubois, P. Eng.
 
 #include "Component.h"
 
@@ -63,7 +63,7 @@ namespace EBPro
 
         if (lChanged)
         {
-            ::Console::Progress_Begin("EBPro", "Saving (NOT TESTED)", mToImport.Get());
+            ::Console::Progress_Begin("EBPro", "Saving", mToImport.Get());
 
             SaveToImport();
         }
@@ -73,7 +73,7 @@ namespace EBPro
             // we verify if the ToImport is configured.
             if (IsToImportConfigured() && File::Folder::CURRENT.DoesFileExist(mToImport.Get()))
             {
-                ::Console::Progress_Begin("EBPro", "Deleting (NOT TESTED)", mToImport.Get());
+                ::Console::Progress_Begin("EBPro", "Deleting (NOT TESTED)", mToImport.Get()); // TO TEST
                 {
                     File::Folder lCurrent(File::Folder::Id::CURRENT);
 

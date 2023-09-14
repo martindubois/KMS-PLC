@@ -1,0 +1,8 @@
+
+# Author    Martin Dubois, P. Eng.
+# License   http://www.apache.org/licenses/LICENSE-2.0
+# copyright (C) 2023 KMS
+# Product   KMS-PLC
+# File      Tests/Test10/HMI/Test.csv.txt
+
+ADDRESS rToto2 MODBUS_RTU_4X 1002

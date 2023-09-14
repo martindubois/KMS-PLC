@@ -5,7 +5,7 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/EBPro_AddressList.cpp
 
-// TEST COVERAGE  2023-08-06  KMS - Martin Dubois, P. Eng.
+// TEST COVERAGE  2023-09-14  KMS - Martin Dubois, P. Eng.
 
 #include "Component.h"
 
@@ -101,12 +101,13 @@ namespace EBPro
         {
             for (auto lItA = mAddresses.begin(); lItA != mAddresses.end(); lItA++)
             {
+                // NOT TESTED
                 for (auto lItB = lItA + 1; lItB != mAddresses.end(); lItB++)
                 {
                     if (0 == strcmp((*lItA)->GetName(), (*lItB)->GetName()))
                     {
                         ::Console::Warning_Begin((*lItA)->GetLineNo(), (*lItB)->GetLineNo())
-                            << "2 addresses are named \"" << (*lItA)->GetName() << "\"";
+                            << "2 addresses are named \"" << (*lItA)->GetName() << "\" (NOT TESTED)";
                         ::Console::Warning_End();
                     }
 
@@ -173,7 +174,6 @@ namespace EBPro
         mFile_CSV.Read(File::Folder::CURRENT, GetExported());
     }
 
-    // NOT TESTED
     void AddressList::SaveToImport()
     {
         const char* lToImport = GetToImport();
@@ -193,7 +193,6 @@ namespace EBPro
         auto lIt = mAddresses_ByName.find(aName);
         if (mAddresses_ByName.end() == lIt)
         {
-            // NOT TESTED
             return nullptr;
         }
 
@@ -211,7 +210,7 @@ namespace EBPro
         auto lAddress = Find_ByName(aName);
         if (nullptr == lAddress)
         {
-            ::Console::Change("New address (NOT TESTED)", aName);
+            ::Console::Change("New address", aName);
 
             lResult = true;
 

@@ -5,7 +5,7 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGI_Project.cpp
 
-// TEST COVERAGE  2023-08-17  KMS - Martin Dubois, P. Eng.
+// TEST COVERAGE  2023-09-14  KMS - Martin Dubois, P. Eng.
 
 #include "Component.h"
 
@@ -105,7 +105,7 @@ namespace TRiLOGI
         }
         else
         {
-            ::Console::Progress_End("Cleaned (No change) (NOT TESTED)");
+            ::Console::Progress_End("Cleaned (No change)");
         }
     }
 

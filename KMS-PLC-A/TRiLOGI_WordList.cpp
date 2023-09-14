@@ -5,7 +5,7 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGI_WordList.cpp
 
-// TEST COVERAGE  2023-08-14  KMS - Martin Dubois, P. Eng.
+// TEST COVERAGE  2023-09-14  KMS - Martin Dubois, P. Eng.
 
 #include "Component.h"
 
@@ -113,6 +113,7 @@ namespace TRiLOGI
         }
     }
 
+    // NOT TESTED
     void WordList::ClearList() { mWords_ByName.clear(); mWords_ByOffset.clear(); }
 
     void WordList::GetAddresses(const std::regex& aRegEx, AddressList* aOut) const
@@ -184,10 +185,10 @@ namespace TRiLOGI
             KMS_EXCEPTION_ASSERT(OFFSET_MIN <  mOffsetNew, RESULT_INVALID_CONFIG, "Words.OffsetNew is below the minimum", "");
             KMS_EXCEPTION_ASSERT(mOffsetMax >= mOffsetNew, RESULT_INVALID_CONFIG, "Words.OffsetNew is above the condfigured maximum", "");
             break;
-        case ProjectType::NEW:
-            KMS_EXCEPTION_ASSERT(OFFSET_MAX >  mOffsetNew, RESULT_INVALID_CONFIG, "Words.OffsetNew it above the absolute maximum", "");
-            KMS_EXCEPTION_ASSERT(OFFSET_MIN <= mOffsetNew, RESULT_INVALID_CONFIG, "Words.OffsetNew is below the minimum", "");
-            KMS_EXCEPTION_ASSERT(mOffsetMax >  mOffsetNew, RESULT_INVALID_CONFIG, "Words.OffsetNew is above the configured maximum", "");
+        case ProjectType::NEW: // NOT TESTED
+            KMS_EXCEPTION_ASSERT(OFFSET_MAX >  mOffsetNew, RESULT_INVALID_CONFIG, "Words.OffsetNew it above the absolute maximum (NOT TESTED)", "");
+            KMS_EXCEPTION_ASSERT(OFFSET_MIN <= mOffsetNew, RESULT_INVALID_CONFIG, "Words.OffsetNew is below the minimum (NOT TESTED)", "");
+            KMS_EXCEPTION_ASSERT(mOffsetMax >  mOffsetNew, RESULT_INVALID_CONFIG, "Words.OffsetNew is above the configured maximum (NOT TESTED)", "");
             break;
 
         default: assert(false);
@@ -216,7 +217,7 @@ namespace TRiLOGI
             }
         }
 
-        KMS_EXCEPTION_ASSERT(OFFSET_MIN <= lResult, RESULT_TOO_MANY, "Too many word (NOT TESTED)", "");
+        KMS_EXCEPTION_ASSERT(OFFSET_MIN <= lResult, RESULT_TOO_MANY, "Too many word", "");
 
         return lResult;
     }
@@ -240,7 +241,7 @@ namespace TRiLOGI
             }
         }
 
-        KMS_EXCEPTION_ASSERT(mOffsetMax >= lResult, RESULT_TOO_MANY, "Too many word (NOT TESTED)", "");
+        KMS_EXCEPTION_ASSERT(mOffsetMax >= lResult, RESULT_TOO_MANY, "Too many word", "");
 
         return lResult;
     }

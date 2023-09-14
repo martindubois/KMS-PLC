@@ -5,7 +5,7 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGI_TimerList.cpp
 
-// TEST COVERAGE  2023-08-08  KMS - Martin Dubois, P. Eng.
+// TEST COVERAGE  2023-09-14  KMS - Martin Dubois, P. Eng.
 
 #include "Component.h"
 
@@ -31,7 +31,7 @@ namespace TRiLOGI
         {
             if (IsProjectLegacy())
             {
-                ::Console::Change("New timer", aName);
+                ::Console::Change("New timer (NOT TESTED)", aName);
             }
 
             auto lIndex = FindFreeIndex();
@@ -43,6 +43,7 @@ namespace TRiLOGI
             return true;
         }
 
+        // NOT TESTED
         auto lTimer = dynamic_cast<Timer*>(lObject);
         assert(nullptr != lTimer);
 
@@ -63,7 +64,7 @@ namespace TRiLOGI
         char         lName[NAME_LENGTH];
 
         auto lRet = swscanf_s(aLine, L"%u,%S %u", &lIndex, lName SizeInfo(lName), &lInit);
-        KMS_EXCEPTION_ASSERT(3 == lRet, RESULT_INVALID_FORMAT, "Invalid timer line (NOT TESTED)", lRet);
+        KMS_EXCEPTION_ASSERT(3 == lRet, RESULT_INVALID_FORMAT, "Invalid timer line", lRet);
 
         auto lTimer = new Timer(lName, lIndex, lInit);
 

@@ -54,6 +54,7 @@ static const Case_Normal CASE_N[] =
     { TESTS "Test07", "PLC.PC6", nullptr        , { 0, 0 } },
     { TESTS "Test08", nullptr  , nullptr        , { 2, 2 } },
     { TESTS "Test09", nullptr  , nullptr        , { 2, 2 } },
+    { TESTS "Test10", nullptr  , nullptr        , { 0, 0 } },
 };
 
 #define CASE_N_QTY (sizeof(CASE_N) / sizeof(CASE_N[0]))
