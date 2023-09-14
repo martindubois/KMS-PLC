@@ -38,7 +38,11 @@ void ::Console::Change(const char* aMsg, const wchar_t* aName)
     assert(nullptr != aMsg);
     assert(nullptr != aName);
 
-    gConsole.OutputStream() << KMS::Console::Color::BLUE << aMsg << " - " << aName << KMS::Console::Color::WHITE << std::endl;
+    char lName[NAME_LENGTH];
+
+    sprintf_s(lName, "%S", aName);
+
+    gConsole.OutputStream() << KMS::Console::Color::BLUE << aMsg << " - " << lName << KMS::Console::Color::WHITE << std::endl;
 }
 
 void ::Console::Change(const char* aMsg, const char* aName, const char* aFrom, const char* aTo)
