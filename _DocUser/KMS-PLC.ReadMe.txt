@@ -5,7 +5,7 @@ License   http://www.apache.org/licenses/LICENSE-2.0
 Product   KMS-PLC
 File      _DocUser/KMS-PLC.ReadMe.txt
 
-0.1.12-dev Windows 2023-09-13
+0.1.13-dev Windows 2023-09-13
 
 0.0.5-dev Windows 2022-10-26
 * Installer include KMS-ComTool, KMS-ModbusSim and KMS-ModbusTool
