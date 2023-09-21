@@ -34,6 +34,23 @@ namespace TRiLOGI
 
     public:
 
+        static const bool        CREATE_IF_NEEDED_DEFAULT;
+        static const char      * EXPORTED_DEFAULT;
+        static const char      * FILE_NAME_DEFAULT;
+        static const char      * HEADER_FILE_DEFAULT;
+        static const char      * HEADER_PREFIX_DEFAULT;
+        static const ProjectType PROJECT_TYPE_DEFAULT;
+        static const char      * TOOL_CONFIG_DEFAULT;
+
+        KMS::DI::Boolean                               mCreateIfNeeded;
+        KMS::DI::String_Expand                         mExported;
+        KMS::DI::String_Expand                         mFileName;
+        KMS::DI::String_Expand                         mHeaderFile;
+        KMS::DI::String_Expand                         mHeaderPrefix;
+        KMS::DI::Enum<ProjectType, PROJECT_TYPE_NAMES> mProjectType;
+        KMS::DI::Array                                 mSources;
+        KMS::DI::String_Expand                         mToolConfig;
+
         Project();
 
         bool IsValid() const;
@@ -61,16 +78,6 @@ namespace TRiLOGI
 
         // ===== DI::Container ==============================================
         void Validate() const;
-
-        // ===== Configurable attributes ====================================
-        KMS::DI::Boolean       mCreateIfNeeded;
-        KMS::DI::String_Expand mExported;
-        KMS::DI::String_Expand mFileName;
-        KMS::DI::String_Expand mHeaderFile;
-        KMS::DI::String_Expand mHeaderPrefix;
-        KMS::DI::Enum<ProjectType, PROJECT_TYPE_NAMES> mProjectType;
-        KMS::DI::Array         mSources;
-        KMS::DI::String_Expand mToolConfig;
 
     private:
 

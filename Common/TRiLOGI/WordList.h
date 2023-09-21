@@ -32,6 +32,17 @@ namespace TRiLOGI
 
     public:
 
+        static const uint16_t OFFSET_MAX_DEFAULT;
+        static const uint16_t OFFSET_MAX_MAX;
+        static const uint16_t OFFSET_MAX_MIN;
+        static const uint16_t OFFSET_NEW_DEFAULT_LEGACY;
+        static const uint16_t OFFSET_NEW_DEFAULT_NEW;
+        static const uint16_t OFFSET_NEW_MAX;
+        static const uint16_t OFFSET_NEW_MIN;
+
+        KMS::DI::UInt<uint16_t> mOffsetMax;
+        KMS::DI::UInt<uint16_t> mOffsetNew;
+
         WordList();
 
         TRiLOGI::Object* AddWord(const char* aName, unsigned int aIndex, const char* aComment);
@@ -53,10 +64,6 @@ namespace TRiLOGI
 
         // ===== DI::Container ==============================================
         void Validate() const;
-
-        // ===== Configurable attributes ====================================
-        KMS::DI::UInt<uint16_t> mOffsetMax;
-        KMS::DI::UInt<uint16_t> mOffsetNew;
 
     private:
 

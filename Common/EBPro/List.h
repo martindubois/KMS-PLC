@@ -21,6 +21,15 @@ namespace EBPro
     class List : public KMS::DI::Dictionary
     {
 
+    private:
+
+        static const char* EXPORTED_DEFAULT;
+        static const char* TO_IMPORT_DEFAULT;
+
+        KMS::DI::String_Expand mExported;
+        KMS::DI::String_Expand mToImport;
+        KMS::DI::Array         mSources;
+
     public:
 
         List(Software* aSoftware);
@@ -54,11 +63,6 @@ namespace EBPro
         NO_COPY(List);
 
         Software* mSoftware;
-
-        // ===== Configurable attributes ====================================
-        KMS::DI::String_Expand mExported;
-        KMS::DI::String_Expand mToImport;
-        KMS::DI::Array         mSources;
 
     };
 

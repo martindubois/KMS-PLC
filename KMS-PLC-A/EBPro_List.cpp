@@ -32,7 +32,13 @@ namespace EBPro
     // Public
     // //////////////////////////////////////////////////////////////////////
 
-    List::List(Software* aSoftware) : mSoftware(aSoftware)
+    const char* List::EXPORTED_DEFAULT  = "";
+    const char* List::TO_IMPORT_DEFAULT = "";
+
+    List::List(Software* aSoftware)
+        : mExported(EXPORTED_DEFAULT)
+        , mToImport(TO_IMPORT_DEFAULT)
+        , mSoftware(aSoftware)
     {
         assert(nullptr != aSoftware);
 

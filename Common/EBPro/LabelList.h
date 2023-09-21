@@ -22,6 +22,10 @@ namespace EBPro
     class LabelList : public List
     {
 
+    private:
+
+        KMS::DI::Array mLanguages;
+
     public:
 
         LabelList(Software* aSoftware);
@@ -63,9 +67,6 @@ namespace EBPro
         unsigned int FindLanguageIndex(const char* aId) const;
 
         uint8_t mHeader[18];
-
-        // ===== Configurable attributes ====================================
-        KMS::DI::Array mLanguages;
 
     };
 

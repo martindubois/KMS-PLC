@@ -39,8 +39,6 @@ static const Cfg::MetaData MD_PROJECT_TYPE    ("ProjectType = LEGACY | NEW");
 static const Cfg::MetaData MD_SOURCES         ("Sources += {Path}.PC6.txt");
 static const Cfg::MetaData MD_TOOL_CONFIG     ("HeaderFile = {Path}.cfg");
 
-#define PROJECT_TYPE_DEFAULT (ProjectType::LEGACY)
-
 // Static function declarations
 // //////////////////////////////////////////////////////////////////////////
 
@@ -52,12 +50,25 @@ namespace TRiLOGI
     // Public
     // //////////////////////////////////////////////////////////////////////
 
+    const bool        Project::CREATE_IF_NEEDED_DEFAULT = false;
+    const char      * Project::EXPORTED_DEFAULT         = "";
+    const char      * Project::FILE_NAME_DEFAULT        = "";
+    const char      * Project::HEADER_FILE_DEFAULT      = "";
+    const char      * Project::HEADER_PREFIX_DEFAULT    = "";
+    const ProjectType Project::PROJECT_TYPE_DEFAULT     = ProjectType::LEGACY;
+    const char      * Project::TOOL_CONFIG_DEFAULT      = "";
+
     Project::Project()
-        : mInputs ("input" ,    1, 256)
+        : mCreateIfNeeded(CREATE_IF_NEEDED_DEFAULT)
+        , mExported      (EXPORTED_DEFAULT)
+        , mFileName      (FILE_NAME_DEFAULT)
+        , mHeaderFile    (HEADER_FILE_DEFAULT)
+        , mHeaderPrefix  (HEADER_PREFIX_DEFAULT)
+        , mProjectType   (PROJECT_TYPE_DEFAULT)
+        , mToolConfig    (TOOL_CONFIG_DEFAULT)
+        , mInputs ("input" ,    1, 256)
         , mOutputs("output",    1, 256)
         , mRelays ("relay" , 1025, 512)
-        // ===== Configurable attributes ====================================
-        , mProjectType(PROJECT_TYPE_DEFAULT)
         // ===== Callbacks ==================================================
         , ON_PROJECT_TYPE_CHANGED(this, &Project::OnProjectTypeChanged)
     {

@@ -28,7 +28,13 @@ namespace EBPro
     // Public
     // //////////////////////////////////////////////////////////////////////
 
-    Project::Project() : mAddresses(&mSoftware), mFunctions(&mSoftware), mLabels(&mSoftware)
+    const char* Project::FILE_NAME_DEFAULT = "";
+
+    Project::Project()
+        : mFileName(FILE_NAME_DEFAULT)
+        , mAddresses(&mSoftware)
+        , mFunctions(&mSoftware)
+        , mLabels(&mSoftware)
     {
         AddEntry("FileName", &mFileName, false, &MD_FILE_NAME);
 

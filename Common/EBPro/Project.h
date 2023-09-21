@@ -22,6 +22,10 @@ namespace EBPro
 
     public:
 
+        static const char* FILE_NAME_DEFAULT;
+
+        KMS::DI::String_Expand mFileName;
+
         Project();
 
         void Edit();
@@ -39,9 +43,6 @@ namespace EBPro
         void Verify() const;
 
         AddressList mAddresses;
-
-        // ===== Configurable attributes ====================================
-        KMS::DI::String_Expand mFileName;
 
     private:
 

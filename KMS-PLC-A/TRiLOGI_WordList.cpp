@@ -28,10 +28,6 @@ KMS_RESULT_STATIC(RESULT_TOO_MANY);
 #define OFFSET_MIN (   1)
 #define OFFSET_MAX (3999)
 
-#define OFFSET_MAX_DEFAULT        OFFSET_MAX
-#define OFFSET_NEW_DEFAULT_LEGACY (999)
-#define OFFSET_NEW_DEFAULT_NEW    (  2)
-
 static const Cfg::MetaData MD_OFFSET_MAX("OffsetMax = {Max}");
 static const Cfg::MetaData MD_OFFSET_NEW("OffsetNew = {New}");
 
@@ -41,11 +37,18 @@ namespace TRiLOGI
     // Public
     // //////////////////////////////////////////////////////////////////////
 
+    const uint16_t WordList::OFFSET_MAX_DEFAULT        = OFFSET_MAX;
+    const uint16_t WordList::OFFSET_MAX_MAX            = OFFSET_MAX;
+    const uint16_t WordList::OFFSET_MAX_MIN            = OFFSET_MIN + 1;
+    const uint16_t WordList::OFFSET_NEW_DEFAULT_LEGACY = 999;
+    const uint16_t WordList::OFFSET_NEW_DEFAULT_NEW    =   2;
+    const uint16_t WordList::OFFSET_NEW_MAX            = OFFSET_MAX;
+    const uint16_t WordList::OFFSET_NEW_MIN            = OFFSET_MIN;
+
     WordList::WordList()
-        : mProjectType(ProjectType::LEGACY)
-        // ===== Configurable attributes ====================================
-        , mOffsetMax(OFFSET_MAX_DEFAULT)
+        : mOffsetMax(OFFSET_MAX_DEFAULT)
         , mOffsetNew(OFFSET_NEW_DEFAULT_LEGACY)
+        , mProjectType(ProjectType::LEGACY)
     {
         AddEntry("OffsetMax", &mOffsetMax, false, &MD_OFFSET_MAX);
         AddEntry("OffsetNew", &mOffsetNew, false, &MD_OFFSET_NEW);
