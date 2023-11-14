@@ -17,6 +17,8 @@
 
 #include "TRiLOGI/Function.h"
 
+#include "Utilities.h"
+
 using namespace KMS;
 
 namespace TRiLOGI
@@ -49,8 +51,10 @@ namespace TRiLOGI
 
         std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> lConverter;
 
-        for (const auto& lLine : mLines)
+        for (auto& lLine : mLines)
         {
+            Utl_RemoveSpecialChar(&lLine);
+
             std::wstring lLineW(lConverter.from_bytes(lLine.c_str()));
 
             aFile_PC6->AddLine(lLineW.c_str());
