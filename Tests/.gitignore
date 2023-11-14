@@ -5,4 +5,5 @@
 # Product   KMS-PLC
 # File      Tests/.gitignore
 
+/Common/
 /Test99/

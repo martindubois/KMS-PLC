@@ -165,7 +165,10 @@ namespace EBPro
         {
             for (auto lState : mStates)
             {
-                Write_String(aFile, lState->mStrings[i]);
+                if (lState->mStrings.size() > i)
+                {
+                    Write_String(aFile, lState->mStrings[i]);
+                }
             }
         }
 

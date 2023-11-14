@@ -4,6 +4,7 @@ Copyright (C) 2022-2023 KMS
 Product   KMS-PLC
 File      KMS-PLC/_DocUser/KMS.ReadMe.txt
 
+1.0.1 Windows 2023-11-14
 - Configurable attributes cleanup
 
 1.0.0 Windows 2023-09-14
