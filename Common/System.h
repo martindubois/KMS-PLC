@@ -1,6 +1,6 @@
 
 // Author    KMS - Martin Dubois, P. Eng.
-// Copyright (C) 2022-2023 KMS
+// Copyright (C) 2022-2024 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
 // File      Common/System.h
@@ -38,13 +38,15 @@ public:
 
     void Parse();
 
+    void Program_PLC();
+
     void Verify();
 
     void Write();
 
     // ===== KMS::CLI::Tool =================================================
     virtual void DisplayHelp(FILE* aOut) const;
-    virtual void ExecuteCommand(const char* aC);
+    virtual int  ExecuteCommand(const char* aC);
     virtual int  Run();
 
 private:

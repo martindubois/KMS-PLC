@@ -1,6 +1,6 @@
 
 // Author    KMS - Martin Dubois, P. Eng.
-// Copyright (C) 2022-2023 KMS
+// Copyright (C) 2022-2024 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
 // File      KMS-PLC-A/System.cpp
@@ -84,6 +84,8 @@ void System::Parse()
     mTRiLOGI.Parse();
 }
 
+void System::Program_PLC() { mTRiLOGI.Program(); }
+
 void System::Read()
 {
     mEBPro  .Read();
@@ -143,27 +145,33 @@ void System::DisplayHelp(FILE* aOut) const
         "Edit emtp | PC6\n"
         "Export\n"
         "Import\n"
+        "Program PLC\n"
         "Verify\n"
         "Write\n");
 
     CLI::Tool::DisplayHelp(aOut);
 }
 
-void System::ExecuteCommand(const char* aC)
+int System::ExecuteCommand(const char* aC)
 {
     assert(nullptr != aC);
 
-    if      (0 == strcmp("Clean"    , aC)) { Clean    (); }
-    else if (0 == strcmp("Edit emtp", aC)) { Edit_emtp(); }
-    else if (0 == strcmp("Edit PC6" , aC)) { Edit_PC6 (); }
-    else if (0 == strcmp("Export"   , aC)) { Export   (); }
-    else if (0 == strcmp("Import"   , aC)) { Import   (); }
-    else if (0 == strcmp("Verify"   , aC)) { Verify   (); }
-    else if (0 == strcmp("Write"    , aC)) { Write    (); }
+    int lResult = 0;
+
+    if      (0 == strcmp("Clean"      , aC)) { Clean      (); }
+    else if (0 == strcmp("Edit emtp"  , aC)) { Edit_emtp  (); }
+    else if (0 == strcmp("Edit PC6"   , aC)) { Edit_PC6   (); }
+    else if (0 == strcmp("Export"     , aC)) { Export     (); }
+    else if (0 == strcmp("Import"     , aC)) { Import     (); }
+    else if (0 == strcmp("Program PLC", aC)) { Program_PLC(); }
+    else if (0 == strcmp("Verify"     , aC)) { Verify     (); }
+    else if (0 == strcmp("Write"      , aC)) { Write      (); }
     else
     {
-        CLI::Tool::ExecuteCommand(aC);
+        lResult = CLI::Tool::ExecuteCommand(aC);
     }
+
+    return lResult;
 }
 
 int System::Run()

@@ -1,6 +1,6 @@
 
 // Author    KMS - Martin Dubois, P. Eng.
-// Copyright (C) 2022-2023 KMS
+// Copyright (C) 2022-2024 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
 // File      KMS-PLC-A/TRiLOGI_Project.cpp
@@ -30,14 +30,17 @@ using namespace KMS;
 // Constants
 // //////////////////////////////////////////////////////////////////////////
 
-static const Cfg::MetaData MD_CREATE_IF_NEEDED("CreateIfNeeded = false | true");
-static const Cfg::MetaData MD_EXPORTED        ("Exported = {Path}.PC6.txt");
-static const Cfg::MetaData MD_FILE_NAME       ("FileName = {Path}.PC6");
-static const Cfg::MetaData MD_HEADER_FILE     ("HeaderFile = {Path}.h");
-static const Cfg::MetaData MD_HEADER_PREFIX   ("HeaderPrefix = {Prefix}");
-static const Cfg::MetaData MD_PROJECT_TYPE    ("ProjectType = LEGACY | NEW");
-static const Cfg::MetaData MD_SOURCES         ("Sources += {Path}.PC6.txt");
-static const Cfg::MetaData MD_TOOL_CONFIG     ("HeaderFile = {Path}.cfg");
+static const Cfg::MetaData MD_COMPILED_FILE_NAME("CompiledFileName = {Path}.CO5");
+static const Cfg::MetaData MD_CREATE_IF_NEEDED  ("CreateIfNeeded = false | true");
+static const Cfg::MetaData MD_EXPORTED          ("Exported = {Path}.PC6.txt");
+static const Cfg::MetaData MD_FILE_NAME         ("FileName = {Path}.PC6");
+static const Cfg::MetaData MD_HEADER_FILE       ("HeaderFile = {Path}.h");
+static const Cfg::MetaData MD_HEADER_PREFIX     ("HeaderPrefix = {Prefix}");
+static const Cfg::MetaData MD_ID                ("Id = {Id}");
+static const Cfg::MetaData MD_IP_ADDRESS        ("IPAddress = {A.B.C.D}");
+static const Cfg::MetaData MD_PROJECT_TYPE      ("ProjectType = LEGACY | NEW");
+static const Cfg::MetaData MD_SOURCES           ("Sources += {Path}.PC6.txt");
+static const Cfg::MetaData MD_TOOL_CONFIG       ("HeaderFile = {Path}.cfg");
 
 // Static function declarations
 // //////////////////////////////////////////////////////////////////////////
@@ -50,22 +53,28 @@ namespace TRiLOGI
     // Public
     // //////////////////////////////////////////////////////////////////////
 
-    const bool        Project::CREATE_IF_NEEDED_DEFAULT = false;
-    const char      * Project::EXPORTED_DEFAULT         = "";
-    const char      * Project::FILE_NAME_DEFAULT        = "";
-    const char      * Project::HEADER_FILE_DEFAULT      = "";
-    const char      * Project::HEADER_PREFIX_DEFAULT    = "";
-    const ProjectType Project::PROJECT_TYPE_DEFAULT     = ProjectType::LEGACY;
-    const char      * Project::TOOL_CONFIG_DEFAULT      = "";
+    const char      * Project::COMPILED_FILE_NAME_DEFAULT = "";
+    const bool        Project::CREATE_IF_NEEDED_DEFAULT   = false;
+    const char      * Project::EXPORTED_DEFAULT           = "";
+    const char      * Project::FILE_NAME_DEFAULT          = "";
+    const char      * Project::HEADER_FILE_DEFAULT        = "";
+    const char      * Project::HEADER_PREFIX_DEFAULT      = "";
+    const uint8_t     Project::ID_DEFAULT                 = 1;
+    const char      * Project::IP_ADDRESS_DEFAULT         = "";
+    const ProjectType Project::PROJECT_TYPE_DEFAULT       = ProjectType::LEGACY;
+    const char      * Project::TOOL_CONFIG_DEFAULT        = "";
 
     Project::Project()
-        : mCreateIfNeeded(CREATE_IF_NEEDED_DEFAULT)
-        , mExported      (EXPORTED_DEFAULT)
-        , mFileName      (FILE_NAME_DEFAULT)
-        , mHeaderFile    (HEADER_FILE_DEFAULT)
-        , mHeaderPrefix  (HEADER_PREFIX_DEFAULT)
-        , mProjectType   (PROJECT_TYPE_DEFAULT)
-        , mToolConfig    (TOOL_CONFIG_DEFAULT)
+        : mCompiledFileName(COMPILED_FILE_NAME_DEFAULT)
+        , mCreateIfNeeded  (CREATE_IF_NEEDED_DEFAULT)
+        , mExported        (EXPORTED_DEFAULT)
+        , mFileName        (FILE_NAME_DEFAULT)
+        , mHeaderFile      (HEADER_FILE_DEFAULT)
+        , mHeaderPrefix    (HEADER_PREFIX_DEFAULT)
+        , mId              (ID_DEFAULT)
+        , mIPAddress       (IP_ADDRESS_DEFAULT)
+        , mProjectType     (PROJECT_TYPE_DEFAULT)
+        , mToolConfig      (TOOL_CONFIG_DEFAULT)
         , mInputs ("input" ,    1, 256)
         , mOutputs("output",    1, 256)
         , mRelays ("relay" , 1025, 512)
@@ -76,14 +85,17 @@ namespace TRiLOGI
 
         mProjectType.mOnChanged = &ON_PROJECT_TYPE_CHANGED;
 
-        AddEntry("CreateIfNeeded", &mCreateIfNeeded, false, &MD_CREATE_IF_NEEDED);
-        AddEntry("Exported"      , &mExported      , false, &MD_EXPORTED);
-        AddEntry("FileName"      , &mFileName      , false, &MD_FILE_NAME);
-        AddEntry("HeaderFile"    , &mHeaderFile    , false, &MD_HEADER_FILE);
-        AddEntry("HeaderPrefix"  , &mHeaderPrefix  , false, &MD_HEADER_PREFIX);
-        AddEntry("ProjectType"   , &mProjectType   , false, &MD_PROJECT_TYPE);
-        AddEntry("Sources"       , &mSources       , false, &MD_SOURCES);
-        AddEntry("ToolConfig"    , &mToolConfig    , false, &MD_TOOL_CONFIG);
+        AddEntry("CompiledFileName", &mCompiledFileName, false, &MD_COMPILED_FILE_NAME);
+        AddEntry("CreateIfNeeded"  , &mCreateIfNeeded  , false, &MD_CREATE_IF_NEEDED);
+        AddEntry("Exported"        , &mExported        , false, &MD_EXPORTED);
+        AddEntry("FileName"        , &mFileName        , false, &MD_FILE_NAME);
+        AddEntry("HeaderFile"      , &mHeaderFile      , false, &MD_HEADER_FILE);
+        AddEntry("HeaderPrefix"    , &mHeaderPrefix    , false, &MD_HEADER_PREFIX);
+        AddEntry("Id"              , &mId              , false, &MD_ID);
+        AddEntry("IPAddress"       , &mIPAddress       , false, &MD_IP_ADDRESS);
+        AddEntry("ProjectType"     , &mProjectType     , false, &MD_PROJECT_TYPE);
+        AddEntry("Sources"         , &mSources         , false, &MD_SOURCES);
+        AddEntry("ToolConfig"      , &mToolConfig      , false, &MD_TOOL_CONFIG);
 
         AddEntry("Words", &mDefines.mWords, false);
     }
@@ -212,6 +224,14 @@ namespace TRiLOGI
 
             Instruction_Write();
         }
+    }
+
+    void Project::Program()
+    {
+        KMS_EXCEPTION_ASSERT(0 < mCompiledFileName.GetLength(), RESULT_INVALID_CONFIG, "No file name configured" , "");
+        KMS_EXCEPTION_ASSERT(0 < mIPAddress       .GetLength(), RESULT_INVALID_CONFIG, "No IP address configured", "");
+
+        mSoftware.Program(mCompiledFileName.Get(), mIPAddress.Get(), mId.Get());
     }
 
     void Project::Read()

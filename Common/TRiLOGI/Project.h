@@ -1,6 +1,6 @@
 
 // Author    KMS - Martin Dubois, P. Eng.
-// Copyright (C) 2022-2023 KMS
+// Copyright (C) 2022-2024 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
 // File      Common/TRiLOGI/Project.h
@@ -34,19 +34,25 @@ namespace TRiLOGI
 
     public:
 
+        static const char      * COMPILED_FILE_NAME_DEFAULT;
         static const bool        CREATE_IF_NEEDED_DEFAULT;
         static const char      * EXPORTED_DEFAULT;
         static const char      * FILE_NAME_DEFAULT;
         static const char      * HEADER_FILE_DEFAULT;
         static const char      * HEADER_PREFIX_DEFAULT;
+        static const uint8_t     ID_DEFAULT;
+        static const char      * IP_ADDRESS_DEFAULT;
         static const ProjectType PROJECT_TYPE_DEFAULT;
         static const char      * TOOL_CONFIG_DEFAULT;
 
+        KMS::DI::String_Expand                         mCompiledFileName;
         KMS::DI::Boolean                               mCreateIfNeeded;
         KMS::DI::String_Expand                         mExported;
         KMS::DI::String_Expand                         mFileName;
         KMS::DI::String_Expand                         mHeaderFile;
         KMS::DI::String_Expand                         mHeaderPrefix;
+        KMS::DI::UInt<uint8_t>                         mId;
+        KMS::DI::String_Expand                         mIPAddress;
         KMS::DI::Enum<ProjectType, PROJECT_TYPE_NAMES> mProjectType;
         KMS::DI::Array                                 mSources;
         KMS::DI::String_Expand                         mToolConfig;
@@ -64,6 +70,8 @@ namespace TRiLOGI
         void Import();
 
         void Parse();
+
+        void Program();
 
         void Read();
 
