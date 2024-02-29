@@ -8,7 +8,6 @@
 #include "Component.h"
 
 // ===== Local ==============================================================
-#include "../Common/Globals.h"
 #include "../Common/TRiLOGI/BitList.h"
 
 using namespace KMS;

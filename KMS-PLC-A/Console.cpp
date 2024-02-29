@@ -10,9 +10,6 @@
 // ===== Import/Includes ====================================================
 #include <KMS/Console/Color.h>
 
-// ===== Local ==============================================================
-#include "../Common/Globals.h"
-
 // Public
 // //////////////////////////////////////////////////////////////////////////
 
@@ -22,7 +19,7 @@ void ::Console::Change(const char* aMsg, const char* aElement, const char* aName
     assert(nullptr != aElement);
     assert(nullptr != aName);
 
-    gConsole.OutputStream() << KMS::Console::Color::BLUE << aMsg << " " << aElement << " - " << aName << KMS::Console::Color::WHITE << std::endl;
+    std::cout << KMS::Console::Color::BLUE << aMsg << " " << aElement << " - " << aName << KMS::Console::Color::WHITE << std::endl;
 }
 
 void ::Console::Change(const char* aMsg, const char* aName)
@@ -30,7 +27,7 @@ void ::Console::Change(const char* aMsg, const char* aName)
     assert(nullptr != aMsg);
     assert(nullptr != aName);
 
-    gConsole.OutputStream() << KMS::Console::Color::BLUE << aMsg << " - " << aName << KMS::Console::Color::WHITE << std::endl;
+    std::cout << KMS::Console::Color::BLUE << aMsg << " - " << aName << KMS::Console::Color::WHITE << std::endl;
 }
 
 void ::Console::Change(const char* aMsg, const wchar_t* aName)
@@ -42,7 +39,7 @@ void ::Console::Change(const char* aMsg, const wchar_t* aName)
 
     sprintf_s(lName, "%S", aName);
 
-    gConsole.OutputStream() << KMS::Console::Color::BLUE << aMsg << " - " << lName << KMS::Console::Color::WHITE << std::endl;
+    std::cout << KMS::Console::Color::BLUE << aMsg << " - " << lName << KMS::Console::Color::WHITE << std::endl;
 }
 
 void ::Console::Change(const char* aMsg, const char* aName, const char* aFrom, const char* aTo)
@@ -50,58 +47,58 @@ void ::Console::Change(const char* aMsg, const char* aName, const char* aFrom, c
     assert(nullptr != aMsg);
     assert(nullptr != aName);
 
-    gConsole.OutputStream() << KMS::Console::Color::BLUE;
-    gConsole.OutputStream() << aMsg << " - " << aName << " (\"" << aFrom << "\" -> \"" << aTo << "\")";
-    gConsole.OutputStream() << KMS::Console::Color::WHITE << std::endl;
+    std::cout << KMS::Console::Color::BLUE;
+    std::cout << aMsg << " - " << aName << " (\"" << aFrom << "\" -> \"" << aTo << "\")";
+    std::cout << KMS::Console::Color::WHITE << std::endl;
 }
 
 void ::Console::Stats(uint64_t aValue, const char* aUnit)
 {
     assert(nullptr != aUnit);
 
-    gConsole.OutputStream() << "    " << aValue << " " << aUnit << std::endl;
+    std::cout << "    " << aValue << " " << aUnit << std::endl;
 }
 
 std::ostream& ::Console::Error_Begin()
 {
-    gConsole.OutputStream() << KMS::Console::Color::RED << "    ERROR  ";
+    std::cout << KMS::Console::Color::RED << "    ERROR  ";
 
-    return gConsole.OutputStream();
+    return std::cout;
 }
 
-void ::Console::Error_End() { gConsole.OutputStream() << KMS::Console::Color::WHITE << std::endl; }
+void ::Console::Error_End() { std::cout << KMS::Console::Color::WHITE << std::endl; }
 
 std::ostream& ::Console::Info_Begin()
 {
-    gConsole.OutputStream() << "    INFO  ";
+    std::cout << "    INFO  ";
 
-    return gConsole.OutputStream();
+    return std::cout;
 }
 
 std::ostream& ::Console::Info_Begin(unsigned int aLineNo)
 {
-    gConsole.OutputStream() << "    INFO  Line " << aLineNo << "  ";
+    std::cout << "    INFO  Line " << aLineNo << "  ";
 
-    return gConsole.OutputStream();
+    return std::cout;
 }
 
-void ::Console::Info_End() { gConsole.OutputStream() << std::endl; }
+void ::Console::Info_End() { std::cout << std::endl; }
 
 std::ostream& ::Console::Instruction_Begin()
 {
-    gConsole.OutputStream() << KMS::Console::Color::BLUE << "INSTRUCTION\n";
+    std::cout << KMS::Console::Color::BLUE << "INSTRUCTION\n";
 
-    return gConsole.OutputStream();
+    return std::cout;
 }
 
-void ::Console::Instruction_End() { gConsole.OutputStream() << KMS::Console::Color::WHITE << std::endl; }
+void ::Console::Instruction_End() { std::cout << KMS::Console::Color::WHITE << std::endl; }
 
 void ::Console::Progress_Begin(const char* aModule, const char* aMsg)
 {
     assert(nullptr != aModule);
     assert(nullptr != aMsg);
 
-    gConsole.OutputStream() << aModule << " - " << aMsg << " ..." << std::endl;
+    std::cout << aModule << " - " << aMsg << " ..." << std::endl;
 }
 
 void ::Console::Progress_Begin(const char* aModule, const char* aMsg, const char* aFileName)
@@ -110,38 +107,38 @@ void ::Console::Progress_Begin(const char* aModule, const char* aMsg, const char
     assert(nullptr != aMsg);
     assert(nullptr != aFileName);
 
-    gConsole.OutputStream() << aModule << " - " << aMsg << " " << aFileName << " ..." << std::endl;
+    std::cout << aModule << " - " << aMsg << " " << aFileName << " ..." << std::endl;
 }
 
 void ::Console::Progress_End(const char* aMsg)
 {
     assert(nullptr != aMsg);
 
-    gConsole.OutputStream() << aMsg << std::endl;
+    std::cout << aMsg << std::endl;
 }
 
 std::ostream& ::Console::Warning_Begin()
 {
-    gConsole.OutputStream() << KMS::Console::Color::YELLOW << "    WARNING  ";
+    std::cout << KMS::Console::Color::YELLOW << "    WARNING  ";
 
-    return gConsole.OutputStream();
+    return std::cout;
 }
 
 std::ostream& ::Console::Warning_Begin(unsigned int aLineNo)
 {
-    gConsole.OutputStream() << KMS::Console::Color::YELLOW << "    WARNING  Line " << aLineNo << "  ";
+    std::cout << KMS::Console::Color::YELLOW << "    WARNING  Line " << aLineNo << "  ";
 
-    return gConsole.OutputStream();
+    return std::cout;
 }
 
 std::ostream& ::Console::Warning_Begin(unsigned int aLineNoA, unsigned int aLineNoB)
 {
-    gConsole.OutputStream() << KMS::Console::Color::YELLOW << "    WARNING  Line " << aLineNoA << " and " << aLineNoB << "  ";
+    std::cout << KMS::Console::Color::YELLOW << "    WARNING  Line " << aLineNoA << " and " << aLineNoB << "  ";
 
-    return gConsole.OutputStream();
+    return std::cout;
 }
 
-void ::Console::Warning_End() { gConsole.OutputStream() << KMS::Console::Color::WHITE << std::endl; }
+void ::Console::Warning_End() { std::cout << KMS::Console::Color::WHITE << std::endl; }
 
 void ::Console::Warning_IgnoredLine(unsigned int aLineNo, const char* aLine)
 {

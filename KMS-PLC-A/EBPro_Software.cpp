@@ -8,8 +8,6 @@
 #include "Component.h"
 
 // ===== Local ==============================================================
-#include "../Common/Globals.h"
-
 #include "../Common/EBPro/Software.h"
 
 using namespace KMS;
@@ -156,22 +154,19 @@ std::ostream& Instruction_Begin()
     ::Console::Instruction_Begin()
         << "    Tool \"EBPro\"\n";
 
-    return gConsole.OutputStream();
+    return std::cout;
 }
 
 void Instruction_End()
 {
-    //                                   1           2         3         4         5         6         7
-    //                          1234567890123456 789 0123456789012345678901234567890123456789012345678901234567
-    gConsole.OutputStream() << "        - Click \"OK\"                                                      [ ]\n";
+    //                     1           2         3         4         5         6         7
+    //            1234567890123456 789 0123456789012345678901234567890123456789012345678901234567
+    std::cout << "        - Click \"OK\"                                                      [ ]\n";
 
-    gConsole.OutputStream() << "Presse ENTER to continue";
+    std::cout << "Presse ENTER to continue";
 
     ::Console::Instruction_End();
 
-    if (stdout == gConsole.OutputFile())
-    {
-        char lLine[LINE_LENGTH];
-        fgets(lLine, sizeof(lLine), stdin);
-    }
+    char lLine[LINE_LENGTH];
+    fgets(lLine, sizeof(lLine), stdin);
 }

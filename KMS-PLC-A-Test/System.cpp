@@ -9,10 +9,10 @@
 
 // ===== Import/Includes ====================================================
 #include <KMS/Cfg/Configurator.h>
+#include <KMS/Console/Redirection.h>
 #include <KMS/File/Folder.h>
 
 // ===== Local ==============================================================
-#include "../Common/Globals.h"
 #include "../Common/System.h"
 
 using namespace KMS;
@@ -22,10 +22,10 @@ using namespace KMS;
 
 typedef struct
 {
+    int          mExpectedResult;
     const char * mFolder;
     const char * mToDelete_Before;
     const char * mToDelete_After;
-    unsigned int mExceptions[2];
 }
 Case_Normal;
 
@@ -47,14 +47,14 @@ Case_Exception;
 
 static const Case_Normal CASE_N[] =
 {
-    { TESTS "Test00", nullptr  , nullptr        , { 0, 0 } },
-    { TESTS "Test01", "PLC.PC6", "PLC.PC6.*.bak", { 0, 0 } },
-    { TESTS "Test02", nullptr  , nullptr        , { 2, 2 } },
-    { TESTS "Test06", "PLC.PC6", "PLC.PC6.*.bak", { 0, 0 } },
-    { TESTS "Test07", "PLC.PC6", nullptr        , { 0, 0 } },
-    { TESTS "Test08", nullptr  , nullptr        , { 2, 2 } },
-    { TESTS "Test09", nullptr  , nullptr        , { 2, 2 } },
-    { TESTS "Test10", nullptr  , nullptr        , { 0, 0 } },
+    {      0, TESTS "Test00", nullptr  , nullptr         },
+    {      0, TESTS "Test01", "PLC.PC6", "PLC.PC6.*.bak" },
+    {      0, TESTS "Test02", nullptr  , nullptr         },
+    {      0, TESTS "Test06", "PLC.PC6", "PLC.PC6.*.bak" },
+    {      0, TESTS "Test07", "PLC.PC6", nullptr         },
+    { - 2046, TESTS "Test08", nullptr  , nullptr         },
+    { - 2046, TESTS "Test09", nullptr  , nullptr         },
+    // { 0, TESTS "Test10", nullptr  , nullptr         }, // Request user input
 };
 
 #define CASE_N_QTY (sizeof(CASE_N) / sizeof(CASE_N[0]))
@@ -70,8 +70,6 @@ static const Case_Exception CASE_E[] =
 
 KMS_TEST(System_Base, "Auto", sTest_Base)
 {
-    gConsole.Set_Null();
-
     // Constructor
     System lS;
 
@@ -96,7 +94,11 @@ KMS_TEST(System_Base, "Auto", sTest_Base)
     // ===== CLI::Tool ======================================================
 
     // DisplayHelp
-    lS.DisplayHelp(gConsole.OutputFile());
+    Console::Redirection lR(Console::Redirection::What::WHAT_STDOUT);
+    {
+        lS.DisplayHelp(stdout);
+    }
+    lR.Restore();
 
     // ExecuteCommand
 
@@ -105,8 +107,6 @@ KMS_TEST(System_Base, "Auto", sTest_Base)
 
 KMS_TEST(System_Case, "Auto", sTest_Case)
 {
-    gConsole.Set_Null();
-
     for (unsigned int i = 0; i < CASE_N_QTY; i++)
     {
         File::Folder lFolder(File::Folder::CURRENT, CASE_N[i].mFolder);
@@ -136,12 +136,15 @@ KMS_TEST(System_Case, "Auto", sTest_Case)
             lC.AddConfigurable(&lS);
             lC.ParseArguments(1, lV);
 
-            if (0 != CASE_N[i].mExceptions[j])
-            {
-                Dbg::gLog.SetHideCount(Dbg::LogFile::Level::LEVEL_ERROR, CASE_N[i].mExceptions[j]);
-            }
+            int lRet;
 
-            KMS_TEST_COMPARE(lS.Run(), 0L);
+            Console::Redirection lR(Console::Redirection::What::WHAT_STDOUT);
+            {
+                lRet = lS.Run();
+            }
+            lR.Restore();
+
+            KMS_TEST_COMPARE(lRet, CASE_N[i].mExpectedResult);
         }
 
         if (nullptr != CASE_N[i].mToDelete_After)
@@ -153,8 +156,6 @@ KMS_TEST(System_Case, "Auto", sTest_Case)
 
 KMS_TEST(System_Exception, "Auto", sTest_Exception)
 {
-    gConsole.Set_Null();
-
     for (unsigned int i = 0; i < CASE_E_QTY; i++)
     {
         File::Folder lFolder(File::Folder::CURRENT, CASE_E[i].mFolder);
@@ -179,7 +180,6 @@ KMS_TEST(System_Exception, "Auto", sTest_Exception)
 
         try
         {
-            Dbg::gLog.SetHideCount(Dbg::LogFile::Level::LEVEL_ERROR, 2);
             lS.Validate();
             KMS_TEST_ASSERT(false);
         }
@@ -189,11 +189,17 @@ KMS_TEST(System_Exception, "Auto", sTest_Exception)
 
 KMS_TEST(System_Main, "Auto", sTest_Main)
 {
-    gConsole.Set_Null();
-
     const char* lVector[2] = { "KMS-PLC-A-Test.exe", "ConfigFiles+=" TEST_0 "\\" KMS_PLC_CFG};
 
-    KMS_TEST_COMPARE(System::Main(2, lVector), 0);
+    int lRet;
+
+    Console::Redirection lR(Console::Redirection::What::WHAT_STDOUT);
+    {
+        lRet = System::Main(2, lVector);
+    }
+    lR.Restore();
+
+    KMS_TEST_COMPARE(lRet, 0);
 
     lVector[1] = "ConfigFiles+=" TEST_1 "\\" KMS_PLC_CFG;
 
@@ -201,6 +207,19 @@ KMS_TEST(System_Main, "Auto", sTest_Main)
 
     lTest1.DeleteFiles("PLC.PC6");
 
-    KMS_TEST_COMPARE(System::Main(2, lVector), 0);
-    KMS_TEST_COMPARE(System::Main(2, lVector), 0);
+    lR.Redirect();
+    {
+        lRet = System::Main(2, lVector);
+    }
+    lR.Restore();
+
+    KMS_TEST_COMPARE(lRet, 0);
+
+    lR.Redirect();
+    {
+        lRet = System::Main(2, lVector);
+    }
+    lR.Restore();
+
+    KMS_TEST_COMPARE(lRet, 0);
 }

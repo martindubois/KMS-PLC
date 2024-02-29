@@ -117,9 +117,6 @@
     <ClCompile Include="Console.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Globals.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Types.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

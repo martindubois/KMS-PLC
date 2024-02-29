@@ -17,8 +17,6 @@
 #include <KMS/Proc/Process.h>
 
 // ===== Local ==============================================================
-#include "../Common/Globals.h"
-
 #include "../Common/TRiLOGI/Software.h"
 
 using namespace KMS;

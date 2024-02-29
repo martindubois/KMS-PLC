@@ -43,7 +43,6 @@
     <ClCompile Include="EBPro_Project.cpp" />
     <ClCompile Include="EBPro_Software.cpp" />
     <ClCompile Include="Function.cpp" />
-    <ClCompile Include="Globals.cpp" />
     <ClCompile Include="System.cpp" />
     <ClCompile Include="TRiLOGI_BitList.cpp" />
     <ClCompile Include="TRiLOGI_Constant.cpp" />
