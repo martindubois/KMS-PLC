@@ -4,6 +4,8 @@ Copyright (C) 2022-2023 KMS
 Product   KMS-PLC
 File      KMS-PLC/_DocUser/KMS.ReadMe.txt
 
+- Fix the command Programm PLC (KP-32)
+
 1.0.1 Windows 2023-11-14
 - Configurable attributes cleanup
 

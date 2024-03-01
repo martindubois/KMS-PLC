@@ -13,13 +13,22 @@
 #include <Windows.h>
 
 // ===== Import/Includes ====================================================
-#include <KMS/Click/Master.h>
+#include <KMS/Console/HumanScript.h>
 #include <KMS/Proc/Process.h>
 
 // ===== Local ==============================================================
 #include "../Common/TRiLOGI/Software.h"
 
 using namespace KMS;
+
+#define FILE_EXT_EXE ".exe"
+
+// Configuration
+// //////////////////////////////////////////////////////////////////////////
+
+#define CO5_UPLOADER_FOLDER "C:\\CO5Uploader"
+
+#define CO5_UPLOADER_EXE CO5_UPLOADER_FOLDER "\\CO5Uploader" FILE_EXT_EXE
 
 // Static function declarations
 // //////////////////////////////////////////////////////////////////////////
@@ -46,40 +55,38 @@ namespace TRiLOGI
 
     void Software::Program(const char* aFile, const char* aIPAddress, uint8_t aId)
     {
-        char lId[ 4];
-
-        sprintf_s(lId, "%u", aId);
-
-        Click::Master lCM;
-        Proc::Process lP(File::Folder::NONE, "C:\\CO5Uploader\\CO5Uploader.exe");
+        File::Folder lBin(CO5_UPLOADER_FOLDER);
 
         char lFile  [PATH_LENGTH];
         char lFolder[PATH_LENGTH];
 
         if (SplitFolderAndFile(aFile, lFolder, sizeof(lFolder), lFile, sizeof(lFile)))
         {
-            char lWorking[PATH_LENGTH];
-
-            File::Folder::CURRENT.GetPath(lFolder, lWorking, sizeof(lWorking));
-
-            lP.SetWorkingDirectory(lWorking);
+            File::Folder::CURRENT.Copy(lBin, aFile, lFile);
         }
         else
         {
-            lP.SetWorkingDirectory(File::Folder::CURRENT.GetPath());
+            File::Folder::CURRENT.Copy(lBin, lFile, lFile);
         }
+
+        char lId[4];
+
+        sprintf_s(lId, "%u", aId);
+
+        Proc::Process lP(File::Folder::NONE, CO5_UPLOADER_EXE);
+
+        lP.SetWorkingDirectory(CO5_UPLOADER_FOLDER);
 
         lP.AddArgument(lFile);
         lP.AddArgument(aIPAddress);
         lP.AddArgument(lId);
 
-        ::Console::Instruction_Begin()
-            //           1          2         3          4         5          6         7
-            //  1234567890123 45678901234567890123456789 0123456789012345 6789012 345678901234567
-            << "    - In the \"Uploading CO5 File to ...\" dialog, click \"Reboot\"           [ ]\n"
-            //  1234567890123456 7890123456789012345678901 234567890123456789012345678901234567
-            << "    - Close the \"CO5 Uploader Version 3.3\" dialo                          [ ]\n";
-        ::Console::Instruction_End();
+        KMS::Console::HumanScript lHS;
+
+        lHS.Begin("Complete PLC programming");
+        lHS.Step("- In the \"Uploading CO5 File to ...\" dialog, click \"Reboot\"");
+        lHS.Step("- Close the \"CO5 Uploader Version 3.3\" dialog");
+        lHS.End();
 
         lP.Run(1000 * 60 * 5);
     }
