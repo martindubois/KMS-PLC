@@ -7,16 +7,13 @@
 
 #include "Component.h"
 
+// ===== Import/Includes ====================================================
+#include <KMS/Console/HumanScript.h>
+
 // ===== Local ==============================================================
 #include "../Common/EBPro/Software.h"
 
 using namespace KMS;
-
-// Static function declarations
-// //////////////////////////////////////////////////////////////////////////
-
-static std::ostream& Instruction_Begin();
-static void          Instruction_End  ();
 
 namespace EBPro
 {
@@ -41,33 +38,39 @@ namespace EBPro
         assert(nullptr != aImp);
         assert(nullptr != aExp);
 
-        Instruction_Begin()
+        KMS::Console::HumanScript lHS;
 
-            //           1           2          3          4          5          6          7
-            //  1234567890 12345678 9012345678 90123456 7890123456 78901234 567890 123456789012
-            << "    - Tab \"Project\" - Group \"Library\" - Click \"Address\" ==> \"Address Tag\n"
-            //  1234567890123 4567890123456789012345678901234567890123456789012345678901234567
-            << "      Library\" dialog                                                     [ ]\n"
-            //  1234567890123456 78901234567890 123456 78901 234567890123456789012345678901234567
-            << "        - Click \"Import CSV...\" ==> \"Open\" dialog                         [ ]\n"
-            << "            - Select \"" << aImp << "\"\n"
-            //  123456789012345678901234 56789 012345 6789012345678901 23456789012345678901234567
-            << "              and click \"Open\" ==> \"EasyBuilder Pro\" dialog               [ ]\n"
-            //  12345678901234567890 1234 567890 1234567890123456 7890123456789012345678901234567
-            << "            - Click \"Yes\" ==> \"EasyBuilder Pro\" dialog                    [ ]\n"
-            //  12345678901234567890 123 456789012345678901234567890123456789012345678901234567
-            << "            - Click \"OK\"                                                  [ ]\n"
-            //  1234567890123456 78901234567890 123456 78901 234567890123456789012345678901234567
-            << "        - Click \"Export CSV...\" ==> \"Open\" dialog                         [ ]\n"
-            << "            - Select \"" << aExp << "\"\n"
-            //  123456789012345678901234 56789 012345 6789012345678901 23456789012345678901234567
-            << "              and click \"Open\" ==> \"EasyBuilder Pro\" dialog               [ ]\n"
-            //  12345678901234567890 123 456789012345678901234567890123456789012345678901234567
-            << "            - Click \"OK\"                                                  [ ]\n"
-            //  1234567890123456 78901 23456789012345678901234567890123456789012345678901234567
-            << "        - Click \"Exit\"                                                    [ ]\n";
+        lHS.Begin("Tool \"EBPro\"");
+        {
+            lHS.Line("- Tab \"Project\" - Group \"Library\" - Click \"Address\" ==> \"Address Tag");
+            lHS.Step("  Library\" dialog");
+            lHS.Indent_Inc();
+            lHS.Line("- Click \"Import CSV...\" ==> \"Open\" dialog");
+            lHS.Indent_Inc();
 
-        Instruction_End();
+            char lLine[LINE_LENGTH];
+            sprintf_s(lLine, "Select \"%s\"", aImp);
+            lHS.Line(lLine);
+
+            lHS.Step("  and click \"Open\" ==> \"EasyBuilder Pro\" dialog");
+            lHS.Step("- Click \"Yes\" ==> \"EasyBuilder Pro\" dialog");
+            lHS.Step("- Click \"OK\"");
+            lHS.Indent_Dec();
+            lHS.Step("- Click \"Export CSV...\" ==> \"Open\" dialog");
+            lHS.Indent_Inc();
+            
+            sprintf_s(lLine, "- Select \"%s\"", aExp);
+            lHS.Line(lLine);
+
+            lHS.Step("  and click \"Open\" ==> \"EasyBuilder Pro\" dialog");
+            lHS.Step("- Click \"OK\"");
+            lHS.Indent_Dec();
+            lHS.Step("- Click \"Exit\"");
+            lHS.Step("- Click \"OK\"");
+
+            lHS.Wait();
+        }
+        lHS.End();
     }
 
     void Software::ImportFunctions(const char* aImp, const char* aExp)
@@ -75,29 +78,38 @@ namespace EBPro
         assert(nullptr != aImp);
         assert(nullptr != aExp);
 
-        Instruction_Begin()
+        KMS::Console::HumanScript lHS;
 
-            //           1           2          3          4          5           6         7
-            //  1234567890 12345678 9012345678 90123456 7890123456 789012 345678 90123456789012 3
-            << "    - Tab \"Project\" - Group \"Library\" - Click \"Macro\" --> \"Macro Manager\"\n"
-            //  12345678901234567890123456789012345678901234567890123456789012345678901234567
-            << "      dialog                                                              [ ]\n"
-            //  1234567890123456 78901234567 890 12 34567890123456789012345 6789012345678901234567
-            << "        - Click \"Library...\" --> \"Macro Function Library\" dialog           [ ]\n"
-            //  12345678901234567890 1234567890 12 345 67890 123456789012345 6789012345678901234567
-            << "            - Click \"Import...\" --> \"Open\" dialog                           [ ]\n"
-            << "                - Select \"" << aImp << "\"\n"
-            // 1234567890123456789012345678 90123 45678901234567890123456789012345678901234567
-            << "                  and click \"Open\"                                        [ ]\n"
-            //  12345678901234567890 1234567890 123456 78901 234567890123456789012345678901234567
-            << "            - Click \"Export...\" --> \"Open\" dialog                         [ ]\n"
-            << "                - Select \"" << aExp << "\"\n"
-            //  1234567890123456789012345678 90123 45678901234567890123456789012345678901234567
-            << "                  and click \"Open\"                                        [ ]\n"
-            //  12345678901234567890 12345 6789012345678901234567890123456789012345678901234567
-            << "            - Click \"Exit\"                                                [ ]\n";
+        lHS.Begin("Tool \"EBPro\"");
+        {
+            lHS.Line("- Tab \"Project\" - Group \"Library\" - Click \"Macro\" --> \"Macro Manager\"");
+            lHS.Step("  dialog");
+            lHS.Indent_Inc();
+            lHS.Step("- Click \"Library...\" --> \"Macro Function Library\" dialog");
+            lHS.Indent_Inc();
+            lHS.Step("- Click \"Import...\" --> \"Open\" dialog");
+            lHS.Indent_Inc();
+            
+            char lLine[LINE_LENGTH];
+            sprintf_s(lLine, "- Select \"%s\"", aImp);
+            lHS.Line(lLine);
 
-        Instruction_End();
+            lHS.Step("  and click \"Open\"");
+            lHS.Indent_Dec();
+            lHS.Line("- Click \"Export...\" --> \"Open\" dialog");
+
+            sprintf_s(lLine, "- Select \"%s\"", aExp);
+            lHS.Line(lLine);
+
+            lHS.Step("  and click \"Open\"");
+            lHS.Indent_Dec();
+            lHS.Step("- Click \"Exit\"");
+            lHS.Indent_Dec();
+            lHS.Step("- Click \"OK\"");
+
+            lHS.Wait();
+        }
+        lHS.End();
     }
 
     void Software::ImportLabels(const char* aImp, const char* aExp)
@@ -105,25 +117,33 @@ namespace EBPro
         assert(nullptr != aImp);
         assert(nullptr != aExp);
 
-        Instruction_Begin()
+        KMS::Console::HumanScript lHS;
 
-            //           1           2          3          4          5           6         7
-            //  1234567890 12345678 9012345678 90123456 7890123456 789012 345678 901234567890123456 7
-            << "    - Tab \"Project\" - Group \"Library\" - Click \"Label\" ==> \"Label Tag Library\"\n"
-            //  12345678901234567890123456789012345678901234567890123456789012345678901234567
-            << "      dialog                                                              [ ]\n"
-            //  1234567890123456 7890123456789012345 678901 23456 7890123456789012345678901234567
-            << "        - Click \"Load Label File...\" ==> \"Open\" dialog                    [ ]\n"
-            << "            - Select \"" << aImp << "\"\n"
-            //  123456789012345678901234 56789 012345678901234567890123456789012345678901234567
-            << "              and click \"Open\"                                            [ ]\n"
-            //  1234567890123456 7890123456789012345 678901 23456 7890123456789012345678901234567
-            << "        - Click \"Save Label File...\" ==> \"Open\" dialog                    [ ]\n"
-            << "            - Select \"" << aExp << "\"\n"
-            //  123456789012345678901234 56789 012345678901234567890123456789012345678901234567
-            << "              and click \"Open\"                                            [ ]\n";
+        lHS.Begin("Tool \"EBPro\"");
+        {
+            lHS.Line("- Tab \"Project\" - Group \"Library\" - Click \"Label\" ==> \"Label Tag Library\"");
+            lHS.Step("  dialog");
+            lHS.Indent_Inc();
+            lHS.Step("- Click \"Load Label File...\" ==> \"Open\" dialog");
+            lHS.Indent_Inc();
 
-        Instruction_End();
+            char lLine[LINE_LENGTH];
+            sprintf_s(lLine, "- Select \"%s\"", aImp);
+            lHS.Line(lLine);
+
+            lHS.Step("  and click \"Open\"");
+            lHS.Indent_Dec();
+            lHS.Step("- Click \"Save Label File...\" ==> \"Open\" dialog");
+
+            sprintf_s(lLine, "- Select \"%s\"", aExp);
+            lHS.Line(lLine);
+            lHS.Step("  and click \"Open\"");
+            lHS.Indent_Dec();
+            lHS.Step("- Click \"OK\"");
+
+            lHS.Wait();
+        }
+        lHS.End();
     }
 
     void Software::Open(const char* aFile)
@@ -144,29 +164,4 @@ namespace EBPro
         mProcess->Start();
     }
 
-}
-
-// Static function declarations
-// //////////////////////////////////////////////////////////////////////////
-
-std::ostream& Instruction_Begin()
-{
-    ::Console::Instruction_Begin()
-        << "    Tool \"EBPro\"\n";
-
-    return std::cout;
-}
-
-void Instruction_End()
-{
-    //                     1           2         3         4         5         6         7
-    //            1234567890123456 789 0123456789012345678901234567890123456789012345678901234567
-    std::cout << "        - Click \"OK\"                                                      [ ]\n";
-
-    std::cout << "Presse ENTER to continue";
-
-    ::Console::Instruction_End();
-
-    char lLine[LINE_LENGTH];
-    fgets(lLine, sizeof(lLine), stdin);
 }

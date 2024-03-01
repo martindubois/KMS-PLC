@@ -14,6 +14,7 @@
 
 // ===== Import/Includes ====================================================
 #include <KMS/Cfg/MetaData.h>
+#include <KMS/Console/HumanScript.h>
 #include <KMS/Text/File_ASCII.h>
 
 // ===== Local ==============================================================
@@ -741,11 +742,11 @@ namespace TRiLOGI
 
 void Instruction_Write()
 {
-    ::Console::Instruction_Begin()
+    KMS::Console::HumanScript lHS;
 
-        //           1           2         3         4         5         6         7
-        //  123456789012 345678 90123456789012345678901234567890123456789012345678901234567
-        << "    Use the \"Write\" command to save the changes                           [ ]" << std::endl;
-
-    ::Console::Instruction_End();
+    lHS.Begin("The PC6 file changed");
+    {
+        lHS.Step("- Use the \"Write\" command to save the changes");
+    }
+    lHS.End();
 }

@@ -84,15 +84,6 @@ std::ostream& ::Console::Info_Begin(unsigned int aLineNo)
 
 void ::Console::Info_End() { std::cout << std::endl; }
 
-std::ostream& ::Console::Instruction_Begin()
-{
-    std::cout << KMS::Console::Color::BLUE << "INSTRUCTION\n";
-
-    return std::cout;
-}
-
-void ::Console::Instruction_End() { std::cout << KMS::Console::Color::WHITE << std::endl; }
-
 void ::Console::Progress_Begin(const char* aModule, const char* aMsg)
 {
     assert(nullptr != aModule);

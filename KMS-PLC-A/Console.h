@@ -25,9 +25,6 @@ public:
     static std::ostream& Info_Begin(unsigned int aLineNo);
     static void          Info_End  ();
 
-    static std::ostream& Instruction_Begin();
-    static void          Instruction_End  ();
-
     static void Progress_Begin(const char* aModule, const char* aMsg);
     static void Progress_Begin(const char* aModule, const char* aMsg, const char* aFileName);
     static void Progress_End  (const char* aMsg);

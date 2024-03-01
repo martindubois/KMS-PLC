@@ -83,9 +83,11 @@ namespace TRiLOGI
 
         KMS::Console::HumanScript lHS;
 
-        lHS.Begin("Complete PLC programming");
-        lHS.Step("- In the \"Uploading CO5 File to ...\" dialog, click \"Reboot\"");
-        lHS.Step("- Close the \"CO5 Uploader Version 3.3\" dialog");
+        lHS.Begin("Tool \"CO5 Uploader\"");
+        {
+            lHS.Step("- In the \"Uploading CO5 File to ...\" dialog, click \"Reboot\"");
+            lHS.Step("- Close the \"CO5 Uploader Version 3.3\" dialog");
+        }
         lHS.End();
 
         lP.Run(1000 * 60 * 5);
