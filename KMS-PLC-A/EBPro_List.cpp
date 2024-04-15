@@ -44,9 +44,11 @@ namespace EBPro
 
         mSources.SetCreator(DI::String_Expand::Create);
 
-        AddEntry("Exported", &mExported, false, &MD_EXPORTED);
-        AddEntry("Sources" , &mSources , false, &MD_SOURCES);
-        AddEntry("ToImport", &mToImport, false, &MD_TO_IMPORT);
+        Ptr_OF<DI::Object> lEntry;
+
+        lEntry.Set(&mExported, false); AddEntry("Exported", lEntry, &MD_EXPORTED);
+        lEntry.Set(&mSources , false); AddEntry("Sources" , lEntry, &MD_SOURCES);
+        lEntry.Set(&mToImport, false); AddEntry("ToImport", lEntry, &MD_TO_IMPORT);
     }
 
     List::~List() {}

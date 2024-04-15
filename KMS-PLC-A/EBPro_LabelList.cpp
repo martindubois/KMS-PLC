@@ -48,7 +48,9 @@ namespace EBPro
 
         mLanguages.SetCreator(DI::String::Create);
 
-        AddEntry("Languages", &mLanguages, false , &MD_LANGUAGES);
+        Ptr_OF<DI::Object> lEntry;
+
+        lEntry.Set(&mLanguages, false); AddEntry("Languages", lEntry, &MD_LANGUAGES);
     }
 
     void LabelList::Export() const

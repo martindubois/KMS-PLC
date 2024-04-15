@@ -50,8 +50,10 @@ int System::Main(int aCount, const char** aVector)
 
 System::System()
 {
-    AddEntry("EBPro"  , &mEBPro  , false);
-    AddEntry("TRiLOGI", &mTRiLOGI, false);
+    Ptr_OF<DI::Object> lEntry;
+
+    lEntry.Set(&mEBPro  , false); AddEntry("EBPro"  , lEntry);
+    lEntry.Set(&mTRiLOGI, false); AddEntry("TRiLOGI", lEntry);
 }
 
 void System::Clean() { mTRiLOGI.Clean(); }

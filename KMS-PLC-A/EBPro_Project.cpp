@@ -36,11 +36,13 @@ namespace EBPro
         , mFunctions(&mSoftware)
         , mLabels(&mSoftware)
     {
-        AddEntry("FileName", &mFileName, false, &MD_FILE_NAME);
+        Ptr_OF<DI::Object> lEntry;
 
-        AddEntry("Addresses", &mAddresses, false);
-        AddEntry("Functions", &mFunctions, false);
-        AddEntry("Labels"   , &mLabels   , false);
+        lEntry.Set(&mFileName, false); AddEntry("FileName", lEntry, &MD_FILE_NAME);
+
+        lEntry.Set(&mAddresses, false); AddEntry("Addresses", lEntry);
+        lEntry.Set(&mFunctions, false); AddEntry("Functions", lEntry);
+        lEntry.Set(&mLabels   , false); AddEntry("Labels"   , lEntry);
     }
 
     void Project::Edit()

@@ -86,19 +86,21 @@ namespace TRiLOGI
 
         mProjectType.mOnChanged = &ON_PROJECT_TYPE_CHANGED;
 
-        AddEntry("CompiledFileName", &mCompiledFileName, false, &MD_COMPILED_FILE_NAME);
-        AddEntry("CreateIfNeeded"  , &mCreateIfNeeded  , false, &MD_CREATE_IF_NEEDED);
-        AddEntry("Exported"        , &mExported        , false, &MD_EXPORTED);
-        AddEntry("FileName"        , &mFileName        , false, &MD_FILE_NAME);
-        AddEntry("HeaderFile"      , &mHeaderFile      , false, &MD_HEADER_FILE);
-        AddEntry("HeaderPrefix"    , &mHeaderPrefix    , false, &MD_HEADER_PREFIX);
-        AddEntry("Id"              , &mId              , false, &MD_ID);
-        AddEntry("IPAddress"       , &mIPAddress       , false, &MD_IP_ADDRESS);
-        AddEntry("ProjectType"     , &mProjectType     , false, &MD_PROJECT_TYPE);
-        AddEntry("Sources"         , &mSources         , false, &MD_SOURCES);
-        AddEntry("ToolConfig"      , &mToolConfig      , false, &MD_TOOL_CONFIG);
+        Ptr_OF<DI::Object> lEntry;
 
-        AddEntry("Words", &mDefines.mWords, false);
+        lEntry.Set(&mCompiledFileName, false); AddEntry("CompiledFileName", lEntry, &MD_COMPILED_FILE_NAME);
+        lEntry.Set(&mCreateIfNeeded  , false); AddEntry("CreateIfNeeded"  , lEntry, &MD_CREATE_IF_NEEDED);
+        lEntry.Set(&mExported        , false); AddEntry("Exported"        , lEntry, &MD_EXPORTED);
+        lEntry.Set(&mFileName        , false); AddEntry("FileName"        , lEntry, &MD_FILE_NAME);
+        lEntry.Set(&mHeaderFile      , false); AddEntry("HeaderFile"      , lEntry, &MD_HEADER_FILE);
+        lEntry.Set(&mHeaderPrefix    , false); AddEntry("HeaderPrefix"    , lEntry, &MD_HEADER_PREFIX);
+        lEntry.Set(&mId              , false); AddEntry("Id"              , lEntry, &MD_ID);
+        lEntry.Set(&mIPAddress       , false); AddEntry("IPAddress"       , lEntry, &MD_IP_ADDRESS);
+        lEntry.Set(&mProjectType     , false); AddEntry("ProjectType"     , lEntry, &MD_PROJECT_TYPE);
+        lEntry.Set(&mSources         , false); AddEntry("Sources"         , lEntry, &MD_SOURCES);
+        lEntry.Set(&mToolConfig      , false); AddEntry("ToolConfig"      , lEntry, &MD_TOOL_CONFIG);
+
+        lEntry.Set(&mDefines.mWords, false); AddEntry("Words", lEntry);
     }
 
     bool Project::IsValid() const { return 0 < mFile.GetLineCount(); }

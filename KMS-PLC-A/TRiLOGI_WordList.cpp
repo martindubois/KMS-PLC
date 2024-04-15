@@ -50,8 +50,10 @@ namespace TRiLOGI
         , mOffsetNew(OFFSET_NEW_DEFAULT_LEGACY)
         , mProjectType(ProjectType::LEGACY)
     {
-        AddEntry("OffsetMax", &mOffsetMax, false, &MD_OFFSET_MAX);
-        AddEntry("OffsetNew", &mOffsetNew, false, &MD_OFFSET_NEW);
+        Ptr_OF<DI::Object> lEntry;
+
+        lEntry.Set(&mOffsetMax, false); AddEntry("OffsetMax", lEntry, &MD_OFFSET_MAX);
+        lEntry.Set(&mOffsetNew, false); AddEntry("OffsetNew", lEntry, &MD_OFFSET_NEW);
     }
 
     Object* WordList::AddWord(const char* aName, unsigned int aIndex, const char* aComment)
