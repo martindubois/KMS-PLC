@@ -10,10 +10,10 @@ AppName = KMS-PLC
 AppPublisher = KMS
 AppPublisherURL = https://www.kms-quebec.com
 AppSupportURL = https://www.kms-quebec.com
-AppVersion = 1.0.2
+AppVersion = 1.0.3
 ArchitecturesInstallIn64BitMode = x64
 DefaultDirName = {commonpf}\KMS-PLC
-OutputBaseFilename = KMS-PLC_1.0.2_x64
+OutputBaseFilename = KMS-PLC_1.0.3_x64
 OutputDir = Installer
 
 [Files]
@@ -34,4 +34,4 @@ Source: "x64\Release_Static\KMS-PLC.exe"                    ; DestDir: {app}
 Root: HKCR; SubKey: "Directory\shell\kms_plc"         ; Flags: uninsdeletekey
 Root: HKCR; SubKey: "Directory\shell\kms_plc"         ; ValueType: string; ValueData: "KMS-PLC Here"
 Root: HKCR; SubKey: "Directory\shell\kms_plc\command" ;
-Root: HKCR; SubKey: "Directory\shell\kms_plc\command" ; ValueType: string; ValueData: "cmd.exe /s /k pushd ""%V"" && ""{app}\KMS-PLC.exe\"" Commands+=Shell"
+Root: HKCR; SubKey: "Directory\shell\kms_plc\command" ; ValueType: string; ValueData: "cmd.exe /s /k pushd ""%V"" && ""{app}\KMS-PLC.exe"" && exit"

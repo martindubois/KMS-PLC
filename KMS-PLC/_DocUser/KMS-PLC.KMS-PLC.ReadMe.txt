@@ -4,6 +4,8 @@ Copyright (C) 2022-2024 KMS
 Product   KMS-PLC
 File      KMS-PLC/_DocUser/KMS.ReadMe.txt
 
+1.0.3 Windows 2024-05-03
+
 1.0.2 Windows 2024-03-04
 - Fix the command Programm PLC (KP-32)
 
