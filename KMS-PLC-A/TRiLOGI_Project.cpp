@@ -244,7 +244,7 @@ namespace TRiLOGI
             ::Console::Progress_Begin("TRiLOGY", "Reading", mFileName.Get());
             {
                 mFile.Clear();
-                mFile.Read(File::Folder::CURRENT, mFileName.Get());
+                mFile.Read(File::Folder::CURRENT, mFileName.Get(), Text::File::FLAG_DO_NOT_REMOVE_CR);
             }
             ::Console::Progress_End("Read");
         }
@@ -336,7 +336,7 @@ namespace TRiLOGI
                 File::Folder::CURRENT.Backup(mFileName.Get(), File::Folder::FLAG_BACKUP_RENAME);
             }
 
-            mFile.Write(File::Folder::CURRENT, mFileName.Get(), L"\r\n");
+            mFile.Write(File::Folder::CURRENT, mFileName.Get(), L"\n");
         }
         ::Console::Progress_End("Written");
     }

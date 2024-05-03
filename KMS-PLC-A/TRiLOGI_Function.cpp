@@ -45,7 +45,7 @@ namespace TRiLOGI
 
         wchar_t lLine[LINE_LENGTH];
 
-        swprintf_s(lLine, L"Fn#%u,%u", GetIndex(), mLength);
+        swprintf_s(lLine, L"Fn#%u,%u\r", GetIndex(), mLength);
 
         aFile_PC6->AddLine(lLine);
 
@@ -76,8 +76,6 @@ namespace TRiLOGI
         AddLine("// Imported using KMS-PLC");
 
         ::Function::Parse(aFile, aIt, "FUNCTION END");
-
-        AddLine("");
 
         mLength = GetLength();
     }

@@ -19,19 +19,34 @@ KMS_RESULT_STATIC(RESULT_INVALID_FUNCTION_FORMAT);
 // Public
 // //////////////////////////////////////////////////////////////////////////
 
+// i-TRiLOGI add a empty line at the end of the last function when saving.
+// This method ignore last empty lines in order to not falsly report a
+// change.
+//
 // NOT TESTED  Return true
 bool Function::operator != (const Function& aB) const
 {
-    auto lCount = mLines.size();
+    auto lA =    mLines.size();
+    auto lB = aB.mLines.size();
 
-    if (aB.mLines.size() != lCount)
+    if (lA > lB)
     {
         return true;
     }
 
-    for (unsigned int i = 0; i < lCount; i++)
+    unsigned int i;
+
+    for (i = 0; i < lA; i++)
     {
         if (mLines[i] != aB.mLines[i])
+        {
+            return true;
+        }
+    }
+
+    for (; i < lB; i++)
+    {
+        if (aB.mLines[i] != "\r")
         {
             return true;
         }

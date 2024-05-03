@@ -128,7 +128,7 @@ namespace TRiLOGI
 
             if (0 == wcscmp(PC6_SECTION_END_CUSTFN, lLine)) { lLineNo++; break; }
 
-            if (0 == wcscmp(L"\xc8", lLine))
+            if (0 == wcscmp(L"\xc8\r", lLine))
             {
                 if (nullptr != lFunction)
                 {
@@ -198,8 +198,12 @@ namespace TRiLOGI
             char         lName[NAME_LENGTH];
 
             auto lRet = swscanf_s(lLine, L"%u,%S", &lIndex, lName SizeInfo(lName));
-            if (2 != lRet)
+            switch (lRet)
             {
+            case 1: sprintf_s(lName, "Function%u", lIndex + 1); break;
+            case 2: break;
+
+            default:
                 sprintf_s(lMsg, "Line %u  Corrupted PC6 file (NOT TESTED)", aLineNo);
                 KMS_EXCEPTION(RESULT_CORRUPTED_PC6_FILE, lMsg, lRet);
             }
