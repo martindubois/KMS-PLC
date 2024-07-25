@@ -46,14 +46,23 @@ public:
 
     // ===== KMS::CLI::Tool =================================================
     virtual void DisplayHelp(FILE* aOut) const;
-    virtual int  ExecuteCommand(const char* aC);
+    virtual int  ExecuteCommand(KMS::CLI::CommandLine* aCmd);
     virtual int  Run();
 
 private:
 
     NO_COPY(System);
 
-    void ExecuteOperations();
+    int Cmd_Clean      (KMS::CLI::CommandLine* aCmd);
+    int Cmd_Edit       (KMS::CLI::CommandLine* aCmd);
+    int Cmd_Edit_emtp  (KMS::CLI::CommandLine* aCmd);
+    int Cmd_Edit_PC6   (KMS::CLI::CommandLine* aCmd);
+    int Cmd_Export     (KMS::CLI::CommandLine* aCmd);
+    int Cmd_Import     (KMS::CLI::CommandLine* aCmd);
+    int Cmd_Program    (KMS::CLI::CommandLine* aCmd);
+    int Cmd_Program_PLC(KMS::CLI::CommandLine* aCmd);
+    int Cmd_Verify     (KMS::CLI::CommandLine* aCmd);
+    int Cmd_Write      (KMS::CLI::CommandLine* aCmd);
 
     EBPro::Project   mEBPro;
     TRiLOGI::Project mTRiLOGI;

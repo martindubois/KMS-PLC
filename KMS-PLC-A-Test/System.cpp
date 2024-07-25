@@ -49,7 +49,7 @@ static const Case_Normal CASE_N[] =
 {
     {      0, TESTS "Test00", nullptr  , nullptr         },
     {      0, TESTS "Test01", "PLC.PC6", "PLC.PC6.*.bak" },
-    {      0, TESTS "Test02", nullptr  , nullptr         },
+    {   5130, TESTS "Test02", nullptr  , nullptr         },
     {      0, TESTS "Test06", "PLC.PC6", "PLC.PC6.*.bak" },
     {      0, TESTS "Test07", "PLC.PC6", nullptr         },
     { - 2046, TESTS "Test08", nullptr  , nullptr         },
@@ -124,7 +124,7 @@ KMS_TEST(System_Case, "Auto", sTest_Case)
 
         sprintf_s(lArg, "ConfigFiles+=%s", lConfigFile);
 
-        const char* lV[1] = { lArg };
+        const char* lV[2] = { "", lArg};
 
         for (unsigned int j = 0; j < 2; j++)
         {
@@ -134,7 +134,10 @@ KMS_TEST(System_Case, "Auto", sTest_Case)
             System            lS;
 
             lC.AddConfigurable(&lS);
-            lC.ParseArguments(1, lV);
+
+            CLI::CommandLine lCmd(2, lV);
+
+            lC.ParseArguments(&lCmd);
 
             int lRet;
 
@@ -168,7 +171,7 @@ KMS_TEST(System_Exception, "Auto", sTest_Exception)
 
         sprintf_s(lArg, "ConfigFiles+=%s", lConfigFile);
 
-        const char* lV[1] = { lArg };
+        const char* lV[2] = { "", lArg};
 
         std::cout << "    Case " << i << " (" << CASE_E[i].mFolder << ") ..." << std::endl;
 
@@ -176,7 +179,10 @@ KMS_TEST(System_Exception, "Auto", sTest_Exception)
         System            lS;
 
         lC.AddConfigurable(&lS);
-        lC.ParseArguments(1, lV);
+
+        CLI::CommandLine lCmd(2, lV);
+
+        lC.ParseArguments(&lCmd);
 
         try
         {
