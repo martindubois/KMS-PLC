@@ -49,12 +49,14 @@ int System::Main(int aCount, const char** aVector)
     KMS_MAIN_RETURN;
 }
 
-System::System()
+System::System() : mMacros(this)
 {
     Ptr_OF<DI::Object> lEntry;
 
     lEntry.Set(&mEBPro  , false); AddEntry("EBPro"  , lEntry);
     lEntry.Set(&mTRiLOGI, false); AddEntry("TRiLOGI", lEntry);
+
+    AddModule(&mMacros);
 }
 
 void System::Clean() { mTRiLOGI.Clean(); }

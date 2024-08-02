@@ -9,6 +9,7 @@
 #pragma once
 
 // ===== Import =============================================================
+#include <KMS/CLI/Macros.h>
 #include <KMS/CLI/Tool.h>
 
 // ===== Local ==============================================================
@@ -66,5 +67,7 @@ private:
 
     EBPro::Project   mEBPro;
     TRiLOGI::Project mTRiLOGI;
+
+    KMS::CLI::Macros mMacros;
 
 };
