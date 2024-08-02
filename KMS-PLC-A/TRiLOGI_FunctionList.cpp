@@ -128,7 +128,7 @@ namespace TRiLOGI
 
             if (0 == wcscmp(PC6_SECTION_END_CUSTFN, lLine)) { lLineNo++; break; }
 
-            if (0 == wcscmp(L"\xc8\r", lLine))
+            if ((0 == wcscmp(L"\xc8\r", lLine)) || (0 == wcscmp(L"\xc8", lLine)))
             {
                 if (nullptr != lFunction)
                 {
