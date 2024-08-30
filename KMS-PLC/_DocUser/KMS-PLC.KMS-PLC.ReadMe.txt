@@ -4,6 +4,7 @@ Copyright (C) 2022-2024 KMS
 Product   KMS-PLC
 File      KMS-PLC/_DocUser/KMS.ReadMe.txt
 
+1.0-4 Windows 2024-08-30
 - Macros
 
 1.0.3 Windows 2024-05-03
