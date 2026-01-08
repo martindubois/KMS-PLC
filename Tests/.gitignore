@@ -1,9 +1,10 @@
 
 # Author    KMS - Martin Dubois, P. Eng.
-# Copyright (C) 2023
+# Copyright (C) 2023-2026
 # License   http://www.apache.org/licenses/LICENSE-2.0
 # Product   KMS-PLC
 # File      Tests/.gitignore
 
-/Common/
 /Test99/
+
+HMI_Labels.txt
