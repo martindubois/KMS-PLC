@@ -9,16 +9,14 @@
 // ===== C ==================================================================
 #include <stdio.h>
 
-class Parser
+class Parser final
 {
 
 public:
 
-    Parser(const char* aFileName);
+    Parser(const char* aFileName, bool aOptional = false);
 
     ~Parser();
-
-    bool IsAtEnd();
 
     bool GetNextLine(char* aOut, unsigned int aOutSize_byte);
 

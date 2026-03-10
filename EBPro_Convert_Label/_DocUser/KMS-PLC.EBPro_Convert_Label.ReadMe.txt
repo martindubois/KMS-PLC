@@ -1,11 +1,10 @@
 
 Author    KMS - Martin Dubois, P. Eng.
-Copyright (C) 2022-2026 KMS
+Copyright (C) 2026 KMS
 License   http://www.apache.org/licenses/LICENSE-2.0
 Product   KMS-PLC
-File      _DocUser/KMS-PLC.ReadMe.txt
+File      EBPro_Convert_Label/_DocUser/KMS-PLC.EBPro_Convert_Label.ReadMe.txt
 
 EDIT ON BUILD
 
 2.0.0-dev Windows 2026-03-09
-* EBPro_Convert_Label

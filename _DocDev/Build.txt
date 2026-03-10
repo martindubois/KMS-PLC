@@ -5,19 +5,21 @@ License   http://www.apache.org/licenses/LICENSE-2.0
 Product   KMS-PLC
 File      _DocDev/Build.txt
 
-Name                _________________________________________________________
+Name                ____________________________________    Martin Dubois ( )
 
 Date and time       20 ______ - ______ - ______               ______ : ______
 
-Computer            _________________________________________________________
+Computer            ________________________________________________    MD ()
 
-File "Common/Version.h" - Edit the Version                                [ ]
+File "Common/Version.h" - Edit the Version
 
-Version             ______ . ______ . ______ . ______ - _____________________
-                    {Ma}     {Mi}     {Bu}              {Type}
+Version             ______ . ______ . ______ . ______
+                    {Ma}     {Mi}     {Bu}            -beta               ( )
+                                                      -test               ( )
+                                                      - _____________________
+                                                        {Type}
 
-File "_DocUser/KMS-PLC.ReadMe.txt"                                        [ ]
-File "KMS-PLC/_DocUser/KMS-PLC.KMS-PLC.ReadMe.txt"                        [ ]
+Search for "EDIT ON BUILD" and edit found file as needed                  [ ]
 
 Tools "PowerShell" - In the product folder
     .\Import\Binaries\Release_Static_x64\KMS-Build.exe                    [ ]

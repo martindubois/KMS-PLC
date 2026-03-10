@@ -3,39 +3,38 @@
 // Copyright (C) 2026 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
-// File      EBPro/Config.cpp
+// File      HMI/Config.cpp
 
 #include "Component.h"
 
 // ===== Local ==============================================================
 #include "../Common/Parser.h"
 
-#include "../Common/EBPro/Config.h"
+#include "../Common/HMI/Config.h"
 
 using namespace KMS;
 
 // Configurations
 // //////////////////////////////////////////////////////////////////////////
 
-static const char* CONFIG_TXT = "EBPro_Config.txt";
+static const char* CONFIG_TXT = "HMI_Config.txt";
 
-namespace EBPro
+namespace HMI
 {
 
     Config::Config()
     {
-        Parser lParser(CONFIG_TXT);
+        Parser lParser(CONFIG_TXT, true);
 
         char lLine[LINE_LENGTH];
 
         while (lParser.GetNextLine(lLine, sizeof(lLine)))
         {
-            unsigned int lIndex;
-            char lName[NAME_LENGTH];
+            char lSource[NAME_LENGTH];
 
-            if (2 == sscanf_s(lLine, "Language %u %[a-z]", &lIndex, lName SizeInfo(lName)))
+            if (2 == sscanf_s(lLine, "Label %[~\n\r]", lSource SizeInfo(lSource)))
             {
-                SetLanguage(lIndex, lName);
+                Label_AddSource(lSource);
             }
             else
             {
@@ -44,24 +43,24 @@ namespace EBPro
         }
     }
 
-    const char* Config::GetLanguageName(unsigned int aIndex) const
+    const char* Config::Label_GetSource(unsigned int aIndex) const
     {
-        assert(LANGUAGE_QTY > aIndex);
+        return mLabel_Sources[aIndex].c_str();
+    }
 
-        return mLanguages_ByIndex[aIndex];
+    unsigned int Config::Label_GetSourceCount() const
+    {
+        return static_cast<unsigned int>(mLabel_Sources.size());
     }
 
     // Private
     // //////////////////////////////////////////////////////////////////////
 
-    void Config::SetLanguage(unsigned int aIndex, const char* aName)
+    void Config::Label_AddSource(const char* aSource)
     {
-        assert(LANGUAGE_QTY > aIndex);
-        assert(nullptr != aName);
+        assert(nullptr != aSource);
 
-        mLanguages_ByName.insert(LanguageMap::value_type(aName, aIndex));
-
-        strcpy_s(mLanguages_ByIndex[aIndex] SizeInfo(mLanguages_ByIndex[aIndex]), aName);
+        mLabel_Sources.push_back(aSource);
     }
 
 }

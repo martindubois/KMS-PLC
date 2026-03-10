@@ -15,21 +15,20 @@ using namespace KMS;
 // Public
 // //////////////////////////////////////////////////////////////////////////
 
-Parser::Parser(const char* aFileName) : mFile(nullptr)
+Parser::Parser(const char* aFileName, bool aOptional) : mFile(nullptr)
 {
     auto lRet = fopen_s(&mFile, aFileName, "rb");
-    KMS_EXCEPTION_ASSERT(0 == lRet, RESULT_OPEN_FAILED, "Cannot open input file", aFileName);
-
-    assert(nullptr != mFile);
+    KMS_EXCEPTION_ASSERT(0 == lRet || aOptional, RESULT_OPEN_FAILED, "Cannot open input file", aFileName);
 }
 
 Parser::~Parser()
 {
-    assert(nullptr != mFile);
-
-    auto lRet = fclose(mFile);
-    assert(0 == lRet);
-    (void)lRet;
+    if (nullptr != mFile)
+    {
+        auto lRet = fclose(mFile);
+        assert(0 == lRet);
+        (void)lRet;
+    }
 }
 
 bool Parser::GetNextLine(char* aOut, unsigned int aOutSize_byte)
@@ -37,33 +36,34 @@ bool Parser::GetNextLine(char* aOut, unsigned int aOutSize_byte)
     assert(nullptr != aOut);
     assert(0 < aOutSize_byte);
 
-    assert(nullptr != mFile);
-
-    char lLine[LINE_LENGTH];
-
-    if (nullptr != fgets(lLine, sizeof(lLine), mFile))
+    if (nullptr != mFile)
     {
-        unsigned int lStart = 0;
+        char lLine[LINE_LENGTH];
 
-        for (;;)
+        if (nullptr != fgets(lLine, sizeof(lLine), mFile))
         {
-            switch (lLine[lStart])
+            unsigned int lStart = 0;
+
+            for (;;)
             {
-            case '\0':
-            case '\n':
-            case '\r':
-            case '#':
-                // The line is empty or a comment
-                return GetNextLine(aOut, aOutSize_byte);
+                switch (lLine[lStart])
+                {
+                case '\0':
+                case '\n':
+                case '\r':
+                case '#':
+                    // The line is empty or a comment
+                    return GetNextLine(aOut, aOutSize_byte);
 
-            case ' ':
-            case '\t':
-                lStart++;
-                break;
+                case ' ':
+                case '\t':
+                    lStart++;
+                    break;
 
-            default:
-                strcpy_s(aOut SizeInfoV(aOutSize_byte), lLine + lStart);
-                return true;
+                default:
+                    strcpy_s(aOut SizeInfoV(aOutSize_byte), lLine + lStart);
+                    return true;
+                }
             }
         }
     }

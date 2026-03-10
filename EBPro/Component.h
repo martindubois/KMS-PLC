@@ -3,9 +3,7 @@
 // Copyright (C) 2026 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
-// File      HMI/Component.h
-
-#pragma once
+// File      EBPro/Component.h
 
 #include <KMS/Base.h>
 

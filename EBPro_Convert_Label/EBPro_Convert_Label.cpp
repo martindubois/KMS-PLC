@@ -1,6 +1,7 @@
 
 // Author    KMS - Martin Dubois, P. Eng.
 // Copyright (C) 2026 KMS
+// License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
 // File      EBPro_Convert_Label/EBPro_Convert_Label.cpp
 
@@ -61,12 +62,12 @@ int main(int aCount, const char** aVector)
 
     assert(nullptr != aVector);
 
-    std::string lInputFileName(EXPORTED_LABEL_LBL);
-
     int lResult = 0;
 
     try
     {
+        std::string lInputFileName(EXPORTED_LABEL_LBL);
+
         switch (aCount)
         {
         case 2:
@@ -203,10 +204,13 @@ void Convert_Labels(const char* aInName)
         Convert_Label(lIn, lOut, lConfig);
     }
 
+    std::cout << "\n";
     std::cout << std::endl;
 
     lRet = fclose(lIn);
     assert(0 == lRet);
+
+    std::cout << aInName << " converted to " << HMI::LABELS_TXT << std::endl;
 }
 
 void DisplayUsage()

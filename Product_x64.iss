@@ -1,6 +1,6 @@
 
 ; Author    KMS - Martin Dubois, P. Eng.
-; Copyright (C) 2024 KMS
+; Copyright (C) 2024-2026 KMS
 ; License   http://www.apache.org/licenses/LICENSE-2.0
 ; Product   KMS-PLC
 ; File      Product_x64.iss
@@ -10,10 +10,10 @@ AppName = KMS-PLC
 AppPublisher = KMS
 AppPublisherURL = https://www.kms-quebec.com
 AppSupportURL = https://www.kms-quebec.com
-AppVersion = 1.0.4
+AppVersion = 2.0.0-dev
 ArchitecturesInstallIn64BitMode = x64
 DefaultDirName = {commonpf}\KMS-PLC
-OutputBaseFilename = KMS-PLC_1.0.4_x64
+OutputBaseFilename = KMS-PLC_2.0.0-dev_x64
 OutputDir = Installer
 
 [Files]
@@ -28,10 +28,9 @@ Source: "Import\Binaries\Release_Static_x64\ComTool.exe"    ; DestDir: {app}
 Source: "Import\Binaries\Release_Static_x64\ModbusSim.exe"  ; DestDir: {app}
 Source: "Import\Binaries\Release_Static_x64\ModbusTool.exe" ; DestDir: {app}
 Source: "KMS-PLC\_DocUser\KMS-PLC.KMS-PLC.ReadMe.txt"       ; DestDir: {app}
-Source: "x64\Release_Static\KMS-PLC.exe"                    ; DestDir: {app}
-
-[Registry]
-Root: HKCR; SubKey: "Directory\shell\kms_plc"         ; Flags: uninsdeletekey
-Root: HKCR; SubKey: "Directory\shell\kms_plc"         ; ValueType: string; ValueData: "KMS-PLC Here"
-Root: HKCR; SubKey: "Directory\shell\kms_plc\command" ;
-Root: HKCR; SubKey: "Directory\shell\kms_plc\command" ; ValueType: string; ValueData: "cmd.exe /s /k pushd ""%V"" && ""{app}\KMS-PLC.exe"" && exit"
+Source: "x64\Release_Static\EBPro_Build_Address.exe"        ; DestDir: {app}
+Source: "x64\Release_Static\EBPro_Build_Label.exe"          ; DestDir: {app}
+Source: "x64\Release_Static\EBPro_Convert_Address.exe"      ; DestDir: {app}
+Source: "x64\Release_Static\EBPro_Convert_Label.exe"        ; DestDir: {app}
+Source: "x64\Release_Static\TriLogi_Build.exe"              ; DestDir: {app}
+Source: "x64\Release_Static\TriLogi_Convert.exe"            ; DestDir: {app}
