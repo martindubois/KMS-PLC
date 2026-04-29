@@ -28,6 +28,8 @@ Source: "Import\Binaries\Release_Static_x64\ComTool.exe"    ; DestDir: {app}
 Source: "Import\Binaries\Release_Static_x64\ModbusSim.exe"  ; DestDir: {app}
 Source: "Import\Binaries\Release_Static_x64\ModbusTool.exe" ; DestDir: {app}
 Source: "KMS-PLC\_DocUser\KMS-PLC.KMS-PLC.ReadMe.txt"       ; DestDir: {app}
+Source: "Scripts"                                           ; DestDir: {app}
+Source: "Templates"                                         ; DestDir: {app}
 Source: "x64\Release_Static\EBPro_Build_Address.exe"        ; DestDir: {app}
 Source: "x64\Release_Static\EBPro_Build_Label.exe"          ; DestDir: {app}
 Source: "x64\Release_Static\EBPro_Convert_Address.exe"      ; DestDir: {app}

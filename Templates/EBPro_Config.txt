@@ -1,0 +1,15 @@
+
+# Author    KMS - Martin Dubois, P. Eng.
+# Copyright (C) 2026 KMS
+# License   http://www.apache.org/licenses/LICENSE-2.0
+# Product   KMS-PLC
+# File      Template/EBPro_Config.txt
+
+Language 0 en
+Language 1 fr
+Language 2 pt
+Language 3 es
+Language 4 de
+Language 5 tr
+Language 6 zu
+Language 7 it
