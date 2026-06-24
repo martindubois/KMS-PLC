@@ -1,0 +1,59 @@
+
+// Author    KMS - Martin Dubois, P. Eng.
+// Copyright (C) 2026 KMS
+// License   http://www.apache.org/licenses/LICENSE-2.0
+// Product   KMS-PLC
+// File      Common/PLC/Builder.h
+
+#pragma once
+
+// ===== C++ ================================================================
+#include <regex>
+
+// ===== Common =============================================================
+#include "../Common/Parser.h"
+#include "../Common/PLC/Define.h"
+#include "../Common/PLC/Function.h"
+#include "../Common/PLC/Sequence.h"
+#include "../Common/PLC/Timer.h"
+
+namespace PLC
+{
+
+    class Builder
+    {
+
+    public:
+
+        virtual ~Builder();
+
+        void Build();
+
+        void ReadSource(const char* aSource);
+        
+    protected:
+
+        Builder();
+
+        Define_List   mDefines;
+        Function_List mFunctions;
+        Element_List  mInputs;
+        Element_List  mOutputs;
+        Element_List  mRelays;
+        Sequence_List mSequences;
+        Timer_List    mTimers;
+
+    private:
+
+        void Add_DEFINE        (const std::smatch& aMatch);
+        void Add_FUNCTION      (const std::smatch& aMatch, Parser* aParser);
+        void Add_FUNCTION_LABEL(const std::smatch& aMatch);
+        void Add_INPUT         (const std::smatch& aMatch);
+        void Add_OUTPUT        (const std::smatch& aMatch);
+        void Add_RELAY         (const std::smatch& aMatch);
+        void Add_SEQUENCE      (const std::smatch& aMatch);
+        void Add_TIMER         (const std::smatch& aMatch);
+
+    };
+
+}
