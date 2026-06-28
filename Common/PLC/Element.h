@@ -31,6 +31,8 @@ namespace PLC
 
         void GetName(wchar_t* aOut, unsigned int aOutSize_byte) const;
 
+        bool IsNameEmpty() const;
+
         void SetName(const std::string& aName);
 
     private:
@@ -48,6 +50,8 @@ namespace PLC
     inline uint16_t Element::GetIndex() const { return mIndex; }
 
     inline const char* Element::GetName() const { return mName.c_str(); }
+
+    inline bool Element::IsNameEmpty() const { return mName.empty(); }
 
     inline void Element::SetName(const std::string& aName) { mName = aName; }
 

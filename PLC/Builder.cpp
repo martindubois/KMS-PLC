@@ -38,40 +38,40 @@ namespace PLC
 
     void Builder::ReadSource(const char* aSource)
     {
-        static const std::regex sRegex_DEFINE_0      ("^DEFINE (\\d+) (\\w+) (\\d+)\r\n$");
-        static const std::regex sRegex_DEFINE_1      ("^DEFINE (\\d+) (\\w+) (\\w+)\r\n$");
-        static const std::regex sRegex_DEFINE_2      ("^DEFINE (\\d+) (\\w+) (&h[0-9A-Fa-f]+)\r\n$");
-        static const std::regex sRegex_DEFINE_3      ("^DEFINE (\\d+) (\\w+) (DM\\[\\d+\\])\r\n$");
-        static const std::regex sRegex_FUNCTION      ("^FUNCTION (\\d+)\r\n$");
-        static const std::regex sRegex_FUNCTION_LABEL("^FUNCTION_LABEL (\\d+) (\\w+)\r\n$");
-        static const std::regex sRegex_INPUT         ("^INPUT (\\d+) (\\w+)\r\n$");
-        static const std::regex sRegex_OUTPUT        ("^OUTPUT (\\d+) (\\w+)\r\n$");
-        static const std::regex sRegex_RELAY         ("^RELAY (\\d+) (\\w+)\r\n$");
-        static const std::regex sRegex_SEQUENCE      ("^SEQUENCE (\\d+) (\\w+) (\\d+)\r\n$");
-        static const std::regex sRegex_TIMER         ("^TIMER (\\d+) (\\w+) (\\d+)\r\n$");
-
         char        lLine[LINE_LENGTH];
         std::smatch lMatch;
         Parser      lParser(aSource);
 
         while (lParser.GetNextLine(lLine, sizeof(lLine)))
         {
+            static const std::regex REGEX_DEFINE_0      ("^DEFINE (\\d+) (\\w+) (\\d+)$");
+            static const std::regex REGEX_DEFINE_1      ("^DEFINE (\\d+) (\\w+) (\\w+)$");
+            static const std::regex REGEX_DEFINE_2      ("^DEFINE (\\d+) (\\w+) (&h[0-9A-Fa-f]+)$");
+            static const std::regex REGEX_DEFINE_3      ("^DEFINE (\\d+) (\\w+) (DM\\[\\d+\\])$");
+            static const std::regex REGEX_FUNCTION      ("^FUNCTION (\\d+)$");
+            static const std::regex REGEX_FUNCTION_LABEL("^FUNCTION_LABEL (\\d+) (\\w+)$");
+            static const std::regex REGEX_INPUT         ("^INPUT (\\d+) (\\w+)$");
+            static const std::regex REGEX_OUTPUT        ("^OUTPUT (\\d+) (\\w+)$");
+            static const std::regex REGEX_RELAY         ("^RELAY (\\d+) (\\w+)$");
+            static const std::regex REGEX_SEQUENCE      ("^SEQUENCE (\\d+) (\\w+) (\\d+)$");
+            static const std::regex REGEX_TIMER         ("^TIMER (\\d+) (\\w+) (\\d+)$");
+
             std::string lLineStr(lLine);
 
-            if (   std::regex_match(lLineStr, lMatch, sRegex_DEFINE_0)
-                || std::regex_match(lLineStr, lMatch, sRegex_DEFINE_1)
-                || std::regex_match(lLineStr, lMatch, sRegex_DEFINE_2)
-                || std::regex_match(lLineStr, lMatch, sRegex_DEFINE_3))
+            if (   std::regex_match(lLineStr, lMatch, REGEX_DEFINE_0)
+                || std::regex_match(lLineStr, lMatch, REGEX_DEFINE_1)
+                || std::regex_match(lLineStr, lMatch, REGEX_DEFINE_2)
+                || std::regex_match(lLineStr, lMatch, REGEX_DEFINE_3))
             {
                 Add_DEFINE(lMatch);
             }
-            else if (std::regex_match(lLineStr, lMatch, sRegex_FUNCTION      )) { Add_FUNCTION      (lMatch, &lParser); }
-            else if (std::regex_match(lLineStr, lMatch, sRegex_FUNCTION_LABEL)) { Add_FUNCTION_LABEL(lMatch); }
-            else if (std::regex_match(lLineStr, lMatch, sRegex_INPUT         )) { Add_INPUT         (lMatch); }
-            else if (std::regex_match(lLineStr, lMatch, sRegex_OUTPUT        )) { Add_OUTPUT        (lMatch); }
-            else if (std::regex_match(lLineStr, lMatch, sRegex_RELAY         )) { Add_RELAY         (lMatch); }
-            else if (std::regex_match(lLineStr, lMatch, sRegex_SEQUENCE      )) { Add_SEQUENCE      (lMatch); }
-            else if (std::regex_match(lLineStr, lMatch, sRegex_TIMER         )) { Add_TIMER         (lMatch); }
+            else if (std::regex_match(lLineStr, lMatch, REGEX_FUNCTION      )) { Add_FUNCTION      (lMatch, &lParser); }
+            else if (std::regex_match(lLineStr, lMatch, REGEX_FUNCTION_LABEL)) { Add_FUNCTION_LABEL(lMatch); }
+            else if (std::regex_match(lLineStr, lMatch, REGEX_INPUT         )) { Add_INPUT         (lMatch); }
+            else if (std::regex_match(lLineStr, lMatch, REGEX_OUTPUT        )) { Add_OUTPUT        (lMatch); }
+            else if (std::regex_match(lLineStr, lMatch, REGEX_RELAY         )) { Add_RELAY         (lMatch); }
+            else if (std::regex_match(lLineStr, lMatch, REGEX_SEQUENCE      )) { Add_SEQUENCE      (lMatch); }
+            else if (std::regex_match(lLineStr, lMatch, REGEX_TIMER         )) { Add_TIMER         (lMatch); }
             else
             {
                 KMS_EXCEPTION(RESULT_INVALID_FORMAT, "Invalid source format (NOT TESTED)", lLine);
@@ -96,19 +96,19 @@ namespace PLC
 
     void Builder::Add_FUNCTION(const std::smatch& aMatch, Parser* aParser)
     {
-        static const std::regex sRegex_FUNCTION_END("^FUNCTION_END\r\n$");
-
         assert(nullptr != aParser);
 
         auto lNew = new Function(aMatch);
 
         char lLine[LINE_LENGTH];
 
-        while (aParser->GetNextLine(lLine, sizeof(lLine)))
+        while (aParser->GetNextLine_Code(lLine, sizeof(lLine)))
         {
+            static const std::regex REGEX_FUNCTION_END("^FUNCTION_END$");
+
             std::string lLineStr(lLine);
 
-            if (std::regex_match(lLineStr, sRegex_FUNCTION_END))
+            if (std::regex_match(lLineStr, REGEX_FUNCTION_END))
             {
                 break;
             }

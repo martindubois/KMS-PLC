@@ -20,6 +20,8 @@ public:
 
     bool GetNextLine(char* aOut, unsigned int aOutSize_byte);
 
+    bool GetNextLine_Code(char* aOut, unsigned int aOutSize_byte);
+
 private:
 
     FILE* mFile;

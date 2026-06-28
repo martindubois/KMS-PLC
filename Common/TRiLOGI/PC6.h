@@ -21,6 +21,7 @@ namespace TRiLOGI
     static const wchar_t* PC6_END_R                = L"~\r";
     static const wchar_t* PC6_END_BREAKPOINT       = L"~END_BREAKPOINTS~";
     static const wchar_t* PC6_END_BREAKPOINT_R     = L"~END_BREAKPOINTS~\r";
+    static const wchar_t* PC6_END_CIRCUIT          = L"~END_CIRCUIT~";
     static const wchar_t* PC6_END_CIRCUIT_R        = L"~END_CIRCUIT~\r";
     static const wchar_t* PC6_END_DEFINE           = L"~END_DEFINES~";
     static const wchar_t* PC6_END_DEFINE_R         = L"~END_DEFINES~\r";

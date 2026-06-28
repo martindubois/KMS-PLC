@@ -7,6 +7,9 @@
 
 #include "Component.h"
 
+// ===== C++ ================================================================
+#include <regex>
+
 // ===== Local ==============================================================
 #include "../Common/Parser.h"
 
@@ -40,30 +43,61 @@ bool Parser::GetNextLine(char* aOut, unsigned int aOutSize_byte)
     {
         char lLine[LINE_LENGTH];
 
-        if (nullptr != fgets(lLine, sizeof(lLine), mFile))
+        while (nullptr != fgets(lLine, sizeof(lLine), mFile))
         {
-            unsigned int lStart = 0;
+            static const std::regex REGEX_COMMENT("^\\s*\\#.*\r\n");
+            static const std::regex REGEX_EMPTY("^\\s*\r\n$");
+            static const std::regex REGEX_LINE("^\\s*(.+)\r\n$");
 
-            for (;;)
+            std::smatch lMatch;
+
+            std::string lLineStr(lLine);
+
+            if (std::regex_match(lLine, REGEX_COMMENT))
             {
-                switch (lLine[lStart])
-                {
-                case '\0':
-                case '\n':
-                case '\r':
-                case '#':
-                    // The line is empty or a comment
-                    return GetNextLine(aOut, aOutSize_byte);
+            }
+            else if (std::regex_match(lLine, REGEX_EMPTY))
+            {
+            }
+            else
+            {
+                auto lRet = std::regex_match(lLineStr, lMatch, REGEX_LINE);
+                assert(lRet);
 
-                case ' ':
-                case '\t':
-                    lStart++;
-                    break;
+                strcpy_s(aOut SizeInfoV(aOutSize_byte), lMatch[1].str().c_str());
+                return true;
+            }
+        }
+    }
 
-                default:
-                    strcpy_s(aOut SizeInfoV(aOutSize_byte), lLine + lStart);
-                    return true;
-                }
+    return false;
+}
+
+bool Parser::GetNextLine_Code(char* aOut, unsigned int aOutSize_byte)
+{
+    assert(nullptr != aOut);
+    assert(0 < aOutSize_byte);
+
+    if (nullptr != mFile)
+    {
+        char lLine[LINE_LENGTH];
+
+        while (nullptr != fgets(lLine, sizeof(lLine), mFile))
+        {
+            static const std::regex REGEX_LINE("^(.*)\r\n$");
+
+            std::smatch lMatch;
+
+            std::string lLineStr(lLine);
+
+            if (std::regex_match(lLineStr, lMatch, REGEX_LINE))
+            {
+                strcpy_s(aOut SizeInfoV(aOutSize_byte), lMatch[1].str().c_str());
+                return true;
+            }
+            else
+            {
+                printf("Ignored line : %s\r\n", lLine);
             }
         }
     }

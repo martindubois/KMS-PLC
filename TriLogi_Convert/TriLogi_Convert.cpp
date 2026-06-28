@@ -184,7 +184,7 @@ void Convert(const char* aInName)
 
     // Open output file
 
-    std::wofstream lCircuits(PLC::CIRCUITS_TXT);
+    std::wofstream lCircuits(PLC::CIRCUITS_TXT, std::ios::binary);
     KMS_EXCEPTION_ASSERT(lCircuits.is_open(), RESULT_OPEN_FAILED, "Cannot open output file (NOT_TESTED)", PLC::CIRCUITS_TXT);
 
     ConfigStream(lCircuits);
@@ -235,7 +235,7 @@ void Convert_Initial(const char* aInName)
 
     // Open output files
 
-    std::wofstream lCircuits(PLC::CIRCUITS_TXT);
+    std::wofstream lCircuits(PLC::CIRCUITS_TXT, std::ios::binary);
     std::ofstream  lMain    (PLC::MAIN_TXT);
 
     KMS_EXCEPTION_ASSERT(lCircuits.is_open(), RESULT_OPEN_FAILED, "Cannot open output file", PLC::CIRCUITS_TXT);
@@ -295,7 +295,7 @@ State Convert(const std::wstring& aLine, const wchar_t* aMark, State aCurrent, S
 
 State Convert_Index_Name(const std::wstring& aLine, const wchar_t* aMark, State aCurrent, State aNext, std::ofstream& aMain, const char* aType)
 {
-    static const std::wregex sRegex(L"^(\\d+),(\\w+)\r$");
+    static const std::wregex REGEX(L"^(\\d+),(\\w+)\r$");
 
     assert(nullptr != aMark);
     assert(aCurrent != aNext);
@@ -311,7 +311,7 @@ State Convert_Index_Name(const std::wstring& aLine, const wchar_t* aMark, State 
 
         lResult = aNext;
     }
-    else if (std::regex_match(aLine, lMatch, sRegex))
+    else if (std::regex_match(aLine, lMatch, REGEX))
     {
         char lIndex[NAME_LENGTH];
         char lName [NAME_LENGTH];
@@ -331,7 +331,7 @@ State Convert_Index_Name(const std::wstring& aLine, const wchar_t* aMark, State 
 
 State Convert_Index_Name_Value(const std::wstring& aLine, const wchar_t* aMark, State aCurrent, State aNext, std::ofstream& aMain, const char* aType)
 {
-    static const std::wregex sRegex(L"^(\\d+),(\\w+) (\\d+)\r$");
+    static const std::wregex REGEX(L"^(\\d+),(\\w+) (\\d+)\r$");
 
     assert(nullptr != aMark);
     assert(aCurrent != aNext);
@@ -347,7 +347,7 @@ State Convert_Index_Name_Value(const std::wstring& aLine, const wchar_t* aMark, 
 
         lResult = aNext;
     }
-    else if (std::regex_match(aLine, lMatch, sRegex))
+    else if (std::regex_match(aLine, lMatch, REGEX))
     {
         char lIndex[NAME_LENGTH];
         char lName [NAME_LENGTH];
@@ -369,19 +369,33 @@ State Convert_Index_Name_Value(const std::wstring& aLine, const wchar_t* aMark, 
 
 State Convert_CIRCUIT(const std::wstring& aLine, std::wofstream& aCircuits)
 {
-    aCircuits << aLine;
+    static const std::wregex REGEX(L"^(.+)\r$");
 
-    return (PC6_END_CIRCUIT_R == aLine) ? State::FUNCTION : State::CIRCUIT;
+    std::wsmatch lMatch;
+
+    auto lResult = State::CIRCUIT;
+
+    if (std::regex_match(aLine, lMatch, REGEX))
+    {
+        aCircuits << lMatch[1].str() << L"\r\n";
+
+        if (PC6_END_CIRCUIT == lMatch[1].str())
+        {
+            lResult = State::FUNCTION;
+        }
+    }
+
+    return lResult;
 }
 
 State Convert_DEFINE(const std::wstring& aLine, std::ofstream& aMain)
 {
-    static const std::wregex sRegex0(L"^(\\d+),(\\w+),(\\d+),.*\r$");
-    static const std::wregex sRegex1(L"^(\\d+),(\\w+),(\\w+)\r$");
-    static const std::wregex sRegex2(L"^(\\d+),(\\w+),(&h[0-9A-Fa-f]+)\r$");
-    static const std::wregex sRegex3(L"^(\\d+),(\\w+),(&h[0-9A-Fa-f]+),.*\r$");
-    static const std::wregex sRegex4(L"^(\\d+),(\\w+),(DM\\[\\d+\\])\r$");
-    static const std::wregex sRegex5(L"^(\\d+),(\\w+),(DM\\[\\d+\\]),.*\r$");
+    static const std::wregex REGEX_0(L"^(\\d+),(\\w+),(\\d+),.*\r$");
+    static const std::wregex REGEX_1(L"^(\\d+),(\\w+),(\\w+)\r$");
+    static const std::wregex REGEX_2(L"^(\\d+),(\\w+),(&h[0-9A-Fa-f]+)\r$");
+    static const std::wregex REGEX_3(L"^(\\d+),(\\w+),(&h[0-9A-Fa-f]+),.*\r$");
+    static const std::wregex REGEX_4(L"^(\\d+),(\\w+),(DM\\[\\d+\\])\r$");
+    static const std::wregex REGEX_5(L"^(\\d+),(\\w+),(DM\\[\\d+\\]),.*\r$");
 
     static const std::wregex sRegexA(L"^(\\d+),,\r$");
 
@@ -395,12 +409,12 @@ State Convert_DEFINE(const std::wstring& aLine, std::ofstream& aMain)
 
         lResult = State::BREAKPOINT;
     }
-    else if (std::regex_match(aLine, lMatch, sRegex0)
-        ||   std::regex_match(aLine, lMatch, sRegex1)
-        ||   std::regex_match(aLine, lMatch, sRegex2)
-        ||   std::regex_match(aLine, lMatch, sRegex3)
-        ||   std::regex_match(aLine, lMatch, sRegex4)
-        ||   std::regex_match(aLine, lMatch, sRegex5))
+    else if (std::regex_match(aLine, lMatch, REGEX_0)
+        ||   std::regex_match(aLine, lMatch, REGEX_1)
+        ||   std::regex_match(aLine, lMatch, REGEX_2)
+        ||   std::regex_match(aLine, lMatch, REGEX_3)
+        ||   std::regex_match(aLine, lMatch, REGEX_4)
+        ||   std::regex_match(aLine, lMatch, REGEX_5))
     {
         char lIndex[NAME_LENGTH];
         char lName [NAME_LENGTH];
@@ -426,7 +440,7 @@ State Convert_DEFINE(const std::wstring& aLine, std::ofstream& aMain)
 
 State Convert_FUNCTION(const std::wstring& aLine, std::ofstream& aMain)
 {
-    static const std::wregex sRegex(L"^Fn#(\\d+),(\\d+)\r$");
+    static const std::wregex REGEX(L"^Fn#(\\d+),(\\d+)\r$");
 
     std::wsmatch lMatch;
 
@@ -440,7 +454,7 @@ State Convert_FUNCTION(const std::wstring& aLine, std::ofstream& aMain)
     {
         // We simply ignore the begin mark.
     }
-    else if (std::regex_match(aLine, lMatch, sRegex))
+    else if (std::regex_match(aLine, lMatch, REGEX))
     {
         char lIndex[NAME_LENGTH];
 

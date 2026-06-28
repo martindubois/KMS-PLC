@@ -23,9 +23,9 @@ using namespace TRiLOGI;
 // Constants
 // //////////////////////////////////////////////////////////////////////////
 
-static const char* END_OF_LINE = "\n";
+static const wchar_t* END_OF_LINE = L"\r\n";
 
-static const char* TO_COMPILE_PC6 = "PCL_ToCompile.PC6";
+static const char* TO_COMPILE_PC6 = "PLC_ToCompile.PC6";
 
 // Public
 // //////////////////////////////////////////////////////////////////////////
@@ -52,7 +52,7 @@ void Builder::Write()
 
     ConfigStream(lOut);
 
-    lOut << PC6_HEADER << END_OF_LINE;
+    lOut << PC6_HEADER << "\n";
 
     // Write output file
     
@@ -106,21 +106,24 @@ void Builder::Write()
 
     while (getline(lCircuits, lC))
     {
-        lOut << lC;
+        lOut << lC << L"\n";
     }
 
     // Function
     for (const auto& lF : mFunctions)
     {
-        lOut << PC6_BEGIN_FUNCTION << END_OF_LINE;
-        lOut << "Fn#" << lF.second->GetIndex() << "," << lF.second->GetSize() << END_OF_LINE;
-
-        for (auto& lL : lF.second->mLines)
+        if (!lF.second->IsNameEmpty())
         {
-            auto lRet = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, lL.c_str(), -1, lLine, sizeof(lLine) / sizeof(lLine[0]));
-            assert(0 < lRet);
+            lOut << PC6_BEGIN_FUNCTION << END_OF_LINE;
+            lOut << "Fn#" << lF.second->GetIndex() << "," << lF.second->GetSize() << END_OF_LINE;
 
-            lOut << lLine;
+            for (auto& lL : lF.second->mLines)
+            {
+                auto lRet = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, lL.c_str(), -1, lLine, sizeof(lLine) / sizeof(lLine[0]));
+                assert(0 < lRet);
+
+                lOut << lLine << "\n";
+            }
         }
     }
     lOut << PC6_END_FUNCTION << END_OF_LINE;
@@ -128,9 +131,12 @@ void Builder::Write()
     // Function label
     for (const auto& lF : mFunctions)
     {
-        lF.second->GetName(lName, sizeof(lName));
+        if (!lF.second->IsNameEmpty())
+        {
+            lF.second->GetName(lName, sizeof(lName));
 
-        lOut << lF.second->GetIndex() << "," << lName << END_OF_LINE;
+            lOut << lF.second->GetIndex() << "," << lName << END_OF_LINE;
+        }
     }
     lOut << PC6_END_FUNCTION_LABEL << END_OF_LINE;
 
