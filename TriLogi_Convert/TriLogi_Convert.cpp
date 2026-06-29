@@ -19,10 +19,10 @@
 
 // ===== Import/Includes ====================================================
 #include <KMS/Banner.h>
-#include <KMS/Console/Color.h>
 #include <KMS/Exception.h>
 
 // ===== Local ==============================================================
+#include "../Common/Display.h"
 #include "../Common/PLC/PLC.h"
 #include "../Common/TRiLOGI/PC6.h"
 #include "../Common/Version.h"
@@ -110,7 +110,6 @@ static State Convert_RELAY         (const std::wstring& aLine, std::ofstream& aM
 static State Convert_SEQUENCE      (const std::wstring& aLine, std::ofstream& aMain);
 static State Convert_TIMER         (const std::wstring& aLine, std::ofstream& aMain);
 
-static void DisplayError(const char* aMsg);
 static void DisplayUsage();
 
 static void ToASCII(const std::wstring& aIn, char* aOut, unsigned int aOutSize_byte);
@@ -137,9 +136,10 @@ int main(int aCount, const char** aVector)
 
             if (0 != _stricmp("Initial", aVector[2]))
             {
-                DisplayError("Invalid commmand line");
+                Display_Error("Invalid commmand line", aVector[2]);
                 DisplayUsage();
                 lResult = __LINE__;
+                break;
             }
 
             lInitial = true;
@@ -158,7 +158,7 @@ int main(int aCount, const char** aVector)
             break;
 
         default:
-            DisplayError("Invalid commmand line");
+            Display_Error("Invalid commmand line");
             DisplayUsage();
             lResult = __LINE__;
         }
@@ -178,7 +178,7 @@ void Convert(const char* aInName)
     // Open input file
 
     std::wifstream lIn(aInName, std::ios::binary);
-    KMS_EXCEPTION_ASSERT(lIn.is_open(), RESULT_OPEN_FAILED, "Cannot open input file (NOT TESTED)", aInName);
+    KMS_EXCEPTION_ASSERT(lIn.is_open(), RESULT_OPEN_FAILED, "Cannot open input file", aInName);
 
     ConfigStream(lIn);
 
@@ -238,8 +238,8 @@ void Convert_Initial(const char* aInName)
     std::wofstream lCircuits(PLC::CIRCUITS_TXT, std::ios::binary);
     std::ofstream  lMain    (PLC::MAIN_TXT);
 
-    KMS_EXCEPTION_ASSERT(lCircuits.is_open(), RESULT_OPEN_FAILED, "Cannot open output file", PLC::CIRCUITS_TXT);
-    KMS_EXCEPTION_ASSERT(lMain    .is_open(), RESULT_OPEN_FAILED, "Cannot open output file", PLC::MAIN_TXT);
+    KMS_EXCEPTION_ASSERT(lCircuits.is_open(), RESULT_OPEN_FAILED, "Cannot open output file (NOT TESTED)", PLC::CIRCUITS_TXT);
+    KMS_EXCEPTION_ASSERT(lMain    .is_open(), RESULT_OPEN_FAILED, "Cannot open output file (NOT TESTED)", PLC::MAIN_TXT);
 
     ConfigStream(lCircuits);
 
@@ -323,6 +323,8 @@ State Convert_Index_Name(const std::wstring& aLine, const wchar_t* aMark, State 
     }
     else
     {
+        Display_Error("Invalid index or name (NOT TESTED)", aLine.c_str());
+
         KMS_EXCEPTION(RESULT_INVALID_FORMAT, "Invalid format (NOT TESTED)", aType);
     }
 
@@ -361,6 +363,8 @@ State Convert_Index_Name_Value(const std::wstring& aLine, const wchar_t* aMark, 
     }
     else
     {
+        Display_Error("Invalid index, name or value (NOT TESTED)", aLine.c_str());
+
         KMS_EXCEPTION(RESULT_INVALID_FORMAT, "Invalid format (NOT TESTED)", aType);
     }
 
@@ -383,6 +387,10 @@ State Convert_CIRCUIT(const std::wstring& aLine, std::wofstream& aCircuits)
         {
             lResult = State::FUNCTION;
         }
+    }
+    else
+    {
+        Display_Warning("Ignored circuit line", aLine.c_str());
     }
 
     return lResult;
@@ -432,6 +440,8 @@ State Convert_DEFINE(const std::wstring& aLine, std::ofstream& aMain)
     }
     else
     {
+        Display_Error("Invalid define line (NOT TESTED)", aLine.c_str());
+
         KMS_EXCEPTION(RESULT_INVALID_FORMAT, "Invalid DEFINE format (NOT TESTED)", "");
     }
 
@@ -466,6 +476,8 @@ State Convert_FUNCTION(const std::wstring& aLine, std::ofstream& aMain)
     }
     else
     {
+        Display_Error("Invalid function line (NOT TESTED)", aLine.c_str());
+
         KMS_EXCEPTION(RESULT_INVALID_FORMAT, "Invalid FUNCTION format (NOT TESTED)", "");
     }
 
@@ -530,18 +542,6 @@ State Convert_SEQUENCE(const std::wstring& aLine, std::ofstream& aMain)
 State Convert_TIMER(const std::wstring& aLine, std::ofstream& aMain)
 {
     return Convert_Index_Name_Value(aLine, PC6_END_R, State::TIMER, State::SEQUENCE, aMain, "TIMER");
-}
-
-void DisplayError(const char* aMsg)
-{
-    assert(nullptr != aMsg);
-
-    std::cout << Console::Color::RED;
-    {
-        std::cout << aMsg << "\n";
-    }
-    std::cout << Console::Color::WHITE;
-    std::cout << std::endl;
 }
 
 void DisplayUsage()

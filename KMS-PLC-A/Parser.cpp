@@ -5,6 +5,8 @@
 // Product   KMS-PLC
 // File      KMS-PLC-A/Parser.cpp
 
+// TODO  Use STL stream
+
 #include "Component.h"
 
 // ===== C++ ================================================================

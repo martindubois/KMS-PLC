@@ -2,6 +2,7 @@
 
 rem Author    KMS - Martin Dubois, P. Eng.
 rem Copyright (C) 2026 KMS
+rem License   http://www.apache.org/licenses/LICENSE-2.0
 rem Product   KMS-PLC
 rem File      Tests/TriLogi/Test99/Test99.cmd
 

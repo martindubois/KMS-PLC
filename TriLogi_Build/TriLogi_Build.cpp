@@ -9,9 +9,9 @@
 
 // ===== Import/Includes ====================================================
 #include <KMS/Banner.h>
-#include <KMS/Console/Color.h>
 
 // ===== Local ==============================================================
+#include "../Common/Display.h"
 #include "../Common/Version.h"
 
 #include "Builder.h"
@@ -21,7 +21,6 @@ using namespace KMS;
 // Static function declarations
 // //////////////////////////////////////////////////////////////////////////
 
-static void DisplayError(const char* aMsg);
 static void DisplayUsage();
 
 // Entry point
@@ -47,9 +46,10 @@ int main(int aCount, const char** aVector)
             break;
 
         case 0:
-            DisplayError("Invalid commmand line");
+            Display_Error("Invalid commmand line");
             DisplayUsage();
             lResult = __LINE__;
+            break;
 
         default:
             for (int i = 2; i < aCount; i++)
@@ -64,23 +64,11 @@ int main(int aCount, const char** aVector)
     }
     KMS_CATCH_RESULT(lResult);
 
-    return 0;
+    return lResult;
 }
 
 // Static function declarations
 // //////////////////////////////////////////////////////////////////////////
-
-void DisplayError(const char* aMsg)
-{
-    assert(nullptr != aMsg);
-
-    std::cout << Console::Color::RED;
-    {
-        std::cout << aMsg << "\n";
-    }
-    std::cout << Console::Color::WHITE;
-    std::cout << std::endl;
-}
 
 void DisplayUsage()
 {

@@ -11,6 +11,7 @@
 #include <regex>
 
 // ===== Local ==============================================================
+#include "../Common/Display.h"
 #include "../Common/Parser.h"
 #include "../Common/PLC/PLC.h"
 
@@ -74,6 +75,8 @@ namespace PLC
             else if (std::regex_match(lLineStr, lMatch, REGEX_TIMER         )) { Add_TIMER         (lMatch); }
             else
             {
+                Display_Error("Invalid source line (NOT TESTED)", lLine);
+
                 KMS_EXCEPTION(RESULT_INVALID_FORMAT, "Invalid source format (NOT TESTED)", lLine);
             }
         }
@@ -122,15 +125,16 @@ namespace PLC
     void Builder::Add_FUNCTION_LABEL(const std::smatch& aMatch)
     {
         auto lIndex = Convert::ToUInt16(aMatch[1].str().c_str());
+        auto lName  = aMatch[2].str();
 
         auto lIt = mFunctions.find(lIndex);
         if (mFunctions.end() != lIt)
         {
-            lIt->second->SetName(aMatch[2].str());
+            lIt->second->SetName(lName);
         }
         else
         {
-            // TODO  Warning
+            Display_Warning("Label for missing funciton", lName.c_str());
         }
     }
 
