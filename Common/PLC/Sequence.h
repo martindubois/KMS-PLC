@@ -18,9 +18,15 @@ namespace PLC
     
     public:
 
-        Sequence(const std::smatch& aMatch);
+        static const uint16_t INVALID_VALUE = 0xffff;
+
+        Sequence();
 
         uint16_t GetValue() const;
+
+        void SetIndexNameAndValue(const std::smatch& aMatch);
+
+        void SetNameAndValue(const std::smatch& aMatch);
 
     private:
 
@@ -28,15 +34,26 @@ namespace PLC
 
     };
 
-    typedef std::map<unsigned int, Sequence> Sequence_List;
+    typedef std::map<unsigned int, Sequence> Sequence_Map;
 
     // Public
     // //////////////////////////////////////////////////////////////////////
 
-    inline Sequence::Sequence(const std::smatch& aMatch)
-        : Element(aMatch)
-        , mValue(KMS::Convert::ToUInt16(aMatch[3].str().c_str()))
-    {}
+    inline Sequence::Sequence() : mValue(INVALID_VALUE) {}
+
+    inline void Sequence::SetIndexNameAndValue(const std::smatch& aMatch)
+    {
+        SetIndexAndName(aMatch);
+
+        mValue = KMS::Convert::ToUInt16(aMatch[3].str().c_str());
+    }
+
+    inline void Sequence::SetNameAndValue(const std::smatch& aMatch)
+    {
+        SetName(aMatch);
+
+        mValue = KMS::Convert::ToUInt16(aMatch[2].str().c_str());
+    }
 
     inline uint16_t Sequence::GetValue() const { return mValue; }
 

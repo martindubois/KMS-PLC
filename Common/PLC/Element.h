@@ -23,7 +23,9 @@ namespace PLC
 
     public:
 
-        Element(const std::smatch& aMatch);
+        static const uint16_t INVALID_INDEX;
+
+        Element();
 
         uint16_t GetIndex() const;
 
@@ -32,6 +34,12 @@ namespace PLC
         void GetName(wchar_t* aOut, unsigned int aOutSize_byte) const;
 
         bool IsNameEmpty() const;
+
+        void SetIndex(uint16_t aIndex);
+
+        void SetIndexAndName(const std::smatch& aMatch);
+
+        void SetName(const std::smatch& aMatch);
 
         void SetName(const std::string& aName);
 
@@ -42,7 +50,7 @@ namespace PLC
 
     };
 
-    typedef std::map<unsigned int, Element> Element_List;
+    typedef std::map<unsigned int, Element> Element_Map;
 
     // Public
     // //////////////////////////////////////////////////////////////////////
@@ -52,6 +60,8 @@ namespace PLC
     inline const char* Element::GetName() const { return mName.c_str(); }
 
     inline bool Element::IsNameEmpty() const { return mName.empty(); }
+
+    inline void Element::SetName(const std::smatch& aMatch) { mName = aMatch[1].str(); }
 
     inline void Element::SetName(const std::string& aName) { mName = aName; }
 

@@ -18,9 +18,13 @@ namespace PLC
     
     public:
 
-        Define(const std::smatch& aMatch);
+        Define();
 
         void GetValue(wchar_t* aOut, unsigned int aOutSize_byte) const;
+
+        void SetIndexNameAndValue(const std::smatch& aMatch);
+
+        void SetNameAndValue(const std::smatch& aMatch);
 
     private:
 
@@ -28,6 +32,7 @@ namespace PLC
 
     };
 
-    typedef std::map<uint16_t, Define> Define_List;
+    typedef std::list<Define>          Define_List;
+    typedef std::map<uint16_t, Define> Define_Map;
 
 }

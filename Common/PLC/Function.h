@@ -21,7 +21,7 @@ namespace PLC
     
     public:
 
-        Function(const std::smatch& aMatch);
+        Function();
 
         size_t GetSize() const;
 
@@ -31,12 +31,12 @@ namespace PLC
 
     };
 
-    typedef std::map<unsigned int, Function*> Function_List;
+    typedef std::map<unsigned int, Function*> Function_Map;
 
     // Public
     // //////////////////////////////////////////////////////////////////////
 
-    inline Function::Function(const std::smatch& aMatch) : Element(aMatch) {}
+    inline Function::Function() {}
 
     inline size_t Function::GetSize() const
     {

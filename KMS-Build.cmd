@@ -2,7 +2,9 @@
 
 rem This file has been genereted using KMS-Framework
 
+
 rem ===== Verify =====
+
 
 if not exist C:\_VC\KMS-PLC\_DocUser\KMS-PLC.ReadMe.txt (
     echo "ERROR  C:\_VC\KMS-PLC\_DocUser\KMS-PLC.ReadMe.txt  does not exist"
@@ -28,14 +30,20 @@ if not exist "C:\Program Files\Microsoft Visual Studio\2022\Professional\Msbuild
     exit /B 40
 )
 
+
 rem ===== Pre-Build =====
 
+
+
 rem ===== Compile =====
+
 
 "C:\Program Files\Microsoft Visual Studio\2022\Professional\Msbuild\Current\Bin\amd64\MSBuild.exe" Solution.sln /target:rebuild /Property:Configuration=Debug /property:Platform=x64
 "C:\Program Files\Microsoft Visual Studio\2022\Professional\Msbuild\Current\Bin\amd64\MSBuild.exe" Solution.sln /target:rebuild /Property:Configuration=Release /property:Platform=x64
 "C:\Program Files\Microsoft Visual Studio\2022\Professional\Msbuild\Current\Bin\amd64\MSBuild.exe" Solution.sln /target:rebuild /Property:Configuration=Release_Static /property:Platform=x64
+
 rem ===== Test =====
+
 
 if not exist C:\_VC\KMS-PLC\x64\Debug\EBPro_Build_Address.exe (
     echo "ERROR  C:\_VC\KMS-PLC\x64\Debug\EBPro_Build_Address.exe  does not exist"
@@ -181,74 +189,74 @@ if not exist C:\_VC\KMS-PLC\x64\Release_Static\EBPro_Convert_Label.pdb (
     exit /B 280
 )
 
-if not exist C:\_VC\KMS-PLC\x64\Debug\TriLogi_Build.exe (
-    echo "ERROR  C:\_VC\KMS-PLC\x64\Debug\TriLogi_Build.exe  does not exist"
+if not exist C:\_VC\KMS-PLC\x64\Debug\TRiLOGI_Build.exe (
+    echo "ERROR  C:\_VC\KMS-PLC\x64\Debug\TRiLOGI_Build.exe  does not exist"
     pause
     exit /B 290
 )
 
-if not exist C:\_VC\KMS-PLC\x64\Debug\TriLogi_Build.pdb (
-    echo "ERROR  C:\_VC\KMS-PLC\x64\Debug\TriLogi_Build.pdb  does not exist"
+if not exist C:\_VC\KMS-PLC\x64\Debug\TRiLOGI_Build.pdb (
+    echo "ERROR  C:\_VC\KMS-PLC\x64\Debug\TRiLOGI_Build.pdb  does not exist"
     pause
     exit /B 300
 )
 
-if not exist C:\_VC\KMS-PLC\x64\Release\TriLogi_Build.exe (
-    echo "ERROR  C:\_VC\KMS-PLC\x64\Release\TriLogi_Build.exe  does not exist"
+if not exist C:\_VC\KMS-PLC\x64\Release\TRiLOGI_Build.exe (
+    echo "ERROR  C:\_VC\KMS-PLC\x64\Release\TRiLOGI_Build.exe  does not exist"
     pause
     exit /B 310
 )
 
-if not exist C:\_VC\KMS-PLC\x64\Release\TriLogi_Build.pdb (
-    echo "ERROR  C:\_VC\KMS-PLC\x64\Release\TriLogi_Build.pdb  does not exist"
+if not exist C:\_VC\KMS-PLC\x64\Release\TRiLOGI_Build.pdb (
+    echo "ERROR  C:\_VC\KMS-PLC\x64\Release\TRiLOGI_Build.pdb  does not exist"
     pause
     exit /B 320
 )
 
-if not exist C:\_VC\KMS-PLC\x64\Release_Static\TriLogi_Build.exe (
-    echo "ERROR  C:\_VC\KMS-PLC\x64\Release_Static\TriLogi_Build.exe  does not exist"
+if not exist C:\_VC\KMS-PLC\x64\Release_Static\TRiLOGI_Build.exe (
+    echo "ERROR  C:\_VC\KMS-PLC\x64\Release_Static\TRiLOGI_Build.exe  does not exist"
     pause
     exit /B 330
 )
 
-if not exist C:\_VC\KMS-PLC\x64\Release_Static\TriLogi_Build.pdb (
-    echo "ERROR  C:\_VC\KMS-PLC\x64\Release_Static\TriLogi_Build.pdb  does not exist"
+if not exist C:\_VC\KMS-PLC\x64\Release_Static\TRiLOGI_Build.pdb (
+    echo "ERROR  C:\_VC\KMS-PLC\x64\Release_Static\TRiLOGI_Build.pdb  does not exist"
     pause
     exit /B 340
 )
 
-if not exist C:\_VC\KMS-PLC\x64\Debug\TriLogi_Convert.exe (
-    echo "ERROR  C:\_VC\KMS-PLC\x64\Debug\TriLogi_Convert.exe  does not exist"
+if not exist C:\_VC\KMS-PLC\x64\Debug\TRiLOGI_Convert.exe (
+    echo "ERROR  C:\_VC\KMS-PLC\x64\Debug\TRiLOGI_Convert.exe  does not exist"
     pause
     exit /B 350
 )
 
-if not exist C:\_VC\KMS-PLC\x64\Debug\TriLogi_Convert.pdb (
-    echo "ERROR  C:\_VC\KMS-PLC\x64\Debug\TriLogi_Convert.pdb  does not exist"
+if not exist C:\_VC\KMS-PLC\x64\Debug\TRiLOGI_Convert.pdb (
+    echo "ERROR  C:\_VC\KMS-PLC\x64\Debug\TRiLOGI_Convert.pdb  does not exist"
     pause
     exit /B 360
 )
 
-if not exist C:\_VC\KMS-PLC\x64\Release\TriLogi_Convert.exe (
-    echo "ERROR  C:\_VC\KMS-PLC\x64\Release\TriLogi_Convert.exe  does not exist"
+if not exist C:\_VC\KMS-PLC\x64\Release\TRiLOGI_Convert.exe (
+    echo "ERROR  C:\_VC\KMS-PLC\x64\Release\TRiLOGI_Convert.exe  does not exist"
     pause
     exit /B 370
 )
 
-if not exist C:\_VC\KMS-PLC\x64\Release\TriLogi_Convert.pdb (
-    echo "ERROR  C:\_VC\KMS-PLC\x64\Release\TriLogi_Convert.pdb  does not exist"
+if not exist C:\_VC\KMS-PLC\x64\Release\TRiLOGI_Convert.pdb (
+    echo "ERROR  C:\_VC\KMS-PLC\x64\Release\TRiLOGI_Convert.pdb  does not exist"
     pause
     exit /B 380
 )
 
-if not exist C:\_VC\KMS-PLC\x64\Release_Static\TriLogi_Convert.exe (
-    echo "ERROR  C:\_VC\KMS-PLC\x64\Release_Static\TriLogi_Convert.exe  does not exist"
+if not exist C:\_VC\KMS-PLC\x64\Release_Static\TRiLOGI_Convert.exe (
+    echo "ERROR  C:\_VC\KMS-PLC\x64\Release_Static\TRiLOGI_Convert.exe  does not exist"
     pause
     exit /B 390
 )
 
-if not exist C:\_VC\KMS-PLC\x64\Release_Static\TriLogi_Convert.pdb (
-    echo "ERROR  C:\_VC\KMS-PLC\x64\Release_Static\TriLogi_Convert.pdb  does not exist"
+if not exist C:\_VC\KMS-PLC\x64\Release_Static\TRiLOGI_Convert.pdb (
+    echo "ERROR  C:\_VC\KMS-PLC\x64\Release_Static\TRiLOGI_Convert.pdb  does not exist"
     pause
     exit /B 400
 )
@@ -382,12 +390,18 @@ if not exist C:\_VC\KMS-PLC\x64\Release_Static\KMS-PLC-A-Test.exe (
 )
 
 "C:\_VC\KMS-PLC\x64\Release_Static\KMS-PLC-A-Test.exe" Groups+=Auto
+
 rem ===== Package =====
 
+
 "C:\Program Files (x86)\Inno Setup 6\Compil32.exe" /cc Product_x64.iss
+
 rem ===== Sign =====
 
 
+
+
 rem ===== End =====
+
 echo OK
 exit /B 0

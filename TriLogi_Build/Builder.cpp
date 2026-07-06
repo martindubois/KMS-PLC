@@ -3,7 +3,7 @@
 // Copyright (C) 2026 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
-// File      TriLogi_Build/Builder.cpp
+// File      TRiLOGI_Build/Builder.cpp
 
 #include "Component.h"
 
@@ -27,6 +27,15 @@ static const wchar_t* END_OF_LINE = L"\r\n";
 
 static const char* TO_COMPILE_PC6 = "PLC_ToCompile.PC6";
 
+// Static function declarations
+// //////////////////////////////////////////////////////////////////////////
+
+void Write_DEFINE(std::wofstream& aOut, const PLC::Define& aDefine);
+
+void WriteElement(std::wofstream& aOut, const PLC::Element& aElement);
+
+void WriteElements(std::wofstream& aOut, const PLC::Element_Map& aElements);
+
 // Public
 // //////////////////////////////////////////////////////////////////////////
 
@@ -34,10 +43,6 @@ Builder::Builder() {}
 
 void Builder::Write()
 {
-    wchar_t lLine [LINE_LENGTH];
-    wchar_t lName [NAME_LENGTH];
-    wchar_t lValue[NAME_LENGTH];
-
     // Open input file
 
     std::wifstream lCircuits(PLC::CIRCUITS_TXT, std::ios::binary);
@@ -55,51 +60,12 @@ void Builder::Write()
     lOut << PC6_HEADER << "\n";
 
     // Write output file
-    
-    // Input
-    for (const auto& lI : mInputs)
-    {
-        lI.second.GetName(lName, sizeof(lName));
 
-        lOut << lI.second.GetIndex() << "," << lName << END_OF_LINE;
-    }
-    lOut << PC6_END << END_OF_LINE;
-
-    // Output
-    for (const auto& lO : mOutputs)
-    {
-        lO.second.GetName(lName, sizeof(lName));
-
-        lOut << lO.second.GetIndex() << "," << lName << END_OF_LINE;
-    }
-    lOut << PC6_END << END_OF_LINE;
-
-    // Relay
-    for (const auto& lR : mRelays)
-    {
-        lR.second.GetName(lName, sizeof(lName));
-
-        lOut << lR.second.GetIndex() << "," << lName << END_OF_LINE;
-    }
-    lOut << PC6_END << END_OF_LINE;
-
-    // Timer
-    for (const auto& lT : mTimers)
-    {
-        lT.second.GetName(lName, sizeof(lName));
-
-        lOut << lT.second.GetIndex() << "," << lName << " " << lT.second.GetValue() << END_OF_LINE;
-    }
-    lOut << PC6_END << END_OF_LINE;
-
-    // Sequence
-    for (const auto& lS : mSequences)
-    {
-        lS.second.GetName(lName, sizeof(lName));
-
-        lOut << lS.second.GetIndex() << "," << lName << " " << lS.second.GetValue() << END_OF_LINE;
-    }
-    lOut << PC6_END << END_OF_LINE;
+    WriteElements (lOut, mInputs);
+    WriteElements (lOut, mOutputs);
+    WriteElements (lOut, mRelays);
+    Write_TIMER   (lOut);
+    Write_SEQUENCE(lOut);
 
     // Circuit
     std::wstring lC;
@@ -109,49 +75,13 @@ void Builder::Write()
         lOut << lC << L"\n";
     }
 
-    // Function
-    for (const auto& lF : mFunctions)
-    {
-        if (!lF.second->IsNameEmpty())
-        {
-            lOut << PC6_BEGIN_FUNCTION << END_OF_LINE;
-            lOut << "Fn#" << lF.second->GetIndex() << "," << lF.second->GetSize() << END_OF_LINE;
-
-            for (auto& lL : lF.second->mLines)
-            {
-                auto lRet = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, lL.c_str(), -1, lLine, sizeof(lLine) / sizeof(lLine[0]));
-                assert(0 < lRet);
-
-                lOut << lLine << "\n";
-            }
-        }
-    }
-    lOut << PC6_END_FUNCTION << END_OF_LINE;
-
-    // Function label
-    for (const auto& lF : mFunctions)
-    {
-        if (!lF.second->IsNameEmpty())
-        {
-            lF.second->GetName(lName, sizeof(lName));
-
-            lOut << lF.second->GetIndex() << "," << lName << END_OF_LINE;
-        }
-    }
-    lOut << PC6_END_FUNCTION_LABEL << END_OF_LINE;
+    Write_FUNCTION      (lOut);
+    Write_FUNCTION_LABEL(lOut);
 
     // Tag
     lOut << PC6_END_TAG << END_OF_LINE;
 
-    // Define
-    for (const auto& lD : mDefines)
-    {
-        lD.second.GetName (lName , sizeof(lName ));
-        lD.second.GetValue(lValue, sizeof(lValue));
-
-        lOut << lD.second.GetIndex() << "," << lName << "," << lValue << END_OF_LINE;
-    }
-    lOut << PC6_END_DEFINE << END_OF_LINE;
+    Write_DEFINE(lOut);
 
     // Breakpoint
     lOut << PC6_END_BREAKPOINT << END_OF_LINE;
@@ -163,3 +93,168 @@ void Builder::Write()
 // ===== PLC::Builder =======================================================
 
 Builder::~Builder() {}
+
+// Private
+// //////////////////////////////////////////////////////////////////////////
+
+void Builder::Write_DEFINE(std::wofstream& aOut)
+{
+    auto lIt = mDefines_Auto.begin();
+
+    uint16_t lCurrent = 0;
+
+    for (const auto& lD : mDefines)
+    {
+        auto lIndex = lD.second.GetIndex();
+        assert(PLC::Element::INVALID_INDEX != lIndex);
+
+        while ((lCurrent < lIndex) && (mDefines_Auto.end() != lIt))
+        {
+            // An index is available and we have auto define to write
+
+            lIt->SetIndex(lCurrent);
+
+            ::Write_DEFINE(aOut, *lIt);
+
+            lCurrent++;
+            lIt++;
+        }
+
+        ::Write_DEFINE(aOut, lD.second);
+
+        lCurrent = lIndex + 1;
+    }
+
+    while (mDefines_Auto.end() != lIt)
+    {
+        lIt->SetIndex(lCurrent);
+
+        ::Write_DEFINE(aOut, *lIt);
+
+        lCurrent++;
+        lIt++;
+    }
+
+    aOut << PC6_END_DEFINE << END_OF_LINE;
+
+    assert(mDefines_Auto.end() == lIt);
+}
+
+void Builder::Write_FUNCTION(std::wofstream& aOut)
+{
+    wchar_t lLine[LINE_LENGTH];
+
+    for (const auto& lF : mFunctions)
+    {
+        assert(nullptr != lF.second);
+
+        if (!lF.second->IsNameEmpty())
+        {
+            auto lIndex = lF.second->GetIndex();
+            assert(PLC::Function::INVALID_INDEX != lIndex);
+
+            aOut << PC6_BEGIN_FUNCTION << END_OF_LINE;
+            aOut << "Fn#" << lIndex << "," << lF.second->GetSize() << END_OF_LINE;
+
+            for (auto& lL : lF.second->mLines)
+            {
+                auto lRet = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, lL.c_str(), -1, lLine, sizeof(lLine) / sizeof(lLine[0]));
+                assert(0 < lRet);
+
+                aOut << lLine << "\n";
+            }
+        }
+    }
+
+    aOut << PC6_END_FUNCTION << END_OF_LINE;
+}
+
+void Builder::Write_FUNCTION_LABEL(std::wofstream& aOut)
+{
+    for (const auto& lF : mFunctions)
+    {
+        assert(nullptr != lF.second);
+
+        if (!lF.second->IsNameEmpty())
+        {
+            WriteElement(aOut, *lF.second);
+        }
+    }
+
+    aOut << PC6_END_FUNCTION_LABEL << END_OF_LINE;
+}
+
+void Builder::Write_SEQUENCE(std::wofstream& aOut)
+{
+    wchar_t lName[NAME_LENGTH];
+
+    for (const auto& lS : mSequences)
+    {
+        auto lIndex = lS.second.GetIndex();
+        assert(PLC::Sequence::INVALID_INDEX != lIndex);
+
+        lS.second.GetName(lName, sizeof(lName));
+
+        aOut << lIndex << "," << lName << " " << lS.second.GetValue() << END_OF_LINE;
+    }
+
+    aOut << PC6_END << END_OF_LINE;
+}
+
+void Builder::Write_TIMER(std::wofstream& aOut)
+{
+    wchar_t lName[NAME_LENGTH];
+
+    for (const auto& lT : mTimers)
+    {
+        auto lIndex = lT.second.GetIndex();
+        assert(PLC::Timer::INVALID_INDEX != lIndex);
+
+        lT.second.GetName(lName, sizeof(lName));
+
+        aOut << lIndex << "," << lName << " " << lT.second.GetValue() << END_OF_LINE;
+    }
+
+    aOut << PC6_END << END_OF_LINE;
+}
+
+// Static function declarations
+// //////////////////////////////////////////////////////////////////////////
+
+// TODO  Verify we do not reach the maximum number of define
+
+void Write_DEFINE(std::wofstream& aOut, const PLC::Define& aDefine)
+{
+    auto lIndex = aDefine.GetIndex();
+    assert(PLC::Define::INVALID_INDEX != lIndex);
+
+    wchar_t lName [NAME_LENGTH];
+    wchar_t lValue[NAME_LENGTH];
+
+    aDefine.GetName (lName , sizeof(lName ));
+    aDefine.GetValue(lValue, sizeof(lValue));
+
+    aOut << lIndex << "," << lName << "," << lValue << END_OF_LINE;
+}
+
+void WriteElement(std::wofstream& aOut, const PLC::Element& aElement)
+{
+    auto lIndex = aElement.GetIndex();
+    assert(PLC::Element::INVALID_INDEX != lIndex);
+
+    wchar_t lName[NAME_LENGTH];
+
+    aElement.GetName(lName, sizeof(lName));
+
+    aOut << lIndex << "," << lName << END_OF_LINE;
+}
+
+void WriteElements(std::wofstream& aOut, const PLC::Element_Map& aElements)
+{
+    for (const auto& lE : aElements)
+    {
+        WriteElement(aOut, lE.second);
+    }
+
+    aOut << PC6_END << END_OF_LINE;
+}

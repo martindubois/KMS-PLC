@@ -4,9 +4,9 @@ rem Author    KMS - Martin Dubois, P. Eng.
 rem Copyright (C) 2026 KMS
 rem License   http://www.apache.org/licenses/LICENSE-2.0
 rem Product   KMS-PLC
-rem File      Tests/TriLogi/Test99/Test99.cmd
+rem File      Tests/TRiLOGI/Test99/Test99.cmd
 
-echo Executing  Tests/TriLogi/Test99/Test99.cmd  ...
+echo Executing  Tests/TRiLOGI/Test99/Test99.cmd  ...
 
 rem ===== Configuration =====================================================
 
@@ -36,9 +36,11 @@ set SECOND_CIRCUITS_TXT=Second_Circuits.txt
 
 set SECOND_MAIN_TXT=Second_Main.txt
 
-set TRILOGI_BUILD_EXE="%BINARY_FOLDER%\TriLogi_Build.exe"
+set SECOND_TO_COMPILE_PC6=Second_ToCompile.PC6
 
-set TRILOGI_CONVERT_EXE="%BINARY_FOLDER%\TriLogi_Convert.exe"
+set TRILOGI_BUILD_EXE="%BINARY_FOLDER%\TRiLOGI_Build.exe"
+
+set TRILOGI_CONVERT_EXE="%BINARY_FOLDER%\TRiLOGI_Convert.exe"
 
 rem ===== Verification ======================================================
 
@@ -118,7 +120,11 @@ if ERRORLEVEL 1 (
     exit /B 110
 )
 
+echo INSTRUCTION  File must be binary equal
+
 %KDiff3_EXE% %FIRST_CIRCUITS_TXT% %SECOND_CIRCUITS_TXT%
+
+echo INSTRUCTION  File must be equal except for the header line
 
 %KDiff3_EXE% %FIRST_MAIN_TXT% %SECOND_MAIN_TXT%
 

@@ -4,9 +4,9 @@ rem Author    KMS - Martin Dubois, P. Eng.
 rem Copyright (C) 2026 KMS
 rem License   http://www.apache.org/licenses/LICENSE-2.0
 rem Product   KMS-PLC
-rem File      Tests/TriLogi/Test00/Test00.cmd
+rem File      Tests/TRiLOGI/Test00/Test00.cmd
 
-echo Executing  Tests/TriLogi/Test99/Test00.cmd  ...
+echo Executing  Tests/TRiLOGI/Test99/Test00.cmd  ...
 
 rem ===== Configuration =====================================================
 
@@ -16,9 +16,9 @@ rem ===== Initialisation ====================================================
 
 set BINARY_FOLDER=..\..\..\x64\%CONFIG%
 
-set TRILOGI_BUILD_EXE="%BINARY_FOLDER%\TriLogi_Build.exe"
+set TRILOGI_BUILD_EXE="%BINARY_FOLDER%\TRiLOGI_Build.exe"
 
-set TRILOGI_CONVERT_EXE="%BINARY_FOLDER%\TriLogi_Convert.exe"
+set TRILOGI_CONVERT_EXE="%BINARY_FOLDER%\TRiLOGI_Convert.exe"
 
 rem ===== Verification ======================================================
 

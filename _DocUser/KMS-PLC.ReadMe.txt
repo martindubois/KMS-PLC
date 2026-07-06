@@ -7,5 +7,9 @@ File      _DocUser/KMS-PLC.ReadMe.txt
 
 EDIT ON BUILD
 
+2.0.1-dev Windows 2026-07-06
+* TRiLOGI_Build
+* TRILOGI_Convert
+
 2.0.0-dev Windows 2026-03-09
 * EBPro_Convert_Label

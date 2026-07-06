@@ -3,6 +3,8 @@ Author    KMS - Martin Dubois, P. Eng.
 Copyright (C) 2026 KMS
 License   http://www.apache.org/licenses/LICENSE-2.0
 Product   KMS-PLC
-File      TriLogi_Build/_DocUser/KMS-PLC.TriLogi_Build.ReadMe.txt
+File      TRiLOGI_Build/_DocUser/KMS-PLC.TRiLOGI_Build.ReadMe.txt
 
 EDIT ON BUILD
+
+2.0.1-dev Windows 2026-07-06

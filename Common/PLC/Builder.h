@@ -35,17 +35,19 @@ namespace PLC
 
         Builder();
 
-        Define_List   mDefines;
-        Function_List mFunctions;
-        Element_List  mInputs;
-        Element_List  mOutputs;
-        Element_List  mRelays;
-        Sequence_List mSequences;
-        Timer_List    mTimers;
+        Define_Map   mDefines;
+        Define_List  mDefines_Auto;
+        Function_Map mFunctions;
+        Element_Map  mInputs;
+        Element_Map  mOutputs;
+        Element_Map  mRelays;
+        Sequence_Map mSequences;
+        Timer_Map    mTimers;
 
     private:
 
         void Add_DEFINE        (const std::smatch& aMatch);
+        void Add_DEFINE_TAIL   (const std::smatch& aMatch);
         void Add_FUNCTION      (const std::smatch& aMatch, Parser* aParser);
         void Add_FUNCTION_LABEL(const std::smatch& aMatch);
         void Add_INPUT         (const std::smatch& aMatch);

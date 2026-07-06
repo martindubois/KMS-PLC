@@ -3,7 +3,7 @@
 // Copyright (C) 2026 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
-// File      TriLogi_Convert/TriLogi_Convert.cpp
+// File      TRiLOGI_Convert/TRiLOGI_Convert.cpp
 
 #include <KMS/Base.h>
 
@@ -119,7 +119,7 @@ static void ToASCII(const std::wstring& aIn, char* aOut, unsigned int aOutSize_b
 
 int main(int aCount, const char** aVector)
 {
-    KMS_BANNER("KMS-PLC", "TriLogi_Convert");
+    KMS_BANNER("KMS-PLC", "TRiLOGI_Convert");
 
     assert(nullptr != aVector);
 
@@ -244,7 +244,7 @@ void Convert_Initial(const char* aInName)
     ConfigStream(lCircuits);
 
     lMain << END_OF_LINE;
-    lMain << "# Converted by KMS-PLC - TriLogi_Convert.exe from " << aInName << END_OF_LINE;
+    lMain << "# Converted by KMS-PLC - TRiLOGI_Convert.exe from " << aInName << END_OF_LINE;
     lMain << END_OF_LINE;
 
     // Process input file
@@ -546,7 +546,7 @@ State Convert_TIMER(const std::wstring& aLine, std::ofstream& aMain)
 
 void DisplayUsage()
 {
-    std::cout << "Usage: TriLogi_Convert.exe {TriLogi.PC6} [Initial]" << std::endl;
+    std::cout << "Usage: TRiLOGI_Convert.exe {TRiLOGI.PC6} [Initial]" << std::endl;
 }
 
 void ToASCII(const std::wstring& aIn, char* aOut, unsigned int aOutSize_byte)

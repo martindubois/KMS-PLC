@@ -3,7 +3,7 @@
 // Copyright (C) 2026 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
-// File      TriLogi_Build/TriLogi_Build.cpp
+// File      TRiLOGI_Build/TRiLOGI_Build.cpp
 
 #include "Component.h"
 
@@ -28,7 +28,7 @@ static void DisplayUsage();
 
 int main(int aCount, const char** aVector)
 {
-    KMS_BANNER("KMS-PLC", "TriLogi_Build");
+    KMS_BANNER("KMS-PLC", "TRiLOGI_Build");
 
     assert(nullptr != aVector);
 
@@ -52,7 +52,7 @@ int main(int aCount, const char** aVector)
             break;
 
         default:
-            for (int i = 2; i < aCount; i++)
+            for (int i = 1; i < aCount; i++)
             {
                 assert(nullptr != aVector[i]);
 
@@ -72,5 +72,5 @@ int main(int aCount, const char** aVector)
 
 void DisplayUsage()
 {
-    std::cout << "Usage: TriLogi_Build.exe [SourceFiles]" << std::endl;
+    std::cout << "Usage: TRiLOGI_Build.exe [SourceFiles]" << std::endl;
 }

@@ -3,7 +3,7 @@
 // Copyright (C) 2026 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
-// File      TriLogi_Build/Builder.h
+// File      TRiLOGI_Build/Builder.h
 
 #pragma once
 
@@ -21,5 +21,13 @@ public:
 
     // ===== PLC::Builder ===================================================
     virtual ~Builder();
+
+private:
+
+    void Write_DEFINE        (std::wofstream& aOut);
+    void Write_FUNCTION      (std::wofstream& aOut);
+    void Write_FUNCTION_LABEL(std::wofstream& aOut);
+    void Write_SEQUENCE      (std::wofstream& aOut);
+    void Write_TIMER         (std::wofstream& aOut);
 
 };
