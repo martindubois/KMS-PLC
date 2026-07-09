@@ -5,24 +5,15 @@
 // Product   KMS-PLC
 // File      EBPro_Build_Address/EBPro_Build_Address.cpp
 
-#include <KMS/Base.h>
+#include "Component.h"
 
 // ===== Import/Includes ====================================================
 #include <KMS/Banner.h>
-#include <KMS/Exception.h>
 
 // ===== Local ==============================================================
 #include "../Common/Version.h"
 
-// Configurations
-// //////////////////////////////////////////////////////////////////////////
-
-#define EBPRO_ADDRESSES_TO_IMPORT_CSV "EBPro_Addresses_ToImport.csv"
-
-// Static function declarations
-// //////////////////////////////////////////////////////////////////////////
-
-static void DisplayUsage();
+#include "Builder_Address.h"
 
 // Entry point
 // //////////////////////////////////////////////////////////////////////////
@@ -37,16 +28,13 @@ int main(int aCount, const char** aVector)
 
     try
     {
+        Builder_Address lBuilder;
+
+        lBuilder.AddSources(aCount - 1, aVector + 1);
+
+        lBuilder.Build();
     }
     KMS_CATCH_RESULT(lResult);
 
     return 0;
-}
-
-// Static function declarations
-// //////////////////////////////////////////////////////////////////////////
-
-static void DisplayUsage()
-{
-    std::cout << "Usage: EBPro_Build_Address.exe [SourceFiles]" << std::endl;
 }

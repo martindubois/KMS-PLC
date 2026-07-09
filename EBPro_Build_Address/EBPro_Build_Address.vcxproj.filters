@@ -18,6 +18,9 @@
     <ClCompile Include="EBPro_Build_Address.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Builder_Address.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\Common\Version.rc">
