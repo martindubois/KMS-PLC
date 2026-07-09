@@ -8,7 +8,6 @@
 #include "Component.h"
 
 // ===== Local ==============================================================
-#include "../Common/HMI/Config.h"
 #include "../Common/HMI/HMI.h"
 #include "../Common/HMI/Label.h"
 #include "../Common/Parser.h"
@@ -25,33 +24,40 @@ namespace HMI
 
     void Builder_Label::Build()
     {
-        Config lConfig;
+        unsigned int lLabelCount = 0;
 
-        auto lSourceCount = lConfig.Label_GetSourceCount();
-
-        auto lLabelCount = CountLabels(LABELS_TXT);
-
-        for (unsigned int i = 0; i < lSourceCount; i++)
+        for (const auto& lSource : mSources)
         {
-            lLabelCount += CountLabels(lConfig.Label_GetSource(i));
+            lLabelCount += CountLabels(lSource.c_str());
         }
 
         ProcessLabelCount(lLabelCount);
 
-        ProcessLabels(LABELS_TXT);
-
-        for (unsigned int i = 0; i < lSourceCount; i++)
-        {
-            ProcessLabels(lConfig.Label_GetSource(i));
-        }
+        Builder::Build();
     }
 
     // Protected
     // //////////////////////////////////////////////////////////////////////
 
-    Builder_Label::Builder_Label() {}
+    Builder_Label::Builder_Label() { AddSource(LABELS_TXT); }
+
+    // ===== Builder ========================================================
 
     Builder_Label::~Builder_Label() {}
+
+    void Builder_Label::ReadSource(const char* aSource)
+    {
+        Parser lParser(aSource);
+
+        Label lLabel;
+
+        while (lLabel.Read(&lParser))
+        {
+            ProcessLabel(lLabel);
+
+            lLabel.Clear();
+        }
+    }
 
     // Private
     // //////////////////////////////////////////////////////////////////////
@@ -73,22 +79,6 @@ namespace HMI
         }
 
         return lResult;
-    }
-
-    void Builder_Label::ProcessLabels(const char* aSource)
-    {
-        std::cout << "\n\n" << aSource << std::endl;
-
-        Parser lParser(aSource);
-
-        Label lLabel;
-
-        while (lLabel.Read(&lParser))
-        {
-            ProcessLabel(lLabel);
-
-            lLabel.Clear();
-        }
     }
 
 }

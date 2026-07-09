@@ -35,7 +35,12 @@ namespace PLC
         }
     }
 
-    void Builder::Build() { ReadSource(MAIN_TXT); }
+    void Builder::Build()
+    {
+        ::Builder::Build();
+
+        Write();
+    }
 
     void Builder::ReadSource(const char* aSource)
     {
@@ -104,7 +109,7 @@ namespace PLC
     // Protected
     // //////////////////////////////////////////////////////////////////////
 
-    Builder::Builder() {}
+    Builder::Builder() { AddSource(MAIN_TXT); }
 
     // Private
     // //////////////////////////////////////////////////////////////////////

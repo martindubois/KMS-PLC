@@ -13,8 +13,8 @@ namespace HMI
     // Configuration
     // //////////////////////////////////////////////////////////////////////
 
-    extern const char* ADDRESSES_TXT;
+    static const char* ADDRESSES_TXT = "HMI_Addresses.txt";
     
-    extern const char* LABELS_TXT;
+    static const char* LABELS_TXT = "HMI_Labels.txt";;
 
 }

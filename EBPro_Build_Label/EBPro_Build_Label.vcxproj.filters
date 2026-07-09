@@ -18,7 +18,7 @@
     <ClCompile Include="EBPro_Build_Label.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Builder.cpp">
+    <ClCompile Include="Builder_Label.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

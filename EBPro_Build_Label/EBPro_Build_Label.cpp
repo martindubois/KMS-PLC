@@ -9,19 +9,13 @@
 
 // ===== Import/Includes ====================================================
 #include <KMS/Banner.h>
-#include <KMS/Console/Color.h>
 
 // ===== Local ==============================================================
 #include "../Common/Version.h"
 
-#include "Builder.h"
+#include "Builder_Label.h"
 
 using namespace KMS;
-
-// Static function declarations
-// //////////////////////////////////////////////////////////////////////////
-
-static void DisplayUsage();
 
 // Entry point
 // //////////////////////////////////////////////////////////////////////////
@@ -36,32 +30,13 @@ int main(int aCount, const char** aVector)
 
     try
     {
-        Builder lBuilder;
+        Builder_Label lBuilder;
 
-        switch (aCount)
-        {
-        case 1:
-            lBuilder.Build();
-            break;
+        lBuilder.AddSources(aCount - 1, aVector + 1);
 
-        default:
-            std::cout << Console::Color::RED;
-            std::cout << "Invalid commmand line\n";
-            std::cout << Console::Color::WHITE;
-            std::cout << std::endl;
-            DisplayUsage();
-            lResult = __LINE__;
-        }
+        lBuilder.Build();
     }
     KMS_CATCH_RESULT(lResult);
 
     return 0;
-}
-
-// Static function declarations
-// //////////////////////////////////////////////////////////////////////////
-
-static void DisplayUsage()
-{
-    std::cout << "Usage: EBPro_Build_Label.exe" << std::endl;
 }

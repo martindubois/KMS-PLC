@@ -7,19 +7,21 @@
 
 #pragma once
 
+// ===== Local ==============================================================
+#include "../Common/Builder.h"
+
 namespace HMI
 {
 
     class Label;
 
-    class Builder_Label
+    class Builder_Label : public Builder
     {
 
     public:
 
-        virtual ~Builder_Label();
-
-        void Build();
+        // ===== Builder ====================================================
+        virtual void Build() override;
 
     protected:
 
@@ -29,11 +31,13 @@ namespace HMI
 
         virtual void ProcessLabelCount(unsigned int aCount) = 0;
 
+        // ===== Builder ====================================================
+        virtual ~Builder_Label();
+        virtual void ReadSource(const char* aSource) override;
+
     private:
 
         unsigned int CountLabels(const char* aSource);
-
-        void ProcessLabels(const char* aSource);
 
     };
 

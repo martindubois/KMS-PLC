@@ -3,24 +3,27 @@
 // Copyright (C) 2026 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
-// File      TRiLOGI_Build/Builder.h
+// File      TRiLOGI_Build/TRiLOG_Builder.h
 
 #pragma once
 
 // ===== Local ==============================================================
 #include "../Common/PLC/Builder.h"
 
-class Builder final : public PLC::Builder
+class TRiLOGI_Builder final : public PLC::Builder
 {
 
 public:
 
-    Builder();
+    TRiLOGI_Builder();
 
-    void Write();
+    // ===== Builder ========================================================
+    virtual ~TRiLOGI_Builder();
+
+protected:
 
     // ===== PLC::Builder ===================================================
-    virtual ~Builder();
+    virtual void Write() override;
 
 private:
 

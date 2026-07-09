@@ -3,14 +3,14 @@
 // Copyright (C) 2026 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
-// File      EBPro_Build_Label/Builder.cpp
+// File      EBPro_Build_Label/Builder_Label.cpp
 
 #include "Component.h"
 
 // ===== Local ==============================================================
 #include "../Common/HMI/Label.h"
 
-#include "Builder.h"
+#include "Builder_Label.h"
 
 using namespace KMS;
 
@@ -29,11 +29,11 @@ static void Write_String(FILE* aFile, const std::wstring& aIn);
 // Public
 // //////////////////////////////////////////////////////////////////////////
 
-Builder::Builder() : mIndex(0), mOut(nullptr) {}
+Builder_Label::Builder_Label() : mIndex(0), mOut(nullptr) {}
 
-// ===== HMI::Builder_Label =================================================
+// ===== Builder ============================================================
 
-Builder::~Builder()
+Builder_Label::~Builder_Label()
 {
     std::cout << "\n";
     std::cout << std::endl;
@@ -51,7 +51,7 @@ Builder::~Builder()
 
 // ===== HMI::Builder_Label =================================================
 
-void Builder::ProcessLabel(const HMI::Label& aLabel)
+void Builder_Label::ProcessLabel(const HMI::Label& aLabel)
 {
     assert(nullptr != mOut);
 
@@ -96,7 +96,7 @@ void Builder::ProcessLabel(const HMI::Label& aLabel)
     mIndex++;
 }
 
-void Builder::ProcessLabelCount(unsigned int aCount)
+void Builder_Label::ProcessLabelCount(unsigned int aCount)
 {
     static const uint8_t HEADER[] =
     {

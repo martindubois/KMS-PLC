@@ -11,6 +11,7 @@
 #include <regex>
 
 // ===== Common =============================================================
+#include "../Common/Builder.h"
 #include "../Common/Parser.h"
 #include "../Common/PLC/Define.h"
 #include "../Common/PLC/Function.h"
@@ -20,20 +21,23 @@
 namespace PLC
 {
 
-    class Builder
+    class Builder : public ::Builder
     {
 
     public:
 
+        // ===== ::Builder ==================================================
         virtual ~Builder();
-
-        void Build();
-
-        void ReadSource(const char* aSource);
+        virtual void Build() override;
         
     protected:
 
         Builder();
+
+        virtual void Write() = 0;
+
+        // ===== ::Builder ==================================================
+        virtual void ReadSource(const char* aSource) override;
 
         Define_Map   mDefines;
         Define_List  mDefines_Auto;

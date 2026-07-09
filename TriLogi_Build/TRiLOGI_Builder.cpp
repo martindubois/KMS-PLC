@@ -14,7 +14,7 @@
 #include "../Common/PLC/PLC.h"
 #include "../Common/TRiLOGI/PC6.h"
 
-#include "Builder.h"
+#include "TRiLOGI_Builder.h"
 
 using namespace KMS;
 
@@ -39,9 +39,18 @@ void WriteElements(std::wofstream& aOut, const PLC::Element_Map& aElements);
 // Public
 // //////////////////////////////////////////////////////////////////////////
 
-Builder::Builder() {}
+TRiLOGI_Builder::TRiLOGI_Builder() {}
 
-void Builder::Write()
+// ===== Builder ============================================================
+
+TRiLOGI_Builder::~TRiLOGI_Builder() {}
+
+// Protected
+// //////////////////////////////////////////////////////////////////////////
+
+// ===== PLC::Builder =======================================================
+
+void TRiLOGI_Builder::Write()
 {
     // Open input file
 
@@ -61,10 +70,10 @@ void Builder::Write()
 
     // Write output file
 
-    WriteElements (lOut, mInputs);
-    WriteElements (lOut, mOutputs);
-    WriteElements (lOut, mRelays);
-    Write_TIMER   (lOut);
+    WriteElements(lOut, mInputs);
+    WriteElements(lOut, mOutputs);
+    WriteElements(lOut, mRelays);
+    Write_TIMER(lOut);
     Write_SEQUENCE(lOut);
 
     // Circuit
@@ -75,7 +84,7 @@ void Builder::Write()
         lOut << lC << L"\n";
     }
 
-    Write_FUNCTION      (lOut);
+    Write_FUNCTION(lOut);
     Write_FUNCTION_LABEL(lOut);
 
     // Tag
@@ -90,14 +99,10 @@ void Builder::Write()
     lOut << PC6_END_LAST_IP_ADDR << END_OF_LINE;
 }
 
-// ===== PLC::Builder =======================================================
-
-Builder::~Builder() {}
-
 // Private
 // //////////////////////////////////////////////////////////////////////////
 
-void Builder::Write_DEFINE(std::wofstream& aOut)
+void TRiLOGI_Builder::Write_DEFINE(std::wofstream& aOut)
 {
     auto lIt = mDefines_Auto.begin();
 
@@ -140,7 +145,7 @@ void Builder::Write_DEFINE(std::wofstream& aOut)
     assert(mDefines_Auto.end() == lIt);
 }
 
-void Builder::Write_FUNCTION(std::wofstream& aOut)
+void TRiLOGI_Builder::Write_FUNCTION(std::wofstream& aOut)
 {
     wchar_t lLine[LINE_LENGTH];
 
@@ -169,7 +174,7 @@ void Builder::Write_FUNCTION(std::wofstream& aOut)
     aOut << PC6_END_FUNCTION << END_OF_LINE;
 }
 
-void Builder::Write_FUNCTION_LABEL(std::wofstream& aOut)
+void TRiLOGI_Builder::Write_FUNCTION_LABEL(std::wofstream& aOut)
 {
     for (const auto& lF : mFunctions)
     {
@@ -184,7 +189,7 @@ void Builder::Write_FUNCTION_LABEL(std::wofstream& aOut)
     aOut << PC6_END_FUNCTION_LABEL << END_OF_LINE;
 }
 
-void Builder::Write_SEQUENCE(std::wofstream& aOut)
+void TRiLOGI_Builder::Write_SEQUENCE(std::wofstream& aOut)
 {
     wchar_t lName[NAME_LENGTH];
 
@@ -201,7 +206,7 @@ void Builder::Write_SEQUENCE(std::wofstream& aOut)
     aOut << PC6_END << END_OF_LINE;
 }
 
-void Builder::Write_TIMER(std::wofstream& aOut)
+void TRiLOGI_Builder::Write_TIMER(std::wofstream& aOut)
 {
     wchar_t lName[NAME_LENGTH];
 

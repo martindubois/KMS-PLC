@@ -197,7 +197,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Builder.cpp" />
+    <ClCompile Include="Builder_Label.cpp" />
     <ClCompile Include="EBPro_Build_Label.cpp" />
   </ItemGroup>
   <ItemGroup>

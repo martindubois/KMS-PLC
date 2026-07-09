@@ -210,8 +210,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Builder_Label.cpp" />
-    <ClCompile Include="Config.cpp" />
-    <ClCompile Include="HMI.cpp" />
     <ClCompile Include="Label.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -3,7 +3,7 @@
 // Copyright (C) 2026 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
-// File      EBPro_Build_Label/Builder.h
+// File      EBPro_Build_Label/Builder_Label.h
 
 #pragma once
 
@@ -11,15 +11,15 @@
 #include "../Common/EBPro/Config.h"
 #include "../Common/HMI/Builder_Label.h"
 
-class Builder final : public HMI::Builder_Label
+class Builder_Label final : public HMI::Builder_Label
 {
 
 public:
 
-    Builder();
+    Builder_Label();
 
-    // ===== HMI::Builder_Label =============================================
-    virtual ~Builder();
+    // ===== Builder ========================================================
+    virtual ~Builder_Label();
 
 protected:
 

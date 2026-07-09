@@ -13,6 +13,8 @@
 #include <regex>
 
 // ===== Local ==============================================================
+#include "../Common/Display.h"
+
 #include "../Common/Parser.h"
 
 using namespace KMS;
@@ -99,7 +101,7 @@ bool Parser::GetNextLine_Code(char* aOut, unsigned int aOutSize_byte)
             }
             else
             {
-                printf("Ignored line : %s\r\n", lLine);
+                Display_Warning("Ignore line", lLine);
             }
         }
     }

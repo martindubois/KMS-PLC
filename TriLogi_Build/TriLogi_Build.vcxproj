@@ -197,7 +197,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Builder.cpp" />
+    <ClCompile Include="TRiLOGI_Builder.cpp" />
     <ClCompile Include="TriLogi_Build.cpp" />
   </ItemGroup>
   <ItemGroup>

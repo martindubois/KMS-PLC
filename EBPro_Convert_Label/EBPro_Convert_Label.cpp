@@ -12,10 +12,10 @@
 
 // ===== Import/Includes ====================================================
 #include <KMS/Banner.h>
-#include <KMS/Console/Color.h>
 #include <KMS/Exception.h>
 
 // ===== Local ==============================================================
+#include "../Common/Display.h"
 #include "../Common/EBPro/Config.h"
 #include "../Common/HMI/HMI.h"
 #include "../Common/HMI/Label.h"
@@ -81,10 +81,7 @@ int main(int aCount, const char** aVector)
             break;
 
         default:
-            std::cout << Console::Color::RED;
-            std::cout << "Invalid commmand line\n";
-            std::cout << Console::Color::WHITE;
-            std::cout << std::endl;
+            Display_Error("Invalid command line");
             DisplayUsage();
             lResult = __LINE__;
         }

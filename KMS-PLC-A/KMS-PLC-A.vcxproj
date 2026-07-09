@@ -29,6 +29,7 @@
   <ItemGroup>
     <ClCompile Include="Address.cpp" />
     <ClCompile Include="AddressList.cpp" />
+    <ClCompile Include="Builder.cpp" />
     <ClCompile Include="Console.cpp" />
     <ClCompile Include="Convert.cpp" />
     <ClCompile Include="Display.cpp" />
