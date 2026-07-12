@@ -9,6 +9,7 @@
 
 // ===== C++ ================================================================
 #include <codecvt>
+#include <regex>
 
 // ===== Local ==============================================================
 #include "../Common/Parser.h"
@@ -182,7 +183,7 @@ namespace HMI
 
     void Label::Write(std::ostream& aOut) const
     {
-        aOut << "LABEL " << mName << "\n";
+        aOut << "LABEL " << mName << "\r\n";
 
         for (auto lState : mStates)
         {
@@ -191,7 +192,7 @@ namespace HMI
             lState->Write(aOut);
         }
 
-        aOut << "END\n";
+        aOut << "END\r\n";
     }
 
     // Private
@@ -249,38 +250,43 @@ namespace HMI
     {
         assert(nullptr != aIn);
 
-        char lEscaped [LINE_LENGTH];
-        char lLanguage[LINE_LENGTH];
-        char lLine    [LINE_LENGTH];
-        char lString  [LINE_LENGTH];
+        char lLine  [LINE_LENGTH];
+        char lString[LINE_LENGTH];
+
+        std::smatch lMatch;
 
         while (aIn->GetNextLine(lLine, sizeof(lLine)))
         {
+            static const std::regex REGEX("^([a-z]{2}) (.+)$");
+            static const std::regex REGEX_EMPTY("^([a-z]{2})\\s{0,1}$");
+
             if (0 == strncmp("END", lLine, 3))
             {
                 break;
             }
 
-            if (2 == sscanf_s(lLine, "%[a-z] %[^\r\n]", lLanguage SizeInfo(lLanguage), lEscaped SizeInfo(lEscaped)))
-            {
-                Unescape(lEscaped, lString, sizeof(lString));
+            std::string lLineStr(lLine);
 
-                SetString(lLanguage, lString);
-            }
-            else if (1 == sscanf_s(lLine, "%[a-z]", lLanguage SizeInfo(lLanguage)))
+            if (std::regex_match(lLineStr, lMatch, REGEX_EMPTY))
             {
-                SetString(lLanguage, "");
+                strcpy_s(lString, "");
+            }
+            else if (std::regex_match(lLineStr, lMatch, REGEX))
+            {
+                Unescape(lMatch[2].str().c_str(), lString, sizeof(lString));
             }
             else
             {
                 KMS_EXCEPTION(RESULT_INVALID_FORMAT, "Invalid input line", lLine);
             }
+
+            SetString(lMatch[1].str().c_str(), lString);
         }
     }
 
     void Label_State::Write(std::ostream& aOut) const
     {
-        aOut << "    STATE\n";
+        aOut << "    STATE\r\n";
 
         for (auto& lPair : mStrings)
         {
@@ -288,10 +294,10 @@ namespace HMI
 
             Escape(lPair.second.c_str(), lString, sizeof(lString));
 
-            aOut << "        " << lPair.first << "  " << lString << "\n";
+            aOut << "        " << lPair.first << " " << lString << "\r\n";
         }
 
-        aOut << "    END\n";
+        aOut << "    END\r\n";
     }
 
 }
