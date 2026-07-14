@@ -6,3 +6,5 @@ Product   KMS-PLC
 File      EBPro_Build_Address/_DocUser/KMS-PLC.EBPro_Build_Address.ReadMe.txt
 
 EDIT ON BUILD
+
+2.0.2-dev Windows 2026-07-14

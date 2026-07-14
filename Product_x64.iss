@@ -10,10 +10,10 @@ AppName = KMS-PLC
 AppPublisher = KMS
 AppPublisherURL = https://www.kms-quebec.com
 AppSupportURL = https://www.kms-quebec.com
-AppVersion = 2.0.1-dev
+AppVersion = 2.0.2-dev
 ArchitecturesInstallIn64BitMode = x64compatible
 DefaultDirName = {commonpf}\KMS-PLC
-OutputBaseFilename = KMS-PLC_2.0.1-dev_x64
+OutputBaseFilename = KMS-PLC_2.0.2-dev_x64
 OutputDir = Installer
 
 [Files]

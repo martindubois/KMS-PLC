@@ -369,24 +369,60 @@ if not exist C:\_VC\KMS-PLC\x64\Release_Static\KMS-PLC-A.pdb (
     exit /B 580
 )
 
+if not exist C:\_VC\KMS-PLC\x64\Debug\PLC.lib (
+    echo "ERROR  C:\_VC\KMS-PLC\x64\Debug\PLC.lib  does not exist"
+    pause
+    exit /B 590
+)
+
+if not exist C:\_VC\KMS-PLC\x64\Debug\PLC.pdb (
+    echo "ERROR  C:\_VC\KMS-PLC\x64\Debug\PLC.pdb  does not exist"
+    pause
+    exit /B 600
+)
+
+if not exist C:\_VC\KMS-PLC\x64\Release\PLC.lib (
+    echo "ERROR  C:\_VC\KMS-PLC\x64\Release\PLC.lib  does not exist"
+    pause
+    exit /B 610
+)
+
+if not exist C:\_VC\KMS-PLC\x64\Release\PLC.pdb (
+    echo "ERROR  C:\_VC\KMS-PLC\x64\Release\PLC.pdb  does not exist"
+    pause
+    exit /B 620
+)
+
+if not exist C:\_VC\KMS-PLC\x64\Release_Static\PLC.lib (
+    echo "ERROR  C:\_VC\KMS-PLC\x64\Release_Static\PLC.lib  does not exist"
+    pause
+    exit /B 630
+)
+
+if not exist C:\_VC\KMS-PLC\x64\Release_Static\PLC.pdb (
+    echo "ERROR  C:\_VC\KMS-PLC\x64\Release_Static\PLC.pdb  does not exist"
+    pause
+    exit /B 640
+)
+
 if not exist C:\_VC\KMS-PLC\x64\Debug\KMS-PLC-A-Test.exe (
     echo "ERROR  C:\_VC\KMS-PLC\x64\Debug\KMS-PLC-A-Test.exe  does not exist"
     pause
-    exit /B 590
+    exit /B 650
 )
 
 "C:\_VC\KMS-PLC\x64\Debug\KMS-PLC-A-Test.exe" Groups+=Auto
 if not exist C:\_VC\KMS-PLC\x64\Release\KMS-PLC-A-Test.exe (
     echo "ERROR  C:\_VC\KMS-PLC\x64\Release\KMS-PLC-A-Test.exe  does not exist"
     pause
-    exit /B 600
+    exit /B 660
 )
 
 "C:\_VC\KMS-PLC\x64\Release\KMS-PLC-A-Test.exe" Groups+=Auto
 if not exist C:\_VC\KMS-PLC\x64\Release_Static\KMS-PLC-A-Test.exe (
     echo "ERROR  C:\_VC\KMS-PLC\x64\Release_Static\KMS-PLC-A-Test.exe  does not exist"
     pause
-    exit /B 610
+    exit /B 670
 )
 
 "C:\_VC\KMS-PLC\x64\Release_Static\KMS-PLC-A-Test.exe" Groups+=Auto

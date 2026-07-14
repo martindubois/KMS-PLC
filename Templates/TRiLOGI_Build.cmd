@@ -26,12 +26,6 @@ set TRILOGI_START_AND_CONVERT_CMD="%KMS_PLC_FOLDER%\Scripts\TRiLOGI_StartAndConv
 
 rem ===== Verification ======================================================
 
-if not exist %TRILOGI_BUILD_EXE% (
-    echo FATAL ERROR  %TRILOGI_BUILD_EXE%  does not exist
-    pause
-    exit /B 20
-)
-
 if not exist %TRILOGI_START_AND_CONVERT_CMD% (
     echo FATAL ERROR  %TRILOGI_START_AND_CONVERT_CMD%  does not exist
     pause
