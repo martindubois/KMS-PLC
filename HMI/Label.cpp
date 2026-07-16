@@ -13,6 +13,7 @@
 
 // ===== Local ==============================================================
 #include "../Common/Parser.h"
+#include "../Common/Text.h"
 
 #include "../Common/HMI/Label.h"
 
@@ -183,7 +184,7 @@ namespace HMI
 
     void Label::Write(std::ostream& aOut) const
     {
-        aOut << "LABEL " << mName << "\r\n";
+        aOut << "LABEL " << mName << Text_EOL;
 
         for (auto lState : mStates)
         {
@@ -294,7 +295,7 @@ namespace HMI
 
             Escape(lPair.second.c_str(), lString, sizeof(lString));
 
-            aOut << "        " << lPair.first << " " << lString << "\r\n";
+            aOut << "        " << lPair.first << " " << lString << Text_EOL;
         }
 
         aOut << "    END\r\n";

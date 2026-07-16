@@ -25,6 +25,7 @@
 #include "../Common/Display.h"
 #include "../Common/PLC/PLC.h"
 #include "../Common/TRiLOGI/PC6.h"
+#include "../Common/Text.h"
 #include "../Common/Version.h"
 
 using namespace KMS;
@@ -80,11 +81,6 @@ enum class State
     IP_ADDR,
     END,
 };
-
-// Constants
-// //////////////////////////////////////////////////////////////////////////
-
-static const char* END_OF_LINE = "\n";
 
 // Static function declarations
 // //////////////////////////////////////////////////////////////////////////
@@ -236,16 +232,16 @@ void Convert_Initial(const char* aInName)
     // Open output files
 
     std::wofstream lCircuits(PLC::CIRCUITS_TXT, std::ios::binary);
-    std::ofstream  lMain    (PLC::MAIN_TXT);
+    std::ofstream  lMain    (PLC::MAIN_TXT    , std::ios::binary);
 
     KMS_EXCEPTION_ASSERT(lCircuits.is_open(), RESULT_OPEN_FAILED, "Cannot open output file (NOT TESTED)", PLC::CIRCUITS_TXT);
     KMS_EXCEPTION_ASSERT(lMain    .is_open(), RESULT_OPEN_FAILED, "Cannot open output file (NOT TESTED)", PLC::MAIN_TXT);
 
     ConfigStream(lCircuits);
 
-    lMain << END_OF_LINE;
-    lMain << "# Converted by KMS-PLC - TRiLOGI_Convert.exe from " << aInName << END_OF_LINE;
-    lMain << END_OF_LINE;
+    lMain << Text_EOL;
+    lMain << "# Converted by KMS-PLC - TRiLOGI_Convert.exe from " << aInName << Text_EOL;
+    lMain << Text_EOL;
 
     // Process input file
 
@@ -307,7 +303,7 @@ State Convert_Index_Name(const std::wstring& aLine, const wchar_t* aMark, State 
 
     if (aMark == aLine)
     {
-        aMain << END_OF_LINE;
+        aMain << Text_EOL;
 
         lResult = aNext;
     }
@@ -319,7 +315,7 @@ State Convert_Index_Name(const std::wstring& aLine, const wchar_t* aMark, State 
         ToASCII(lMatch[1].str(), lIndex, sizeof(lIndex));
         ToASCII(lMatch[2].str(), lName , sizeof(lName ));
 
-        aMain << aType << " " << lIndex << " " << lName << END_OF_LINE;
+        aMain << aType << " " << lIndex << " " << lName << Text_EOL;
     }
     else
     {
@@ -345,7 +341,7 @@ State Convert_Index_Name_Value(const std::wstring& aLine, const wchar_t* aMark, 
 
     if (aMark == aLine)
     {
-        aMain << END_OF_LINE;
+        aMain << Text_EOL;
 
         lResult = aNext;
     }
@@ -359,7 +355,7 @@ State Convert_Index_Name_Value(const std::wstring& aLine, const wchar_t* aMark, 
         ToASCII(lMatch[2].str(), lName , sizeof(lName ));
         ToASCII(lMatch[3].str(), lValue, sizeof(lValue));
 
-        aMain << aType << " " << lIndex << " " << lName << " " << lValue << END_OF_LINE;
+        aMain << aType << " " << lIndex << " " << lName << " " << lValue << Text_EOL;
     }
     else
     {
@@ -413,7 +409,7 @@ State Convert_DEFINE(const std::wstring& aLine, std::ofstream& aMain)
 
     if (PC6_END_DEFINE_R == aLine)
     {
-        aMain << END_OF_LINE;
+        aMain << Text_EOL;
 
         lResult = State::BREAKPOINT;
     }
@@ -432,7 +428,7 @@ State Convert_DEFINE(const std::wstring& aLine, std::ofstream& aMain)
         ToASCII(lMatch[2].str(), lName , sizeof(lName ));
         ToASCII(lMatch[3].str(), lValue, sizeof(lValue));
 
-        aMain << "DEFINE " << lIndex << " " << lName << " " << lValue << END_OF_LINE;
+        aMain << "DEFINE " << lIndex << " " << lName << " " << lValue << Text_EOL;
     }
     else if (std::regex_match(aLine, lMatch, sRegexA))
     {
@@ -470,7 +466,7 @@ State Convert_FUNCTION(const std::wstring& aLine, std::ofstream& aMain)
 
         ToASCII(lMatch[1].str(), lIndex, sizeof(lIndex));
 
-        aMain << "FUNCTION " << lIndex << END_OF_LINE;
+        aMain << "FUNCTION " << lIndex << Text_EOL;
 
         lResult = State::FUNCTION_CODE;
     }
@@ -490,15 +486,15 @@ State Convert_FUNCTION_CODE(const std::wstring& aLine, std::ofstream& aMain)
 
     if (PC6_END_FUNCTION_R == aLine)
     {
-        aMain << "FUNCTION_END" << END_OF_LINE;
-        aMain << END_OF_LINE;
+        aMain << "FUNCTION_END" << Text_EOL;
+        aMain << Text_EOL;
 
         lResult = State::FUNCTION_LABEL;
     }
     else if (PC6_BEGIN_FUNCTION_R == aLine)
     {
-        aMain << "FUNCTION_END" << END_OF_LINE;
-        aMain << END_OF_LINE;
+        aMain << "FUNCTION_END" << Text_EOL;
+        aMain << Text_EOL;
 
         lResult = State::FUNCTION;
     }
@@ -508,7 +504,7 @@ State Convert_FUNCTION_CODE(const std::wstring& aLine, std::ofstream& aMain)
 
         ToASCII(aLine, lLine, sizeof(lLine));
 
-        aMain << lLine << END_OF_LINE;
+        aMain << lLine << Text_EOL;
     }
 
     return lResult;

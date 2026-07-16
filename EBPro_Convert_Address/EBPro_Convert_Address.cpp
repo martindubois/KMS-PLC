@@ -19,13 +19,12 @@
 #include "../Common/Display.h"
 #include "../Common/HMI/HMI.h"
 #include "../Common/Version.h"
+#include "../Common/Text.h"
 
 using namespace KMS;
 
 // Configurations
 // //////////////////////////////////////////////////////////////////////////
-
-static const char* END_OF_LINE = "\r\n";
 
 static const char* EXPORTED_ADDRESS_CSV = "EBPro_Exported_Address.csv";
 
@@ -121,9 +120,9 @@ void Convert_Addresses(const char* aInName)
     std::ofstream lOut(HMI::ADDRESSES_TXT, std::ios::binary);
     KMS_EXCEPTION_ASSERT(lOut.is_open(), RESULT_OPEN_FAILED, "Cannot open output file (NOT_TESTED)", HMI::ADDRESSES_TXT);
 
-    lOut << END_OF_LINE;
-    lOut << "# Converted by KMS-PLC - EBPro_Convert.exe from " << aInName << END_OF_LINE;
-    lOut << END_OF_LINE;
+    lOut << Text_EOL;
+    lOut << "# Converted by KMS-PLC - EBPro_Convert.exe from " << aInName << Text_EOL;
+    lOut << Text_EOL;
 
     // Process input file
 
@@ -158,85 +157,85 @@ void Convert_Addresses(const char* aInName)
 void Convert_LOCAL_EM0(const std::smatch& aMatch, std::ofstream& aOut)
 {
     // WORD {Name} LOCAL EM0 {Addr} [Type]
-    aOut << "WORD " << aMatch[1].str() << " LOCAL EM0 " << aMatch[2].str() << END_OF_LINE;
+    aOut << "WORD " << aMatch[1].str() << " LOCAL EM0 " << aMatch[2].str() << Text_EOL;
 }
 
 void Convert_LOCAL_LB(const std::smatch& aMatch, std::ofstream& aOut)
 {
     // BIT {Name} LOCAL LB {Addr}
-    aOut << "BIT " << aMatch[1].str() << " LOCAL LB " << aMatch[2].str() << END_OF_LINE;
+    aOut << "BIT " << aMatch[1].str() << " LOCAL LB " << aMatch[2].str() << Text_EOL;
 }
 
 void Convert_LOCAL_LW(const std::smatch& aMatch, std::ofstream& aOut)
 {
     // WORD {Name} LOCAL LW {Addr} [Type]
-    aOut << "WORD " << aMatch[1].str() << " LOCAL LW " << aMatch[2].str() << END_OF_LINE;
+    aOut << "WORD " << aMatch[1].str() << " LOCAL LW " << aMatch[2].str() << Text_EOL;
 }
 
 void Convert_LOCAL_LW_BIT(const std::smatch& aMatch, std::ofstream& aOut)
 {
     // BIT {Name} LOCAL LW {Addr.Bit}
-    aOut << "BIT " << aMatch[1].str() << " LOCAL LW " << aMatch[2].str() << "." << aMatch[3].str() << END_OF_LINE;
+    aOut << "BIT " << aMatch[1].str() << " LOCAL LW " << aMatch[2].str() << "." << aMatch[3].str() << Text_EOL;
 }
 
 void Convert_LOCAL_LW_UINT16(const std::smatch& aMatch, std::ofstream& aOut)
 {
     // WORD {Name} LOCAL LW {Addr} [Type]
-    aOut << "WORD " << aMatch[1].str() << " LOCAL LW " << aMatch[2].str() << " uint16_t" << END_OF_LINE;
+    aOut << "WORD " << aMatch[1].str() << " LOCAL LW " << aMatch[2].str() << " uint16_t" << Text_EOL;
 }
 
 void Convert_LOCAL_RW(const std::smatch& aMatch, std::ofstream& aOut)
 {
     // WORD {Name} LOCAL RW {Addr} [Type]
-    aOut << "WORD " << aMatch[1].str() << " LOCAL RW " << aMatch[2].str() << END_OF_LINE;
+    aOut << "WORD " << aMatch[1].str() << " LOCAL RW " << aMatch[2].str() << Text_EOL;
 }
 
 void Convert_LOCAL_RW_A(const std::smatch& aMatch, std::ofstream& aOut)
 {
     // WORD {Name} LOCAL RW_A {Addr} [Type]
-    aOut << "WORD " << aMatch[1].str() << " LOCAL RW_A " << aMatch[2].str() << END_OF_LINE;
+    aOut << "WORD " << aMatch[1].str() << " LOCAL RW_A " << aMatch[2].str() << Text_EOL;
 }
 
 void Convert_LOCAL_RW_A_BIT(const std::smatch& aMatch, std::ofstream& aOut)
 {
     // BIT {Name} LOCAL RW_A {Addr.Bit}
-    aOut << "BIT " << aMatch[1].str() << " LOCAL RW_A " << aMatch[2].str() << END_OF_LINE;
+    aOut << "BIT " << aMatch[1].str() << " LOCAL RW_A " << aMatch[2].str() << Text_EOL;
 }
 
 void Convert_LOCAL_RW_A_UINT16(const std::smatch& aMatch, std::ofstream& aOut)
 {
     // WORD {Name} LOCAL RW_A {Addr} [Type]
-    aOut << "WORD " << aMatch[1].str() << " LOCAL RW_A " << aMatch[2].str() << " uint16_t" << END_OF_LINE;
+    aOut << "WORD " << aMatch[1].str() << " LOCAL RW_A " << aMatch[2].str() << " uint16_t" << Text_EOL;
 }
 
 void Convert_MODBUS_1X(const std::smatch& aMatch, std::ofstream& aOut)
 {
     // BIT {Name} MODBUS 1x {Addr}
-    aOut << "BIT " << aMatch[1].str() << " MODBUS 1x " << aMatch[2].str() << END_OF_LINE;
+    aOut << "BIT " << aMatch[1].str() << " MODBUS 1x " << aMatch[2].str() << Text_EOL;
 }
 
 void Convert_MODBUS_4X(const std::smatch& aMatch, std::ofstream& aOut)
 {
     // WORD {Name} MODBUS 4x {Addr} [Type]
-    aOut << "WORD " << aMatch[1].str() << " MODBUS 4x " << aMatch[2].str() << END_OF_LINE;
+    aOut << "WORD " << aMatch[1].str() << " MODBUS 4x " << aMatch[2].str() << Text_EOL;
 }
 
 void Convert_MODBUS_4X_BIT(const std::smatch& aMatch, std::ofstream& aOut)
 {
     // BIT {Name} MODBUS 4x {Addr.Bit}
-    aOut << "BIT " << aMatch[1].str() << " MODBUS 4x " << aMatch[2].str() << END_OF_LINE;
+    aOut << "BIT " << aMatch[1].str() << " MODBUS 4x " << aMatch[2].str() << Text_EOL;
 }
 
 void Convert_MODBUS_4X_INT16(const std::smatch& aMatch, std::ofstream& aOut)
 {
     // WORD {Name} MODBUS 4x {Addr} [Type]
-    aOut << "WORD " << aMatch[1].str() << " MODBUS 4x " << aMatch[2].str() << " int16_t" << END_OF_LINE;
+    aOut << "WORD " << aMatch[1].str() << " MODBUS 4x " << aMatch[2].str() << " int16_t" << Text_EOL;
 }
 
 void Convert_MODBUS_4X_UINT16(const std::smatch& aMatch, std::ofstream& aOut)
 {
     // WORD {Name} MODBUS 4x {Addr} [Type]
-    aOut << "WORD " << aMatch[1].str() << " MODBUS 4x " << aMatch[2].str() << " uint16_t" << END_OF_LINE;
+    aOut << "WORD " << aMatch[1].str() << " MODBUS 4x " << aMatch[2].str() << " uint16_t" << Text_EOL;
 }
 
 static void DisplayUsage()

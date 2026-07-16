@@ -11,6 +11,7 @@
 #include "../Common/Display.h"
 #include "../Common/HMI/HMI.h"
 #include "../Common/Parser.h"
+#include "../Common/Text.h"
 
 #include "Builder_Address.h"
 
@@ -21,12 +22,13 @@ using namespace KMS;
 
 const char* EBPRO_ADDRESSES_TO_IMPORT_CSV = "EBPro_Addresses_ToImport.csv";
 
-const char* END_OF_LINE = "\r\n";
-
 // Public
 // //////////////////////////////////////////////////////////////////////////
 
-Builder_Address::Builder_Address() : mOut(nullptr) {}
+Builder_Address::Builder_Address() : mOut(nullptr)
+{
+    AddSource(HMI::ADDRESSES_TXT);
+}
 
 // ===== Builder ============================================================
 
@@ -103,70 +105,70 @@ void Builder_Address::ReadSource(const char* aSource)
 
 void Builder_Address::Write_BIT_LOCAL_LB(const std::smatch& aMatch)
 {
-    BEGIN "Local HMI,LB," << aMatch[2].str() << ",,Undesignated" << END_OF_LINE;
+    BEGIN "Local HMI,LB," << aMatch[2].str() << ",,Undesignated" << Text_EOL;
 }
 
 void Builder_Address::Write_BIT_LOCAL_LW(const std::smatch& aMatch)
 {
-    BEGIN "Local HMI,LW_Bit," << aMatch[2].str() << ",,Undesignated" << END_OF_LINE;
+    BEGIN "Local HMI,LW_Bit," << aMatch[2].str() << ",,Undesignated" << Text_EOL;
 }
 
 void Builder_Address::Write_BIT_LOCAL_RW_A(const std::smatch& aMatch)
 {
-    BEGIN "Local HMI,RW_A_Bit," << aMatch[2].str() << ",,Undesignated" << END_OF_LINE;
+    BEGIN "Local HMI,RW_A_Bit," << aMatch[2].str() << ",,Undesignated" << Text_EOL;
 }
 
 void Builder_Address::Write_BIT_MODBUS_1X(const std::smatch& aMatch)
 {
-    BEGIN "MODBUS RTU,1x," << aMatch[2].str() << ",,Undesignated" << END_OF_LINE;
+    BEGIN "MODBUS RTU,1x," << aMatch[2].str() << ",,Undesignated" << Text_EOL;
 }
 
 void Builder_Address::Write_BIT_MODBUS_4X(const std::smatch& aMatch)
 {
-    BEGIN "MODBUS RTU,4x_Bit," << aMatch[2].str() << ",,Undesignated" << END_OF_LINE;
+    BEGIN "MODBUS RTU,4x_Bit," << aMatch[2].str() << ",,Undesignated" << Text_EOL;
 }
 
 void Builder_Address::Write_WORD_LOCAL_EM0(const std::smatch& aMatch)
 {
-    BEGIN "Local HMI,EM0," << aMatch[2].str() << ",,Undesignated" << END_OF_LINE;
+    BEGIN "Local HMI,EM0," << aMatch[2].str() << ",,Undesignated" << Text_EOL;
 }
 
 void Builder_Address::Write_WORD_LOCAL_LW(const std::smatch& aMatch)
 {
-    BEGIN "Local HMI,LW," << aMatch[2].str() << ",,Undesignated" << END_OF_LINE;
+    BEGIN "Local HMI,LW," << aMatch[2].str() << ",,Undesignated" << Text_EOL;
 }
 
 void Builder_Address::Write_WORD_LOCAL_LW_UINT16(const std::smatch& aMatch)
 {
-    BEGIN "Local HMI,LW," << aMatch[2].str() << ",,16-bit Unsigned" << END_OF_LINE;
+    BEGIN "Local HMI,LW," << aMatch[2].str() << ",,16-bit Unsigned" << Text_EOL;
 }
 
 void Builder_Address::Write_WORD_LOCAL_RW(const std::smatch& aMatch)
 {
-    BEGIN "Local HMI,RW," << aMatch[2].str() << ",,Undesignated" << END_OF_LINE;
+    BEGIN "Local HMI,RW," << aMatch[2].str() << ",,Undesignated" << Text_EOL;
 }
 
 void Builder_Address::Write_WORD_LOCAL_RW_A(const std::smatch& aMatch)
 {
-    BEGIN "Local HMI,RW_A," << aMatch[2].str() << ",,Undesignated" << END_OF_LINE;
+    BEGIN "Local HMI,RW_A," << aMatch[2].str() << ",,Undesignated" << Text_EOL;
 }
 
 void Builder_Address::Write_WORD_LOCAL_RW_A_UINT16(const std::smatch& aMatch)
 {
-    BEGIN "Local HMI,RW_A," << aMatch[2].str() << ",,16-but Unsigned" << END_OF_LINE;
+    BEGIN "Local HMI,RW_A," << aMatch[2].str() << ",,16-but Unsigned" << Text_EOL;
 }
 
 void Builder_Address::Write_WORD_MODBUS_4X(const std::smatch& aMatch)
 {
-    BEGIN "MODBUS RTU,4x," << aMatch[2].str() << ",,Undesignated" << END_OF_LINE;
+    BEGIN "MODBUS RTU,4x," << aMatch[2].str() << ",,Undesignated" << Text_EOL;
 }
 
 void Builder_Address::Write_WORD_MODBUS_4X_INT16(const std::smatch& aMatch)
 {
-    BEGIN "MODBUS RTU,4x," << aMatch[2].str() << ",,16-bit Signed" << END_OF_LINE;
+    BEGIN "MODBUS RTU,4x," << aMatch[2].str() << ",,16-bit Signed" << Text_EOL;
 }
 
 void Builder_Address::Write_WORD_MODBUS_4X_UINT16(const std::smatch& aMatch)
 {
-    BEGIN "MODBUS RTU,4x," << aMatch[2].str() << ",,16-bit Unsigned" << END_OF_LINE;
+    BEGIN "MODBUS RTU,4x," << aMatch[2].str() << ",,16-bit Unsigned" << Text_EOL;
 }
