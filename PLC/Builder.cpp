@@ -171,7 +171,7 @@ namespace PLC
         }
         else
         {
-            Display_Warning("Label for missing funciton", lName.c_str());
+            Display_Warning("Label for missing function", lName.c_str());
         }
     }
 
