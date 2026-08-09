@@ -500,11 +500,31 @@ State Convert_FUNCTION_CODE(const std::wstring& aLine, std::ofstream& aMain)
     }
     else
     {
-        char lLine[LINE_LENGTH];
+        static const std::wregex REGEX_EMPTY(L"^\\s$");
 
-        ToASCII(aLine, lLine, sizeof(lLine));
+        if (std::regex_match(aLine, REGEX_EMPTY))
+        {
+            aMain << Text_EOL;
+        }
+        else
+        {
+            static const std::wregex REGEX(L"^(\\s*.*\\S)[ \r\t]+$");
 
-        aMain << lLine << Text_EOL;
+            std::wsmatch lMatch;
+
+            char lLine[LINE_LENGTH];
+
+            if (std::regex_match(aLine, lMatch, REGEX))
+            {
+                ToASCII(lMatch[1].str(), lLine, sizeof(lLine));
+            }
+            else
+            {
+                ToASCII(aLine, lLine, sizeof(lLine));
+            }
+
+            aMain << lLine << Text_EOL;
+        }
     }
 
     return lResult;
