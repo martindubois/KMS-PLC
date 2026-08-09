@@ -6,7 +6,7 @@ rem License   http://www.apache.org/licenses/LICENSE-2.0
 rem Product   KMS-PLC
 rem File      Templates/EBPro_Build.cmd
 
-echo Excuting  TRiLOGI_Build.cmd $1  ...
+echo Excuting  EBPro_Build.cmd $1  ...
 
 rem ===== Configuration =====================================================
 
@@ -34,12 +34,12 @@ if not exist %EBPRO_BUILD_LABEL_EXE% (
 
 rem ===== Excecution ========================================================
 
-if "Address" == "$1" then goto Addresses
+if "Address" == "$1" goto Addresses
 
-if "Label" == "$1" then goto Labels
+if "Label" == "$1" goto Labels
 
 echo USER ERROR  Invalid command line
-echo Usage: EBPro_Build.cmd Address|Label
+echo Usage: EBPro_Build.cmd Address Label
 pause
 exit /B 30
 
