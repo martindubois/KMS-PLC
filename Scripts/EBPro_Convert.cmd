@@ -10,7 +10,7 @@ echo Executing  EBPro_Convert.cmd  ...
 
 rem ===== Initialisation ====================================================
 
-set KMS_PLC_FOLDER=%~dp0
+set KMS_PLC_FOLDER=%~dp0\..
 
 set EBPRO_CONFIG_TXT=EBPro_Config.txt
 

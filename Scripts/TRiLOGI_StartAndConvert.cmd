@@ -10,13 +10,13 @@ echo Executing  TRiLOGI_StartAndConvert.cmd  ...
 
 rem ===== Configuration =====================================================
 
-set KMS_PLC_FOLDER=%~dp0
+set KMS_PLC_FOLDER=%~dp0\..
 
 rem ===== Initialisation ====================================================
 
 set PLC_TO_COMPILE_PC6=PLC_ToCompile.PC6
 
-set TRILOGI_CONVERT_EXE="%KMS_PLC_FOLDER%..\TRiLOGI_Convert.exe"
+set TRILOGI_CONVERT_EXE="%KMS_PLC_FOLDER%\TRiLOGI_Convert.exe"
 
 rem ===== Verification ======================================================
 
