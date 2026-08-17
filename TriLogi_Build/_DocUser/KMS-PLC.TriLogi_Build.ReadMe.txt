@@ -7,6 +7,17 @@ File      TRiLOGI_Build/_DocUser/KMS-PLC.TRiLOGI_Build.ReadMe.txt
 
 EDIT ON BUILD
 
+2.0.3-dev Windows 2026-08-17
+* Index monitor
+* FUNCTION {Index} [Name]
+* FUNCTION AUTO {Name}
+* FUNCTION TAIL {Name}
+* RELAY AUTO {Name}
+* RELAY HEAD {Name}
+* RELAY TAIL {Name}
+* TIMER AUTO {Name}
+* TIMER TAIL {Name}
+
 2.0.2-dev Windows 2026-07-14
 
 2.0.1-dev Windows 2026-07-06

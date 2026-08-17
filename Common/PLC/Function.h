@@ -31,6 +31,7 @@ namespace PLC
 
     };
 
+    typedef std::list<Function*>              Function_List;
     typedef std::map<unsigned int, Function*> Function_Map;
 
     // Public

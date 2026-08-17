@@ -50,6 +50,7 @@ namespace PLC
 
     };
 
+    typedef std::list<Element>              Element_List;
     typedef std::map<unsigned int, Element> Element_Map;
 
     // Public

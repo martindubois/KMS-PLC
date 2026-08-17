@@ -34,6 +34,7 @@ namespace PLC
 
     };
 
+    typedef std::list<Timer>              Timer_List;
     typedef std::map<unsigned int, Timer> Timer_Map;
 
     // Public

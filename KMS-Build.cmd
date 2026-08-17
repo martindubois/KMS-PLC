@@ -430,11 +430,6 @@ if not exist C:\_VC\KMS-PLC\x64\Release_Static\KMS-PLC-A-Test.exe (
 rem ===== Package =====
 
 
-"C:\Program Files (x86)\Inno Setup 6\Compil32.exe" /cc Product_x64.iss
-
-rem ===== Sign =====
-
-
 
 
 rem ===== End =====

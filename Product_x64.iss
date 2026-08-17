@@ -10,10 +10,10 @@ AppName = KMS-PLC
 AppPublisher = KMS
 AppPublisherURL = https://www.kms-quebec.com
 AppSupportURL = https://www.kms-quebec.com
-AppVersion = 2.0.2-dev
+AppVersion = 2.0.3-dev
 ArchitecturesInstallIn64BitMode = x64compatible
 DefaultDirName = {commonpf}\KMS-PLC
-OutputBaseFilename = KMS-PLC_2.0.2-dev_x64
+OutputBaseFilename = KMS-PLC_2.0.3-dev_x64
 OutputDir = Installer
 
 [Files]
@@ -27,7 +27,6 @@ Source: "Import\KMS-Tools.ReadMe.txt"                       ; DestDir: "{app}"
 Source: "Import\Binaries\Release_Static_x64\ComTool.exe"    ; DestDir: "{app}"
 Source: "Import\Binaries\Release_Static_x64\ModbusSim.exe"  ; DestDir: "{app}"
 Source: "Import\Binaries\Release_Static_x64\ModbusTool.exe" ; DestDir: "{app}"
-Source: "KMS-PLC\_DocUser\KMS-PLC.KMS-PLC.ReadMe.txt"       ; DestDir: "{app}"
 Source: "Scripts\*.cmd"                                     ; DestDir: "{app}\Scripts"
 Source: "Templates\*.cmd"                                   ; DestDir: "{app}\Templates"
 Source: "x64\Release_Static\EBPro_Build_Address.exe"        ; DestDir: "{app}"

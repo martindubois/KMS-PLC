@@ -11,6 +11,7 @@
 #include <fstream>
 
 // ===== Local ==============================================================
+#include "../Common/Display.h"
 #include "../Common/PLC/PLC.h"
 #include "../Common/TRiLOGI/PC6.h"
 
@@ -30,11 +31,17 @@ static const char* TO_COMPILE_PC6 = "PLC_ToCompile.PC6";
 // Static function declarations
 // //////////////////////////////////////////////////////////////////////////
 
-void Write_DEFINE(std::wofstream& aOut, const PLC::Define& aDefine);
+static void Write_DEFINE(std::wofstream& aOut, const PLC::Define& aDefine);
 
-void WriteElement(std::wofstream& aOut, const PLC::Element& aElement);
+static void Write_FUNCTION(std::wofstream& aOut, const PLC::Function* aFunction);
 
-void WriteElements(std::wofstream& aOut, const PLC::Element_Map& aElements);
+static void Write_TIMER(std::wofstream& aOut, const PLC::Timer& aTimer);
+
+static void WriteElement(std::wofstream& aOut, const PLC::Element& aElement);
+
+static void WriteElements(std::wofstream& aOut, const PLC::Element_Map& aElements);
+
+static void WriteElements(std::wofstream& aOut, const PLC::Element_Map& aElements, PLC::Element_List& aAuto, IndexMonitor* aIm);
 
 // Public
 // //////////////////////////////////////////////////////////////////////////
@@ -72,7 +79,7 @@ void TRiLOGI_Builder::Write()
 
     WriteElements(lOut, mInputs);
     WriteElements(lOut, mOutputs);
-    WriteElements(lOut, mRelays);
+    WriteElements(lOut, mRelays, mRelays_Auto, mIndexMonitors + MONITOR_RELAY);
     Write_TIMER(lOut);
     Write_SEQUENCE(lOut);
 
@@ -147,29 +154,64 @@ void TRiLOGI_Builder::Write_DEFINE(std::wofstream& aOut)
 
 void TRiLOGI_Builder::Write_FUNCTION(std::wofstream& aOut)
 {
-    wchar_t lLine[LINE_LENGTH];
+    auto lIt = mFunctions_Auto.begin();
+
+    uint16_t lCurrent = 0;
 
     for (const auto& lF : mFunctions)
     {
         assert(nullptr != lF.second);
 
+        auto lIndex = lF.second->GetIndex();
+        assert(PLC::Function::INVALID_INDEX != lIndex);
+
+        while ((lCurrent < lIndex) && (mFunctions_Auto.end() != lIt))
+        {
+            // An index is available and we have auto timer to write
+
+            assert(nullptr != *lIt);
+
+            mIndexMonitors[MONITOR_FUNCTION].MarkUsed(lCurrent);
+
+            (*lIt)->SetIndex(lCurrent);
+
+            ::Write_FUNCTION(aOut, *lIt);
+
+            lCurrent++;
+            lIt++;
+        }
+
         if (!lF.second->IsNameEmpty())
         {
-            auto lIndex = lF.second->GetIndex();
-            assert(PLC::Function::INVALID_INDEX != lIndex);
-
-            aOut << PC6_BEGIN_FUNCTION << END_OF_LINE;
-            aOut << "Fn#" << lIndex << "," << lF.second->GetSize() << END_OF_LINE;
-
-            for (auto& lL : lF.second->mLines)
-            {
-                auto lRet = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, lL.c_str(), -1, lLine, sizeof(lLine) / sizeof(lLine[0]));
-                assert(0 < lRet);
-
-                aOut << lLine << "\n";
-            }
+            ::Write_FUNCTION(aOut, lF.second);
         }
+        else
+        {
+            char lNumero[NAME_LENGTH];
+
+            _ultoa_s(lF.second->GetIndex(), lNumero, 10);
+
+            Display_Warning("Unamed function", lNumero);
+        }
+
+        lCurrent = lIndex + 1;
     }
+
+    while (mFunctions_Auto.end() != lIt)
+    {
+        assert(nullptr != *lIt);
+
+        mIndexMonitors[MONITOR_FUNCTION].MarkUsed(lCurrent);
+
+        (*lIt)->SetIndex(lCurrent);
+
+        ::Write_FUNCTION(aOut, *lIt);
+
+        lCurrent++;
+        lIt++;
+    }
+
+    Merge_FUNCTIONS();
 
     aOut << PC6_END_FUNCTION << END_OF_LINE;
 }
@@ -208,16 +250,44 @@ void TRiLOGI_Builder::Write_SEQUENCE(std::wofstream& aOut)
 
 void TRiLOGI_Builder::Write_TIMER(std::wofstream& aOut)
 {
-    wchar_t lName[NAME_LENGTH];
+    auto lIt = mTimers_Auto.begin();
+
+    uint16_t lCurrent = 0;
 
     for (const auto& lT : mTimers)
     {
         auto lIndex = lT.second.GetIndex();
         assert(PLC::Timer::INVALID_INDEX != lIndex);
 
-        lT.second.GetName(lName, sizeof(lName));
+        while ((lCurrent < lIndex) && (mTimers_Auto.end() != lIt))
+        {
+            // An index is available and we have auto timer to write
 
-        aOut << lIndex << "," << lName << " " << lT.second.GetValue() << END_OF_LINE;
+            mIndexMonitors[MONITOR_TIMER].MarkUsed(lCurrent);
+
+            lIt->SetIndex(lCurrent);
+
+            ::Write_TIMER(aOut, *lIt);
+
+            lCurrent++;
+            lIt++;
+        }
+
+        ::Write_TIMER(aOut, lT.second);
+
+        lCurrent = lIndex + 1;
+    }
+
+    while (mTimers_Auto.end() != lIt)
+    {
+        mIndexMonitors[MONITOR_TIMER].MarkUsed(lCurrent);
+
+        lIt->SetIndex(lCurrent);
+
+        ::Write_TIMER(aOut, *lIt);
+
+        lCurrent++;
+        lIt++;
     }
 
     aOut << PC6_END << END_OF_LINE;
@@ -242,6 +312,39 @@ void Write_DEFINE(std::wofstream& aOut, const PLC::Define& aDefine)
     aOut << lIndex << "," << lName << "," << lValue << END_OF_LINE;
 }
 
+void Write_FUNCTION(std::wofstream& aOut, const PLC::Function* aFunction)
+{
+    assert(nullptr != aFunction);
+
+    auto lIndex = aFunction->GetIndex();
+    assert(PLC::Function::INVALID_INDEX != lIndex);
+
+    aOut << PC6_BEGIN_FUNCTION << END_OF_LINE;
+    aOut << "Fn#" << lIndex << "," << aFunction->GetSize() << END_OF_LINE;
+
+    for (auto& lL : aFunction->mLines)
+    {
+        wchar_t lLine[LINE_LENGTH];
+
+        auto lRet = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, lL.c_str(), -1, lLine, sizeof(lLine) / sizeof(lLine[0]));
+        assert(0 < lRet);
+
+        aOut << lLine << "\n";
+    }
+}
+
+void Write_TIMER(std::wofstream& aOut, const PLC::Timer& aTimer)
+{
+    auto lIndex = aTimer.GetIndex();
+    assert(PLC::Timer::INVALID_INDEX != lIndex);
+
+    wchar_t lName[NAME_LENGTH];
+
+    aTimer.GetName(lName, sizeof(lName));
+
+    aOut << lIndex << "," << lName << " " << aTimer.GetValue() << END_OF_LINE;
+}
+
 void WriteElement(std::wofstream& aOut, const PLC::Element& aElement)
 {
     auto lIndex = aElement.GetIndex();
@@ -259,6 +362,53 @@ void WriteElements(std::wofstream& aOut, const PLC::Element_Map& aElements)
     for (const auto& lE : aElements)
     {
         WriteElement(aOut, lE.second);
+    }
+
+    aOut << PC6_END << END_OF_LINE;
+}
+
+void WriteElements(std::wofstream& aOut, const PLC::Element_Map& aElements, PLC::Element_List& aAuto, IndexMonitor* aIM)
+{
+    assert(nullptr != aIM);
+
+    auto lIt = aAuto.begin();
+
+    uint16_t lCurrent = 0;
+
+    for (const auto& lE : aElements)
+    {
+        auto lIndex = lE.second.GetIndex();
+        assert(PLC::Element::INVALID_INDEX != lIndex);
+
+        while ((lCurrent < lIndex) && (aAuto.end() != lIt))
+        {
+            // An index is available and we have auto timer to write
+
+            aIM->MarkUsed(lCurrent);
+
+            lIt->SetIndex(lCurrent);
+
+            ::WriteElement(aOut, *lIt);
+
+            lCurrent++;
+            lIt++;
+        }
+
+        WriteElement(aOut, lE.second);
+
+        lCurrent = lIndex + 1;
+    }
+
+    while (aAuto.end() != lIt)
+    {
+        aIM->MarkUsed(lCurrent);
+
+        lIt->SetIndex(lCurrent);
+
+        ::WriteElement(aOut, *lIt);
+
+        lCurrent++;
+        lIt++;
     }
 
     aOut << PC6_END << END_OF_LINE;

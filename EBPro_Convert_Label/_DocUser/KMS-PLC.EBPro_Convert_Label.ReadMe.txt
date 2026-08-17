@@ -7,6 +7,8 @@ File      EBPro_Convert_Label/_DocUser/KMS-PLC.EBPro_Convert_Label.ReadMe.txt
 
 EDIT ON BUILD
 
+2.0.3-dev Windows 2026-08-17
+
 2.0.2-dev Windows 2026-07-14
 
 2.0.1-dev Windows 2026-07-06
