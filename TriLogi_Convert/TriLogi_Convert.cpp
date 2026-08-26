@@ -22,6 +22,7 @@
 #include <KMS/Exception.h>
 
 // ===== Local ==============================================================
+#include "../Common/Convert.h"
 #include "../Common/Display.h"
 #include "../Common/PLC/PLC.h"
 #include "../Common/TRiLOGI/PC6.h"
@@ -107,8 +108,6 @@ static State Convert_SEQUENCE      (const std::wstring& aLine, std::ofstream& aM
 static State Convert_TIMER         (const std::wstring& aLine, std::ofstream& aMain);
 
 static void DisplayUsage();
-
-static void ToASCII(const std::wstring& aIn, char* aOut, unsigned int aOutSize_byte);
 
 // Entry point
 // //////////////////////////////////////////////////////////////////////////
@@ -563,14 +562,4 @@ State Convert_TIMER(const std::wstring& aLine, std::ofstream& aMain)
 void DisplayUsage()
 {
     std::cout << "Usage: TRiLOGI_Convert.exe {TRiLOGI.PC6} [Initial]" << std::endl;
-}
-
-void ToASCII(const std::wstring& aIn, char* aOut, unsigned int aOutSize_byte)
-{
-    assert(nullptr != aOut);
-    assert(0 < aOutSize_byte);
-    
-    auto lRet = WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS | WC_NO_BEST_FIT_CHARS, aIn.c_str(), -1, aOut, aOutSize_byte, nullptr, nullptr);
-
-    KMS_EXCEPTION_ASSERT(0 < lRet, RESULT_INVALID_FORMAT, "Invalid unicode string (NOT TESTED)", "");
 }

@@ -68,9 +68,6 @@
     <ClCompile Include="Types.cpp" />
     <ClCompile Include="Utilities.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Convert.h" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>

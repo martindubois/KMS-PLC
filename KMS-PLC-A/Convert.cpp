@@ -1,17 +1,62 @@
 
 // Author    KMS - Martin Dubois, P. Eng.
-// Copyright (C) 2022 KMS
+// Copyright (C) 2026 KMS
 // License   http://www.apache.org/licenses/LICENSE-2.0
 // Product   KMS-PLC
 // File      KMS-PLC-A/Convert.cpp
 
 #include "Component.h"
 
+// ===== Windows ============================================================
+#include <Windows.h>
+
 // ===== Local ===============================================================
-#include "Convert.h"
+#include "../Common/Convert.h"
+
+using namespace KMS;
 
 // Functions
 // //////////////////////////////////////////////////////////////////////////
+
+void ToASCII(const std::wstring& aIn, char* aOut, unsigned int aOutSize_byte)
+{
+    assert(nullptr != aOut);
+    assert(0 < aOutSize_byte);
+
+    auto lRet = WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS | WC_NO_BEST_FIT_CHARS, aIn.c_str(), -1, aOut, aOutSize_byte, nullptr, nullptr);
+    KMS_EXCEPTION_ASSERT(0 < lRet, RESULT_INVALID_FORMAT, "Invalid unicode string (NOT TESTED)", "");
+}
+
+void ToASCII(const std::wstring& aIn, std::string* aOut)
+{
+    assert(nullptr != aOut);
+
+    char lOut[LINE_LENGTH];
+
+    ToASCII(aIn, lOut, sizeof(lOut));
+
+    *aOut = lOut;
+}
+
+void ToUnicode(const std::string& aIn, wchar_t* aOut, unsigned int aOutSize_byte)
+{
+    assert(nullptr != aOut);
+    assert(0 < aOutSize_byte);
+
+    auto lRet = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, aIn.c_str(), -1, aOut, aOutSize_byte / sizeof(wchar_t));
+    KMS_EXCEPTION_ASSERT(0 < lRet, RESULT_INVALID_FORMAT, "Invalid ASCII string (NOT TESTED)", "");
+}
+
+void ToUnicode(const std::string& aIn, std::wstring* aOut)
+{
+    assert(nullptr != aOut);
+
+    wchar_t lOut[LINE_LENGTH];
+
+    ToUnicode(aIn, lOut, sizeof(lOut));
+
+    *aOut = lOut;
+}
 
 void ToExportableString(const wchar_t* aIn, wchar_t* aOut)
 {

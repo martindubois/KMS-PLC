@@ -12,6 +12,7 @@
 #include <regex>
 
 // ===== Local ==============================================================
+#include "../Common/Convert.h"
 #include "../Common/Parser.h"
 #include "../Common/Text.h"
 
@@ -65,9 +66,7 @@ namespace HMI
 
         GetName(&lOut);
 
-        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> lConverter;
-
-        *aOut = lConverter.from_bytes(lOut);
+        ToUnicode(lOut, aOut);
     }
 
     void Label::GetString(unsigned int aState, const char* aLanguage, std::string* aOut) const
@@ -85,16 +84,16 @@ namespace HMI
 
         GetString(aState, aLanguage, &lOut);
 
-        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> lConverter;
-
-        *aOut = lConverter.from_bytes(lOut);
+        ToUnicode(lOut, aOut);
     }
 
     void Label::SetName(const std::wstring& aName)
     {
-        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> lConverter;
+        std::string lName;
 
-        SetName(lConverter.to_bytes(aName));
+        ToASCII(aName, &lName);
+
+        SetName(lName);
     }
 
     void Label::SetStateCount(unsigned int aCount)
@@ -123,9 +122,11 @@ namespace HMI
 
     void Label::SetString(unsigned int aState, const char* aLanguage, const std::wstring& aString)
     {
-        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> lConverter;
+        std::string lString;
 
-        SetString(aState, aLanguage, lConverter.to_bytes(aString));
+        ToASCII(aString, &lString);
+
+        SetString(aState, aLanguage, lString);
     }
 
     void Label::Clear()
@@ -244,7 +245,8 @@ namespace HMI
     {
         assert(nullptr != aLanguage);
 
-        mStrings.insert(StringMap::value_type(aLanguage, aString));
+        auto [lIt, lRet] = mStrings.insert(StringMap::value_type(aLanguage, aString));
+        KMS_EXCEPTION_ASSERT(lRet, RESULT_INVALID_NAME, "Duplicated label language", aString.c_str());
     }
 
     void Label_State::Read(Parser* aIn)
