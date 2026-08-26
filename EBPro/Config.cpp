@@ -59,7 +59,8 @@ namespace EBPro
         assert(LANGUAGE_QTY > aIndex);
         assert(nullptr != aName);
 
-        mLanguages_ByName.insert(LanguageMap::value_type(aName, aIndex));
+        auto [lIt, lRet] = mLanguages_ByName.insert(LanguageMap::value_type(aName, aIndex));
+        KMS_EXCEPTION_ASSERT(lRet, RESULT_INVALID_NAME, "Duplicated language", aName);
 
         strcpy_s(mLanguages_ByIndex[aIndex] SizeInfo(mLanguages_ByIndex[aIndex]), aName);
     }

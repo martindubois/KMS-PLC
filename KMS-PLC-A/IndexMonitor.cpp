@@ -133,7 +133,8 @@ void IndexMonitor::AddRange(unsigned int aFirst, unsigned int aLast)
 {
     assert(aFirst <= aLast);
 
-    mRanges.insert(RangeMap::value_type(aFirst, aLast));
+    auto [lIt, lRet] = mRanges.insert(RangeMap::value_type(aFirst, aLast));
+    assert(lRet);
 }
 
 // Static function

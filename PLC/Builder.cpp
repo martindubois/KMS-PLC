@@ -160,7 +160,7 @@ namespace PLC
         mIndexMonitors[MONITOR_RELAY   ].Init("RELAY"   , 0,  511);
         mIndexMonitors[MONITOR_SEQUENCE].Init("SEQUENCE", 0,    7);
         mIndexMonitors[MONITOR_TIMER   ].Init("TIMER"   , 0,   63);
-        mIndexMonitors[MONITOR_WORD    ].Init("WORD"    , 0, 3999);
+        mIndexMonitors[MONITOR_WORD    ].Init("WORD"    , 1, 3999);
 
         AddSource(MAIN_TXT);
     }
@@ -171,7 +171,8 @@ namespace PLC
         {
             auto lIndex = lFunction->GetIndex();
 
-            mFunctions.insert(Function_Map::value_type(lIndex, lFunction));
+            auto [lIt, lRet] = mFunctions.insert(Function_Map::value_type(lIndex, lFunction));
+            assert(lRet);
         }
 
         mFunctions_Auto.clear();
@@ -191,7 +192,8 @@ namespace PLC
             mIndexMonitors[MONITOR_WORD].MarkUsed(Convert::ToUInt32(aMatch[4].str().c_str()));
         }
 
-        mDefines.insert(Define_Map::value_type(lNew.GetIndex(), lNew));
+        auto [lIt, lRet] = mDefines.insert(Define_Map::value_type(lNew.GetIndex(), lNew));
+        KMS_EXCEPTION_ASSERT(lRet, RESULT_INVALID_INDEX, "Duplicated DEFINE index", lNew.GetName());
     }
 
     void Builder::Add_DEFINE_Tail(const std::smatch& aMatch)
@@ -218,7 +220,8 @@ namespace PLC
 
         Parse_FUNCTION(lNew, aParser);
 
-        mFunctions.insert(Function_Map::value_type(lNew->GetIndex(), lNew));
+        auto [lIt, lRet] = mFunctions.insert(Function_Map::value_type(lNew->GetIndex(), lNew));
+        KMS_EXCEPTION_ASSERT(lRet, RESULT_INVALID_INDEX, "Duplicated FUNCTION index", lNew->GetName());
     }
 
     void Builder::Add_FUNCTION_Tail(const std::smatch& aMatch, Parser* aParser)
@@ -256,7 +259,8 @@ namespace PLC
 
         mIndexMonitors[MONITOR_INPUT].MarkUsed(lNew.GetIndex());
 
-        mInputs.insert(Element_Map::value_type(lNew.GetIndex(), lNew));
+        auto [lIt, lRet] = mInputs.insert(Element_Map::value_type(lNew.GetIndex(), lNew));
+        KMS_EXCEPTION_ASSERT(lRet, RESULT_INVALID_INDEX, "Duplicated INPUT index", lNew.GetName());
     }
 
     void Builder::Add_OUTPUT(const std::smatch& aMatch)
@@ -267,7 +271,8 @@ namespace PLC
 
         mIndexMonitors[MONITOR_OUTPUT].MarkUsed(lNew.GetIndex());
 
-        mOutputs.insert(Element_Map::value_type(lNew.GetIndex(), lNew));
+        auto [lIt, lRet] = mOutputs.insert(Element_Map::value_type(lNew.GetIndex(), lNew));
+        KMS_EXCEPTION_ASSERT(lRet, RESULT_INVALID_INDEX, "Duplicated OUTPUT index", lNew.GetName());
     }
 
     void Builder::Add_RELAY(const std::smatch& aMatch)
@@ -278,7 +283,8 @@ namespace PLC
 
         mIndexMonitors[MONITOR_RELAY].MarkUsed(lNew.GetIndex());
 
-        mRelays.insert(Element_Map::value_type(lNew.GetIndex(), lNew));
+        auto [lIt, lRet] = mRelays.insert(Element_Map::value_type(lNew.GetIndex(), lNew));
+        KMS_EXCEPTION_ASSERT(lRet, RESULT_INVALID_INDEX, "Duplicated RELAY index", lNew.GetName());
     }
 
     void Builder::Add_RELAY_Head(const std::smatch& aMatch)
@@ -307,7 +313,8 @@ namespace PLC
 
         mIndexMonitors[MONITOR_SEQUENCE].MarkUsed(lNew.GetIndex());
 
-        mSequences.insert(Sequence_Map::value_type(lNew.GetIndex(), lNew));
+        auto [lIt, lRet] = mSequences.insert(Sequence_Map::value_type(lNew.GetIndex(), lNew));
+        KMS_EXCEPTION_ASSERT(lRet, RESULT_INVALID_INDEX, "Duplicated SEQUENCE index", lNew.GetName());
     }
 
     void Builder::Add_TIMER(const std::smatch& aMatch)
@@ -318,7 +325,8 @@ namespace PLC
 
         mIndexMonitors[MONITOR_TIMER].MarkUsed(lNew.GetIndex());
 
-        mTimers.insert(Timer_Map::value_type(lNew.GetIndex(), lNew));
+        auto [lIt, lRet] = mTimers.insert(Timer_Map::value_type(lNew.GetIndex(), lNew));
+        KMS_EXCEPTION_ASSERT(lRet, RESULT_INVALID_INDEX, "Duplicated TIMER index", lNew.GetName());
     }
 
     void Builder::Add_TIMER_Tail(const std::smatch& aMatch)

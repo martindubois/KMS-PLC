@@ -36,15 +36,6 @@
     <ClCompile Include="EBPro_AddressList.cpp">
       <Filter>Source Files\EBPro</Filter>
     </ClCompile>
-    <ClCompile Include="EBPro_Label.cpp">
-      <Filter>Source Files\EBPro</Filter>
-    </ClCompile>
-    <ClCompile Include="EBPro_LabelList.cpp">
-      <Filter>Source Files\EBPro</Filter>
-    </ClCompile>
-    <ClCompile Include="EBPro_LabelState.cpp">
-      <Filter>Source Files\EBPro</Filter>
-    </ClCompile>
     <ClCompile Include="EBPro_Project.cpp">
       <Filter>Source Files\EBPro</Filter>
     </ClCompile>
@@ -66,16 +57,7 @@
     <ClCompile Include="TRiLOGI_DefineList.cpp">
       <Filter>Source Files\TRiLOGI</Filter>
     </ClCompile>
-    <ClCompile Include="TRiLOGI_Function.cpp">
-      <Filter>Source Files\TRiLOGI</Filter>
-    </ClCompile>
-    <ClCompile Include="TRiLOGI_FunctionList.cpp">
-      <Filter>Source Files\TRiLOGI</Filter>
-    </ClCompile>
     <ClCompile Include="TRiLOGI_Object.cpp">
-      <Filter>Source Files\TRiLOGI</Filter>
-    </ClCompile>
-    <ClCompile Include="TRiLOGI_ObjectList.cpp">
       <Filter>Source Files\TRiLOGI</Filter>
     </ClCompile>
     <ClCompile Include="TRiLOGI_Project.cpp">
