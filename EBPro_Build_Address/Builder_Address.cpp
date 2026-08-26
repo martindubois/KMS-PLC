@@ -7,6 +7,9 @@
 
 #include "Component.h"
 
+// ===== Import/Includes ====================================================
+#include <KMS/Convert.h>
+
 // ===== Local ==============================================================
 #include "../Common/Display.h"
 #include "../Common/HMI/HMI.h"
@@ -22,12 +25,29 @@ using namespace KMS;
 
 const char* EBPRO_ADDRESSES_TO_IMPORT_CSV = "EBPro_Addresses_ToImport.csv";
 
+// Constants
+// //////////////////////////////////////////////////////////////////////////
+
+static constexpr unsigned int MONITOR_BIT_LOCAL_LB    = 0;
+static constexpr unsigned int MONITOR_BIT_MODBUS_1X   = 1;
+static constexpr unsigned int MONITOR_WORD_LOCAL_LW   = 2;
+static constexpr unsigned int MONITOR_WORD_LOCAL_RW   = 3;
+static constexpr unsigned int MONITOR_WORD_LOCAL_RW_A = 4;
+static constexpr unsigned int MONITOR_WORD_MODBUS_4X  = 5;
+
 // Public
 // //////////////////////////////////////////////////////////////////////////
 
 Builder_Address::Builder_Address() : mOut(nullptr)
 {
     AddSource(HMI::ADDRESSES_TXT);
+
+    mIndexMonitors[MONITOR_BIT_LOCAL_LB   ].Init("BIT Local HMI LB"   , 0,   9998);
+    mIndexMonitors[MONITOR_BIT_MODBUS_1X  ].Init("BIT Modbus 1x"      , 1,   1536);
+    mIndexMonitors[MONITOR_WORD_LOCAL_LW  ].Init("WORD Local HMI LW"  , 0,   9999);
+    mIndexMonitors[MONITOR_WORD_LOCAL_RW  ].Init("WORD Local HMI RW"  , 0, 524287);
+    mIndexMonitors[MONITOR_WORD_LOCAL_RW_A].Init("WORD Local HMI RW_A", 0,  65535);
+    mIndexMonitors[MONITOR_WORD_MODBUS_4X ].Init("WORD Modbus 4x"     , 1,   5000);
 }
 
 // ===== Builder ============================================================
@@ -105,6 +125,8 @@ void Builder_Address::ReadSource(const char* aSource)
 
 void Builder_Address::Write_BIT_LOCAL_LB(const std::smatch& aMatch)
 {
+    mIndexMonitors[MONITOR_BIT_LOCAL_LB].MarkUsed(Convert::ToUInt16(aMatch[2].str().c_str()));
+
     BEGIN "Local HMI,LB," << aMatch[2].str() << ",,Undesignated" << Text_EOL;
 }
 
@@ -120,6 +142,8 @@ void Builder_Address::Write_BIT_LOCAL_RW_A(const std::smatch& aMatch)
 
 void Builder_Address::Write_BIT_MODBUS_1X(const std::smatch& aMatch)
 {
+    mIndexMonitors[MONITOR_BIT_MODBUS_1X].MarkUsed(Convert::ToUInt16(aMatch[2].str().c_str()));
+
     BEGIN "MODBUS RTU,1x," << aMatch[2].str() << ",,Undesignated" << Text_EOL;
 }
 
@@ -135,40 +159,56 @@ void Builder_Address::Write_WORD_LOCAL_EM0(const std::smatch& aMatch)
 
 void Builder_Address::Write_WORD_LOCAL_LW(const std::smatch& aMatch)
 {
+    mIndexMonitors[MONITOR_WORD_LOCAL_LW].MarkUsed(Convert::ToUInt16(aMatch[2].str().c_str()));
+
     BEGIN "Local HMI,LW," << aMatch[2].str() << ",,Undesignated" << Text_EOL;
 }
 
 void Builder_Address::Write_WORD_LOCAL_LW_UINT16(const std::smatch& aMatch)
 {
+    mIndexMonitors[MONITOR_WORD_LOCAL_LW].MarkUsed(Convert::ToUInt16(aMatch[2].str().c_str()));
+
     BEGIN "Local HMI,LW," << aMatch[2].str() << ",,16-bit Unsigned" << Text_EOL;
 }
 
 void Builder_Address::Write_WORD_LOCAL_RW(const std::smatch& aMatch)
 {
+    mIndexMonitors[MONITOR_WORD_LOCAL_RW].MarkUsed(Convert::ToUInt32(aMatch[2].str().c_str()));
+
     BEGIN "Local HMI,RW," << aMatch[2].str() << ",,Undesignated" << Text_EOL;
 }
 
 void Builder_Address::Write_WORD_LOCAL_RW_A(const std::smatch& aMatch)
 {
+    mIndexMonitors[MONITOR_WORD_LOCAL_RW_A].MarkUsed(Convert::ToUInt16(aMatch[2].str().c_str()));
+
     BEGIN "Local HMI,RW_A," << aMatch[2].str() << ",,Undesignated" << Text_EOL;
 }
 
 void Builder_Address::Write_WORD_LOCAL_RW_A_UINT16(const std::smatch& aMatch)
 {
+    mIndexMonitors[MONITOR_WORD_LOCAL_RW_A].MarkUsed(Convert::ToUInt16(aMatch[2].str().c_str()));
+
     BEGIN "Local HMI,RW_A," << aMatch[2].str() << ",,16-but Unsigned" << Text_EOL;
 }
 
 void Builder_Address::Write_WORD_MODBUS_4X(const std::smatch& aMatch)
 {
+    mIndexMonitors[MONITOR_WORD_MODBUS_4X].MarkUsed(Convert::ToUInt16(aMatch[2].str().c_str()));
+
     BEGIN "MODBUS RTU,4x," << aMatch[2].str() << ",,Undesignated" << Text_EOL;
 }
 
 void Builder_Address::Write_WORD_MODBUS_4X_INT16(const std::smatch& aMatch)
 {
+    mIndexMonitors[MONITOR_WORD_MODBUS_4X].MarkUsed(Convert::ToUInt16(aMatch[2].str().c_str()));
+
     BEGIN "MODBUS RTU,4x," << aMatch[2].str() << ",,16-bit Signed" << Text_EOL;
 }
 
 void Builder_Address::Write_WORD_MODBUS_4X_UINT16(const std::smatch& aMatch)
 {
+    mIndexMonitors[MONITOR_WORD_MODBUS_4X].MarkUsed(Convert::ToUInt16(aMatch[2].str().c_str()));
+
     BEGIN "MODBUS RTU,4x," << aMatch[2].str() << ",,16-bit Unsigned" << Text_EOL;
 }

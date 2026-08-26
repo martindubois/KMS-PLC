@@ -13,6 +13,7 @@
 
 // ===== Local ==============================================================
 #include "../Common/Builder.h"
+#include "../Common/IndexMonitor.h"
 
 class Builder_Address final : public Builder
 {
@@ -48,5 +49,7 @@ private:
     void Write_WORD_MODBUS_4X_UINT16 (const std::smatch& aMatch);
             
     std::ofstream* mOut;
+
+    IndexMonitor mIndexMonitors[6];
 
 };
