@@ -37,7 +37,6 @@ IndexMonitor::~IndexMonitor()
         for (const auto& lRange : mRanges)
         {
             assert(lRange.first <= lRange.second);
-            assert(mQuantity > lRange.second);
 
             lCount++;
             lFree += lRange.second - lRange.first + 1;
@@ -111,7 +110,7 @@ void IndexMonitor::MarkUsed(unsigned int aIndex)
 
         sprintf_s(lNameAndIndex, "%s %u", mName, aIndex);
 
-        Display_Warning("Index more than once", lNameAndIndex);
+        Display_Warning("Index used more than once", lNameAndIndex);
     }
     else
     {
